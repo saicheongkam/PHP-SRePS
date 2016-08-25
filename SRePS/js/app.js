@@ -1,13 +1,12 @@
 var app = angular.module("myApp", ['ngRoute']);
 
 // Route configarations
-
 app.config(
 	['$routeProvider', function($routeProvider) {
 		$routeProvider
-			.when('/join/:helpdesk', { templateUrl: 'views/joinView.html', controller: 'joinController'})
-			.when('/helpdesk/:name', { templateUrl: 'views/helpdeskView.html', controller: 'helpdeskController'})
-			.otherwise({ templateUrl: 'views/homeView.html', controller: 'homeViewController'} );
+			.when('/sales/:salesid', { templateUrl: 'views/joinView.html', controller: 'detailedViewController'})
+			.when('/sales', { templateUrl: 'views/helpdeskView.html', controller: 'salesViewController'})
+			.otherwise({ templateUrl: 'views/homepage.html', controller: 'homepageController'} );
 	}]
 );
 
