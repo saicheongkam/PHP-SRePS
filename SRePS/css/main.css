@@ -42,7 +42,6 @@ h1.logo
 	height: 10px;
 }
 
-
 .description
 {
 	border-left: 1px #c9c9c9 solid;
@@ -54,4 +53,15 @@ h1.logo
 td.sum
 {
 	border-left: 1px solid #c1c1c1;
+}
+
+.panel
+{
+}
+
+body
+{
+	background-color: rgba(255, 255, 255, 0.69);
+	background-image: url("../img/greyzz.png");
+	background-repeat: repeat;
 }
