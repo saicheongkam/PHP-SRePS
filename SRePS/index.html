@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-ng-app="myApp" lang="en">
 	<head>
-		<title>HelpDesk++</title>
+		<title>People Health Pharmacy</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
 		<!-- Bootstrap -->
@@ -22,7 +22,7 @@
 				<div class="container-fluid">
 					<div class="navbar-header">
 						<a class="logo" href="/">
-							<img class="logo" alt="logo" src="/img/medicine.svg">
+							<img class="logo" alt="logo" src="img/medicine.svg">
 							<span class="logo">People Health Pharmacy</span>
 						</a>
 						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -33,7 +33,7 @@
 					</div>
 					<div class="collapse navbar-collapse" id="myNavbar">
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="" data-toggle="modal" data-target="#HelpdeskOption"><span class="glyphicon glyphicon-signin"></span> Login</a></li>
+							<li><a href="" data-toggle="modal" data-target="#HelpdeskOption"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 							<li><a href="" data-toggle="modal" data-target="#HelpdeskOption"><span class="glyphicon glyphicon-phone"></span> Contact</a></li>
 							<li><a href="" data-toggle="modal" data-target="#HelpdeskOption"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
 						</ul>
@@ -42,7 +42,15 @@
 			</nav>
 			<!--Application-->
 			<div class="row">
-				<div class="col-xs-12" data-ng-view></div>
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#sales"> <span class="glyphicon glyphicon-shopping-cart"></span> Sales</a></li>
+					<li><a data-toggle="tab" href="#menu1"> <span class="glyphicon glyphicon-list"></span> Inventory</a></li>
+					<li><a data-toggle="tab" href="#menu2"> <span class="glyphicon glyphicon-stats"></span> Statistics</a></li>
+					<li class="pull-right"><a data-toggle="tab" href="#menu2"> <span class="glyphicon glyphicon-user"></span> User</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="col-xs-12" data-ng-view></div>
+				</div>
 			</div>
 		</div>
 		<!-- jQuery required for Bootstrap JavaScript plugins) --> 
