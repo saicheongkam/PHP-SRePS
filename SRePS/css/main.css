@@ -42,10 +42,6 @@ h1.logo
 	height: 10px;
 }
 
-.disabled.link
-{
-	
-}
 
 .description
 {
@@ -55,3 +51,7 @@ h1.logo
 	align-content: center;
 }
 
+td.sum
+{
+	border-left: 1px solid #c1c1c1;
+}
