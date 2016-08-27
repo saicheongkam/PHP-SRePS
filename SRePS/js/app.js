@@ -5,7 +5,7 @@ app.config(
 	['$routeProvider', function($routeProvider) {
 		$routeProvider
 			.when('/sales/:salesid', { templateUrl: 'views/joinView.html', controller: 'detailedViewController'})
-			.when('/sales', { templateUrl: 'views/helpdeskView.html', controller: 'salesViewController'})
+			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
 			.otherwise({ templateUrl: 'views/homepage.html', controller: 'homepageController'} );
 	}]
 );
@@ -317,13 +317,9 @@ app.controller ("helpdeskController",
 	}
 );
 
-app.controller('joinController', 
-	function($scope, $routeParams){
-		$scope.helpdesk = ($routeParams.helpdesk)?$routeParams.helpdesk:"helpdesk";
-		$scope.sendRequest = function(student,request)
-		{
-			
-		}
+app.controller('salesViewController', 
+	function($scope, $filter){
+		$scope.sales = [{"date": new Date() ,"name":"Jordan","amount":"$41.25"}];
 });
 
 app.controller('homeViewController',
@@ -349,48 +345,6 @@ app.service('Database', function() {
 					return {error:response.status,desc:response.statusText}
 		});
 	}
-	
-	this.getUnits = function (helpdesk_id) {
-		var url = "process.php/units/helpdesk/"+helpdesk_id;
-		$http.get(url)
-			.then (function(response) {
-					return response.data;
-				}
-				, function(response) {
-					return {error:response.status,desc:response.statusText}
-			});
-	}
-	
-	this.getTutors = function (helpdesk_id) {
-		var url = "process.php/tutors/helpdesk/"+helpdesk_id;
-		$http.get(url)
-			.then (function(response) {
-					return response.data;
-				}
-				, function(response) {
-					return {error:response.status,desc:response.statusText}
-			});
-	}
-	
-	$scope.makeRequest = function(rname, runit, rdesc, rrequest) {
-			var url = "process.php/request/helpdesk/"+helpdesk_id;
-			var data = JSON.stringify ({name: rname, unit: runit, desc:rdesc,request:rrequest});
-			$http.put(url, data)
-				.then(function (response) {
-				}, function (response) {
-					return {error:response.status,desc:response.statusText}
-				});
-			};
-	
-	$scope.deleteRequest = function(request_id) {
-			var url = "process.php/request/request_id/"+request_id;
-			$http.delete(url)
-				.then(function (response) {
-					//do nothing
-				}, function (response) {
-					return {error:response.status,desc:response.statusText}
-				});
-			};
 });
 
 
