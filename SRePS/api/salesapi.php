@@ -21,11 +21,13 @@ $id=array_shift($request);
 //get all sales data
 if ($method == 'GET')
 {
-	$query1="SELECT s.Sale_ID, s.SaleDate, s.Amount, si.Batch_ID, p.Description
+	$query1="SELECT s.Sale_ID, s.SaleDate, s.Amount, staff.Name, si.Batch_ID, si.QuantitySold, p.Description, p.UnitPrice
 FROM Sales s
+INNER JOIN Staff staff ON s.Staff_ID = staff.Staff_ID
 INNER JOIN SalesItem si ON s.Sale_ID = si.Sale_ID
 INNER JOIN Batch b ON si.Batch_ID = b.Batch_ID
-INNER JOIN Product p ON b.Product_ID = p.Product_ID";
+INNER JOIN Product p ON b.Product_ID = p.Product_ID
+ORDER BY s.Sale_ID";
 	//run query
 	$result1=mysqli_query($conn,$query1);
 	if (!$result1) {
@@ -36,13 +38,24 @@ INNER JOIN Product p ON b.Product_ID = p.Product_ID";
 	
 	//set return header 
 	header('Content-Type: application/json');
-	echo '[';
-	for ($i=0;$i<mysqli_num_rows($result1);$i++) {
-    echo ($i>0?',':'').json_encode(mysqli_fetch_object($result1));
-  }
-	echo ']';
+	$json=array();
+	//generate json object from result
+	while($row=mysqli_fetch_assoc($result1))
+	{
+		$json[$row['Sale_ID']]['ID']=$row['Sale_ID'];
+		$json[$row['Sale_ID']]['Date']=$row['SaleDate'];
+		$json[$row['Sale_ID']]['Staff']=$row['Name'];
+		$json[$row['Sale_ID']]['Items'][]=array(
+			'Batch_ID'=>$row['Batch_ID'],
+			'Description'=>$row['Description'],
+			'QuantitySold'=>$row['QuantitySold'],
+			'UnitPrice'=>$row['UnitPrice']
+			);
+	}
+	echo json_encode(array_values($json));
+	
 }
-echo $id;
+
 mysqli_close($conn);
 
 ?>
