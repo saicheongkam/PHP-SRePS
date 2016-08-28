@@ -19,7 +19,7 @@ $resrc = preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
 $id=array_shift($request);
 
 //get all sales data
-if ($method == 'GET')
+if ($method == 'GET' && $resrc=='sales')
 {
 	$query1="SELECT s.Sale_ID, s.SaleDate, s.Amount, staff.Name, si.Batch_ID, si.QuantitySold, p.Description, p.UnitPrice
 FROM Sales s
@@ -55,6 +55,8 @@ ORDER BY s.Sale_ID";
 	echo json_encode(array_values($json));
 	
 }
+else 
+	header('X-PHP-Response-Code: 403', true, 403); 
 
 mysqli_close($conn);
 
