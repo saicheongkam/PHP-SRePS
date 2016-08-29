@@ -55,6 +55,10 @@ td.sum
 	border-left: 1px solid #c1c1c1;
 }
 
+ul.nav-tabs li:hover
+{
+	animation: background-color 3s ease;
+}
 .panel
 {
 }

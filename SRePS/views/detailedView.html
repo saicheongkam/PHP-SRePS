@@ -1,7 +1,7 @@
 <div class="row tab-pane">
 	<div class="col-xs-12 panel">
 		<div class="row panel-body">
-			<ol class="breadcrumb">
+			<ol class="breadcrumb animated headShake">
 				<li><a href="#sales">Sales</a></li>
 				<li>Invoice Details</li>
 			</ol>
@@ -13,37 +13,34 @@
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>Product</th>
-						<th>Unit Price</th>
-						<th>Qty.</th>
-						<th class="text-right">Price</th>
+						<th class="col-xs-1">#</th>
+						<th class="col-xs-4">Product</th>
+						<th class="col-xs-3">Unit Price</th>
+						<th class="col-xs-1">Qty.</th>
+						<th class="col-xs-4 text-right">Price</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="item in sale.items" onclick="alert('hi');">
+					<tr class="animated flipInX" data-ng-repeat="item in sale.items" onclick="alert('hi');"  >
 						<td>{{$index+1}}</td>
 						<td>{{item.product }}</td>
 						<td>${{item.unitprice }}</td>
 						<td>{{item.qty }}</td>
-						<td class="text-right sum">${{(item.unitprice*item.qty)|number:2}}</td>
+						<td class="text-right sum">{{(item.unitprice*item.qty) | currency:"$"}}</td>
 					</tr>
 				</tbody>
 				<tfoot >
 					<tr>
-						<td>Total Payable</td>
-						<td/><td/><td/>
-						<td class="text-right">${{sum | number:2}}</td>
+						<td colspan="4">Total Payable</td>
+						<td class="text-right">{{sum | currency:"$"}}</td>
 					</tr>
 					<tr>
-						<td>Total Paid</td>
-						<td/><td/><td/>
-						<td class="text-right">${{sale.paid}}</td>
+						<td colspan="4">Total Paid</td>
+						<td class="text-right">{{sale.paid | currency:"$" }}</td>
 					</tr>
 					<tr>
-						<td>Change</td>
-						<td/><td/><td/>
-						<td class="text-right">${{ sale.paid - sum | number : 2}}</td>
+						<td colspan="4">Change</td>
+						<td class="text-right">{{ sale.paid - sum | currency:"$"}}</td>
 					</tr>
 				</tfoot>
 			</table>
