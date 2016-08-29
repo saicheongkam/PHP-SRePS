@@ -1,0 +1,34 @@
+{  
+   "id":100302,
+   "date": "12/02/2016",
+   "amount":"135.00",
+   "paid":"150.00",
+   "change":"50.00",
+   "items":[  
+      {  
+         "batch_id":"1",
+         "product":"Doxycycline",
+         "qty":"2",
+         "unitprice":"12.50"
+      },
+      {  
+         "batch_id":"2",
+         "product":"Cyclobenzaprine",
+         "qty":"1",
+         "unitprice":"12.50"
+      },
+      {  
+         "batch_id":"3",
+         "product":"Viagra",
+         "qty":"6",
+         "unitprice":"12.50"
+      },
+      {  
+         "batch_id":"4",
+         "product":"Zoloft",
+         "qty":"1",
+         "unitprice":"12.50"
+      }
+   ],
+   "staff":"James Bardock"
+}

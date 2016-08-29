@@ -1,0 +1,27 @@
+{
+	"database": "xfastg8_php",
+	"host": "www.xfastgames.com",
+	"accounts":
+	[
+		{
+			"account":"1",
+			"username":"xfastg8_sale",
+			"password": "vXLy;BQk?a5Q"
+		},
+		{
+			"account":"2",
+			"username":"xfastg8_manage",
+			"password": "7*dgvR9uN%V{"
+		},
+		{
+			"account":"3",
+			"username":"xfastg8_owner",
+			"password": "dSC~%a?h%T~;"
+		},
+		{
+			"account":"4",
+			"username":"xfastg8_root",
+			"password": "dkz7pD[a{&)n"
+		},
+	]
+}
