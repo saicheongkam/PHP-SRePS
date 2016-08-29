@@ -4,13 +4,14 @@ var app = angular.module("myApp", ['ngRoute']);
 app.config(
 	['$routeProvider', function($routeProvider) {
 		$routeProvider
-			.when('/sales/:salesid', { templateUrl: 'views/detailedView.html', controller: 'detailedViewController'})
 			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
+			.when('/sales/:salesid', { templateUrl: 'views/detailedView.html', controller: 'detailedViewController'})
+			.when('/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.otherwise({ templateUrl: 'views/salesView.html', controller: 'salesViewController'} );
 	}]
 );
 
-// Other Controllers
+// Controllers
 
 app.controller('salesViewController', 
 	function($scope, $filter, Database){
@@ -28,6 +29,14 @@ app.controller('detailedViewController',
 		});
 });
 
+app.controller('addSaleViewController', 
+	function($scope, $filter, Database){
+		$scope.date = new Date();
+		$scope.cart = [{"batch_id":"1","product":"Doxycycline","qty":"2", "unitprice":"12.50"}];
+		$scope.addItem = function(toAdd){
+			$scope.cart.push({"batch_id":toAdd.batch,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
+		};
+});
 
 // Data factory
 app.factory("Data", 
@@ -52,7 +61,7 @@ app.service('Database', function() {
 				"items":[
 					{"batch_id":"1","product":"Doxycycline","qty":"2", "unitprice":"12.50"},
 					{"batch_id":"2","product":"Cyclobenzaprine","qty":"1","unitprice":"12.50"},
-					{"batch_id":"3","product":"Viagra","qty":"6","unitprice":"12.50"},
+					{"batch_id":"3","product":"Stemis","qty":"6","unitprice":"12.50"},
 					{"batch_id":"4","product":"Zoloft","qty":"1","unitprice":"12.50"}],
 				"staff":"James Bardock"
 			}];
@@ -80,6 +89,3 @@ app.run(
 				$(document).foundation();
 		});
 });
-
-
-
