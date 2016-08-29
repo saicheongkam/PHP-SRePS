@@ -24,11 +24,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="sale in sales" onclick="getElementById('edit-1').click()" style="cursor: pointer">
+					<tr data-ng-repeat="sale in sales" onclick="getElementById('select-sale').click()" style="cursor: pointer">
 						<td>{{sale.id}}</td>
 						<td>{{sale.date | date:"MMM d - h:mma"}}</td>
 						<td class="text-right">${{sale.amount}}</td>
-						<td class="sr-only"><a href="#sales/{{sale.id}}" id="edit-1" class="sr-only">{{sale.id}}</a></td>
+						<td class="sr-only"><a href="#sales/{{sale.id}}" id="select-sale" class="sr-only">{{sale.id}}</a></td>
 					</tr>
 				</tbody>
 			</table>
