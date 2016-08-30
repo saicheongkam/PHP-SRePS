@@ -16,7 +16,8 @@ app.config(
 app.controller('salesViewController', 
 	function($scope, $filter, Database){
 		Database.getSales().success(function(result){
-			$scope.sales = results;
+			alert(result);
+			$scope.sales = result;
 		});
 		
 });
