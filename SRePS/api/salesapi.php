@@ -9,7 +9,10 @@ $input = json_decode(file_get_contents('php://input'),true);
 
 // connect to the mysql database
 // Update he connection string accordingly
-$conn = mysqli_connect('mysql.ict.swin.edu.au', 's100669579', '100196', 's100669579_db');
+
+//Update from the config.php
+require_once('config.php');
+$conn = mysqli_connect($host, $user, $password, $database);
 mysqli_set_charset($conn,'utf8');
 
 

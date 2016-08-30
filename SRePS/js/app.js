@@ -15,21 +15,30 @@ app.config(
 
 app.controller('salesViewController', 
 	function($scope, $filter, Database){
-		var dataPromise = Database.getSales();
-		dataPromise.$promise.then(function(result){
-			$scope.sales = result;
-		})
+		Database.getSales().success(function(result){
+			$scope.sales = results;
+		});
 		
 });
 
 app.controller('detailedViewController', 
 	function($scope,$routeParams, $filter, Database){
+	
+		$scope.calculateTotal = function(sales){
+			var sum = 0;
+			sales.items.forEach(function(item){
+					sum += parseFloat(item.unitprice) *parseInt(item.qty);
+			});
+			return sum;
+		}
+		
 		$scope.sale_id = $routeParams.salesid;
-		$scope.sale = Database.getSale($scope.sale_id);
-		$scope.sum = 10;
-		$scope.sale.items.forEach(function(item){
-			$scope.sum += parseFloat(item.unitprice) *parseInt(item.qty);
+	
+		Database.getSale($scope.sale_id).success(function(result){
+				$scope.sale = results;
+				$scope.sum = $scope.calculateTotal($scope.sale);
 		});
+		
 });
 
 app.controller('addSaleViewController', 
@@ -53,8 +62,10 @@ app.controller('addSaleViewController',
 			if (indexToRemove>=0) $scope.cart.splice(indexToRemove,1);
 			$scope.calculateTotal();
 		}
+		
 		$scope.date = new Date();
 		$scope.cart = [{"batch_id":"1","product":"Doxycycline","qty":"2", "unitprice":"12.50"}];
+		$scope.total_paid = 0;
 		$scope.calculateTotal();
 	
 });
@@ -88,24 +99,21 @@ app.service('Database', function($http) {
 			}];
 	
 	this.getSales = function () {
-		var url = "api/salesapi.php/sales";
-		$http.get(url)
-		.then (function(response) {
-					alert('test');
-					return response.data;
-				}
-				,function(response) {
-					return {error:response.status,desc:response.statusText}
-		});
+		return $http.get("api/salesapi.php/sales")
 	};
 	
-	this.getSale = function (sale_id) {
-		var tosend;
-		sales.forEach(function(sale){
-			if(sale.id==sale_id) tosend = sale;
-		});
-		return tosend;
-	}
+	this.getSale = function (id) {
+			return $http.get("api/salesapi.php/sales/"+id)
+	};
+	
+	this.getProduct = function (batch_id) {
+			return $http.get("api/product_api.php/batch/"+id);
+	};
+	
+	this.addSale = function (id) {
+			$http.post("api/salesapi.php/sales/"+id);
+	};
+	
 });
 
 // App run
@@ -122,16 +130,41 @@ app.run(
 });
 
 //Directives
+
 app.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
- 
-                event.preventDefault();
-            }
-        });
-    };
+		return function (scope, element, attrs) {
+				element.bind("keydown keypress", function (event) {
+						if(event.which === 13) {
+								scope.$apply(function (){
+										scope.$eval(attrs.ngEnter);
+								});
+
+								event.preventDefault();
+						}
+				});
+		};
+});
+
+app.directive('formatOnBlur', function ($filter, $window) {
+		var toCurrency = $filter('currency');
+		return {
+				restrict: 'A',
+				require: '?ngModel',
+				link: function (scope, elem, attrs, ctrl) {
+						var rawElem = elem[0];
+						if (!ctrl || !rawElem.hasOwnProperty('value')) return;
+
+						elem.on('focus', updateView.bind(null, true));
+						elem.on('blur',  updateView.bind(null, false));
+
+						function updateView(hasFocus) {
+								if (!ctrl.$modelValue) { return; }
+								var displayValue = hasFocus ?
+												ctrl.$modelValue :
+												toCurrency(ctrl.$modelValue);
+								rawElem.value = displayValue;
+						}
+						updateView(rawElem === $window.document.activeElement);
+				}
+		};
 });
