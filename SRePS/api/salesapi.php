@@ -55,7 +55,7 @@ if($method=='POST')
 //get all sales data
 if ($method == 'GET')
 {
-	$query1="SELECT s.Sale_ID, s.SaleDate, s.Amount, staff.Name, si.Batch_ID, si.QuantitySold, p.Description, p.UnitPrice
+	$query1="SELECT s.Sale_ID, s.SaleDate, s.Amount
 FROM Sales s
 INNER JOIN Staff staff ON s.Staff_ID = staff.Staff_ID
 INNER JOIN SalesItem si ON s.Sale_ID = si.Sale_ID
@@ -76,16 +76,11 @@ ORDER BY s.Sale_ID";
 	//generate json object from result
 	while($row=mysqli_fetch_assoc($result1))
 	{
-		$json[$row['Sale_ID']]['ID']=$row['Sale_ID'];
-		$json[$row['Sale_ID']]['Date']=$row['SaleDate'];
-		$json[$row['Sale_ID']]['Staff']=$row['Name'];
-		$json[$row['Sale_ID']]['Items'][]=array(
-			'Batch_ID'=>$row['Batch_ID'],
-			'Description'=>$row['Description'],
-			'QuantitySold'=>$row['QuantitySold'],
-			'UnitPrice'=>$row['UnitPrice']
-			);
+		$json[$row['Sale_ID']]['id']=$row['Sale_ID'];
+		$json[$row['Sale_ID']]['date']=$row['SaleDate'];
+		$json[$row['Sale_ID']]['amount']=$row['Amount'];
 	}
+
 	echo json_encode(array_values($json));
 	
 }
