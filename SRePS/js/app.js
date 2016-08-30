@@ -36,6 +36,10 @@ app.controller('addSaleViewController',
 		$scope.addItem = function(toAdd){
 			$scope.cart.push({"batch_id":toAdd.batch,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
 		};
+		$scope.removeItem = function(toRemove){
+			var indexToRemove = $scope.cart.indexOf(toRemove);
+			if (indexToRemove>=0) $scope.cart.splice(indexToRemove,1);
+		}
 });
 
 // Data factory
