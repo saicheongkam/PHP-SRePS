@@ -119,14 +119,6 @@ app.service('Database', function($http) {
 // App run
 app.run(
 	function($rootScope) {
-		//Enable tooltip and popover
-		$rootScope.$on('$viewContentLoaded', function () {
-				$(document).ready(function(){
-						$('[data-toggle="popover"]').popover();
-						$('[data-toggle="tooltip"]').tooltip();
-				});
-				$(document).foundation();
-		});
 });
 
 //Directives
