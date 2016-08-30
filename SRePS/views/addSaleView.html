@@ -13,9 +13,9 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-6 pull-left"><span>Approved by: <span class="label label-default">Jacob {{sale.staff}}</span></span></div>
-						<div class="col-xs-6 pull-right pricetag">
+						<div id="pricetag" class="col-xs-6 pull-right pricetag">
 							<strong>Total</strong>
-							<div class="price text-primary text-right">$0.00{{total | currency:"$"}}</div>
+							<div class="price text-primary text-right">{{total | currency:"$"}}</div>
 						</div>
 					</div>
 					<table class="table table-striped table-hover">
@@ -23,7 +23,7 @@
 							<tr>
 								<th class="col-xs-1"></th>
 								<th class="col-xs-1">#</th>
-								<th class="col-xs-4">Product</th>
+								<th class="col-xs-4">Batch No./Product</th>
 								<th class="col-xs-2">Unit Price</th>
 								<th class="col-xs-2">Qty.</th>
 								<th class="col-xs-3 text-right">Price</th>
@@ -33,17 +33,17 @@
 							<tr class="animated flipInX" data-ng-repeat="item in cart" onclick="" >
 								<td class="text-right"><a data-ng-click="removeItem(item);" style="cursor: pointer"><span class="glyphicon glyphicon-minus-sign"></span></a></td>
 								<td>{{$index+1}}</td>
-								<td>{{item.product }}</td>
-								<td>${{item.unitprice }}</td>
+								<td>{{item.product}}</td>
+								<td>{{item.unitprice | currency:'$'}}</td>
 								<td>{{item.qty }}</td>
-								<td class="text-right sum">${{(item.unitprice*item.qty)|number:2}}</td>
+								<td class="text-right sum">{{(item.unitprice*item.qty) | currency:'$'}}</td>
 							</tr>
-							<tr class="">
+							<tr class="" data-ng-init="toAdd.unit_price = 5; toAdd.qty = 1">
 								<td><span class="glyphicon glyphicon-delete"></span></td>
 								<td>{{cart.length+1}}</td>
-								<td><input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product"/></td>
-								<td><input type="text" class="form-control" id="unit_price" data-ng-bind="toAdd.unit_price | currency:'$'" readonly/></td>
-								<td><input type="number" class="form-control" id="qty" data-ng-model="toAdd.qty"/></td>
+								<td><input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product" tabindex="1"/></td>
+								<td><input type="text" class="form-control" id="unit_price" data-ng-model="toAdd.unit_price | currency:'$'" readonly/></td>
+								<td><input type="number" class="form-control" id="qty" data-ng-model="toAdd.qty" ng-enter="addItem(toAdd); toAdd=null;" tabindex="2"/></td>
 								<td class="text-right sum"><input type="text" class="form-control" id="unit_price" data-ng-bind="(toAdd.unit_price*toAdd.qty) | currency:'$'" readonly/></td>
 							</tr>
 							<tr data-ng-click="addItem(toAdd); toAdd=null;" style="cursor: pointer">
