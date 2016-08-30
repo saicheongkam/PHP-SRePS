@@ -55,8 +55,32 @@ td.sum
 	border-left: 1px solid #c1c1c1;
 }
 
-.panel
+ul.nav-tabs li:hover
 {
+	animation: background-color 3s ease;
+}
+
+.panel-primary .panel-heading
+{
+	background-color: rgba(223, 45, 28, 0.8);
+	background-image: url(../img/greyzz.png);
+	background-blend-mode:multiply;
+}
+.price
+{
+	font-size: 32pt;
+	font-weight: 200;
+}
+
+.pricetag
+{
+	line-height: 18pt;
+	text-align: right;
+	margin-right: 12pt;
+	border: 1px #df2d1c dashed;
+	width: auto;
+	height: 48pt;
+	border-radius: 10px;
 }
 
 body
