@@ -38,12 +38,15 @@ if (isset ($input))  {
 		$set.=($i>0?',':'').'`'.$saleColumns[$i].'`=';
 		$set.=($values[$i]===null?'NULL':''.(is_numeric($values[$i])?$values[$i]:'"'.$values[$i].'"').'');
 	}
+	
+	//get all items sold
+	$items=$input['items'];
 }
 
 
-if($method=='POST')
+if($method=='POST' && isset($input))
 {
-	var_dump($set);
+	
 	$sql="insert into `Sales` set $set";
 	$result=mysqli_query($conn,$sql);
 	
@@ -51,6 +54,24 @@ if($method=='POST')
 	{
 		die(mysqli_error($conn));
 	}
+	
+	//add items to table
+	$batchID=0;
+	$qty=0;
+	
+	foreach($items as $item)
+	{
+		$batchID=intval($item['batch_id']);
+		$qty=intval($item['qty']);
+		$sql="insert into `SalesItem` set `Sale_ID`=LAST_INSERT_ID(), `Batch_ID`=$batchID, `QuantitySold`=$qty";
+		$result=mysqli_query($conn,$sql);
+	
+	if(!$result)
+	{
+		die(mysqli_error($conn));
+	}
+	}
+
 }
 //get all sales data
 if ($method == 'GET')
