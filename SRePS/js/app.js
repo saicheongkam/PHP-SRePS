@@ -6,7 +6,9 @@ app.config(
 		$routeProvider
 			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
 			.when('/sales/:salesid', { templateUrl: 'views/detailedView.html', controller: 'detailedViewController'})
-			.when('/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
+			.when('/addSale', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
+			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
+			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
 			.otherwise({ templateUrl: 'views/salesView.html', controller: 'salesViewController'} );
 	}]
 );
@@ -90,6 +92,22 @@ app.controller('addSaleViewController',
 	
 });
 
+app.controller('inventoryViewController', 
+	function($scope){
+		$scope.date = new Date();
+		
+});
+
+app.controller('addItemViewController', 
+	function($scope, Database){
+	
+	$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
+	
+		$scope.addItem = function(toAdd){
+			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc,"qty":toAdd.qty});
+		};		
+});
+
 // Data factory
 app.factory("Data", 
 	function () {
@@ -122,6 +140,10 @@ app.service('Database', function($http) {
 		return $http.get("api/salesapi.php/sales")
 	};
 	
+	this.getProducts = function (batch_id) {
+			return $http.get("api/product_api.php/batch/");
+	};
+	
 	this.getSale = function (id) {
 			return $http.get("api/salesapi.php/sales/"+id)
 	};
@@ -132,6 +154,10 @@ app.service('Database', function($http) {
 	
 	this.addSale = function (id) {
 			$http.post("api/salesapi.php/sales/"+id);
+	};
+	
+	this.addProduct = function (batch_id) {
+			return $http.post("api/product_api.php/batch/"+id);
 	};
 	
 });
