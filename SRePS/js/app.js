@@ -15,8 +15,13 @@ app.config(
 
 app.controller('salesViewController', 
 	function($scope, $filter, Database){
+		$scope.navigateTo = function(sale_id) {
+			var host = $window.location.host;
+			var landingUrl = "http://" + host + "/sale/"+sale_id;
+			alert(landingUrl);
+			$window.location.href = landingUrl;
+		};
 		Database.getSales().success(function(result){
-			alert(result);
 			$scope.sales = result;
 		});
 		
