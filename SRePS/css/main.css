@@ -83,6 +83,18 @@ ul.nav-tabs li:hover
 	border-radius: 10px;
 }
 
+img.loading
+{
+	width: 12px;
+	height: 12px;
+}
+
+.invalid
+{
+	border: 1px red solid;
+	color: #df2d1c;
+}
+
 body
 {
 	background-color: rgba(255, 255, 255, 0.69);

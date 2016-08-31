@@ -14,12 +14,9 @@ app.config(
 // Controllers
 
 app.controller('salesViewController', 
-	function($scope, $filter, Database){
+	function($scope, $filter, $window, Database){
 		$scope.navigateTo = function(sale_id) {
-			var host = $window.location.host;
-			var landingUrl = "http://" + host + "/sale/"+sale_id;
-			alert(landingUrl);
-			$window.location.href = landingUrl;
+			document.getElementById('select-sale-'+sale_id).click();
 		};
 		Database.getSales().success(function(result){
 			$scope.sales = result;
@@ -58,9 +55,9 @@ app.controller('addSaleViewController',
 			return total;
 		}
 		$scope.addItem = function(toAdd){
-			$scope.cart.push({"batch_id":toAdd.batch,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
+			$scope.cart.push({"batch_id":toAdd.batch_id,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
 			$scope.calculateTotal();
-			document.getElementById('product_name').focus();
+			document.getElementById('batch_id').focus();
 			$('#pricetag').addClass('animated flipInX');
 		};
 		$scope.removeItem = function(toRemove){
@@ -68,10 +65,27 @@ app.controller('addSaleViewController',
 			if (indexToRemove>=0) $scope.cart.splice(indexToRemove,1);
 			$scope.calculateTotal();
 		}
+		$scope.resolveProduct = function(batch_id)
+		{
+			$scope.toAdd.resolved = false;
+			Database.getProduct(batch_id).success(function(result){
+				if(result.name){
+					$scope.toAdd.product = result.name;
+					$scope.toAdd.resolved = true;
+					$scope.toAdd.unit_price = result.price;
+				}else{
+					$scope.toAdd.product = "Invalid Batch";
+					$scope.toAdd.resolved = "invalid";
+					document.getElementById('batch_id').focus();
+				}
+			});
+		}
 		
 		$scope.date = new Date();
 		$scope.cart = [{"batch_id":"1","product":"Doxycycline","qty":"2", "unitprice":"12.50"}];
 		$scope.total_paid = 0;
+		$scope.toAdd = {};
+		$scope.toAdd.qty = 1;
 		$scope.calculateTotal();
 	
 });
@@ -113,7 +127,7 @@ app.service('Database', function($http) {
 	};
 	
 	this.getProduct = function (batch_id) {
-			return $http.get("api/product_api.php/batch/"+id);
+			return $http.get("api/product_api.php/product/"+batch_id);
 	};
 	
 	this.addSale = function (id) {
