@@ -157,6 +157,10 @@ app.service('Database', function($http) {
 		return $http.get("api/salesapi.php/sales")
 	};
 	
+	this.getProducts = function (batch_id) {
+			return $http.get("api/product_api.php/batch/");
+	};
+	
 	this.getSale = function (id) {
 			return $http.get("api/salesapi.php/sales/"+id)
 	};
@@ -167,6 +171,10 @@ app.service('Database', function($http) {
 	
 	this.addSale = function (id) {
 			return $http.post("api/salesapi.php/sales/"+id);
+	};
+	
+	this.addProduct = function (batch_id) {
+			return $http.post("api/product_api.php/batch/"+id);
 	};
 	
 	this.addProduct = function (batch_id) {
