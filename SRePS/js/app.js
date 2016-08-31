@@ -6,7 +6,7 @@ app.config(
 		$routeProvider
 			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
 			.when('/sales/:salesid', { templateUrl: 'views/detailedView.html', controller: 'detailedViewController'})
-			.when('/addSale', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
+			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
 			.otherwise({ templateUrl: 'views/salesView.html', controller: 'salesViewController'} );
@@ -57,10 +57,12 @@ app.controller('addSaleViewController',
 			return total;
 		}
 		$scope.addItem = function(toAdd){
-			$scope.cart.push({"batch_id":toAdd.batch_id,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
-			$scope.calculateTotal();
-			document.getElementById('batch_id').focus();
-			$('#pricetag').addClass('animated flipInX');
+			if(!(toAdd.resolved=='invalid' || toAdd.resolved==null)){
+				$scope.cart.push({"batch_id":toAdd.batch_id,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
+				$scope.calculateTotal();
+				document.getElementById('batch_id').focus();
+				$('#pricetag').addClass('animated flipInX');
+			}
 		};
 		$scope.removeItem = function(toRemove){
 			var indexToRemove = $scope.cart.indexOf(toRemove);
@@ -82,10 +84,21 @@ app.controller('addSaleViewController',
 				}
 			});
 		}
+		$scope.finalise = function()
+		{
+			var toSend = { "SaleDate": $scope.date, 
+										 "Amount": $scope.calculateTotal(),
+										 "Paid": $scope.total_paid,
+										 "Staff_ID": 1,
+										 "Items": $scope.cart
+									 };
+			alert(toSend);
+//			Database.addSale().success(function(result){
+//			});
+		}
 		
 		$scope.date = new Date();
 		$scope.cart = [{"batch_id":"1","product":"Doxycycline","qty":"2", "unitprice":"12.50"}];
-		$scope.total_paid = 0;
 		$scope.toAdd = {};
 		$scope.toAdd.qty = 1;
 		$scope.calculateTotal();
@@ -100,12 +113,10 @@ app.controller('inventoryViewController',
 
 app.controller('addItemViewController', 
 	function($scope, Database){
-	
-	$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
-	
+		$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
 		$scope.addItem = function(toAdd){
 			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc,"qty":toAdd.qty});
-		};		
+		};
 });
 
 // Data factory
@@ -140,20 +151,16 @@ app.service('Database', function($http) {
 		return $http.get("api/salesapi.php/sales")
 	};
 	
-	this.getProducts = function (batch_id) {
-			return $http.get("api/product_api.php/batch/");
-	};
-	
 	this.getSale = function (id) {
 			return $http.get("api/salesapi.php/sales/"+id)
 	};
 	
 	this.getProduct = function (batch_id) {
-			return $http.get("api/product_api.php/product/"+batch_id);
+			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
 	
 	this.addSale = function (id) {
-			$http.post("api/salesapi.php/sales/"+id);
+			return $http.post("api/salesapi.php/sales/"+id);
 	};
 	
 	this.addProduct = function (batch_id) {
