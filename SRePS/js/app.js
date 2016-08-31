@@ -6,7 +6,9 @@ app.config(
 		$routeProvider
 			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
 			.when('/sales/:salesid', { templateUrl: 'views/detailedView.html', controller: 'detailedViewController'})
-			.when('/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
+			.when('/addSale', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
+			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
+			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
 			.otherwise({ templateUrl: 'views/salesView.html', controller: 'salesViewController'} );
 	}]
 );
@@ -17,7 +19,7 @@ app.controller('salesViewController',
 	function($scope, $filter, Database){
 		$scope.navigateTo = function(sale_id) {
 			var host = $window.location.host;
-			var landingUrl = "http://" + host + "/sale/"+sale_id;
+			var landingUrl = "http://" + host + "/sale/" + sale_id;
 			alert(landingUrl);
 			$window.location.href = landingUrl;
 		};
@@ -58,7 +60,7 @@ app.controller('addSaleViewController',
 			return total;
 		}
 		$scope.addItem = function(toAdd){
-			$scope.cart.push({"batch_id":toAdd.batch,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
+			$scope.cart.push({"batch_id":toAdd.batch_id,"product":toAdd.product,"qty":toAdd.qty,"unitprice":toAdd.unit_price});
 			$scope.calculateTotal();
 			document.getElementById('product_name').focus();
 			$('#pricetag').addClass('animated flipInX');
@@ -74,6 +76,22 @@ app.controller('addSaleViewController',
 		$scope.total_paid = 0;
 		$scope.calculateTotal();
 	
+});
+
+app.controller('inventoryViewController', 
+	function($scope){
+		$scope.date = new Date();
+		
+});
+
+app.controller('addItemViewController', 
+	function($scope, Database){
+	
+	$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
+	
+		$scope.addItem = function(toAdd){
+			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc,"qty":toAdd.qty});
+		};		
 });
 
 // Data factory
@@ -108,6 +126,10 @@ app.service('Database', function($http) {
 		return $http.get("api/salesapi.php/sales")
 	};
 	
+	this.getProducts = function (batch_id) {
+			return $http.get("api/product_api.php/batch/");
+	};
+	
 	this.getSale = function (id) {
 			return $http.get("api/salesapi.php/sales/"+id)
 	};
@@ -118,6 +140,10 @@ app.service('Database', function($http) {
 	
 	this.addSale = function (id) {
 			$http.post("api/salesapi.php/sales/"+id);
+	};
+	
+	this.addProduct = function (batch_id) {
+			return $http.post("api/product_api.php/batch/"+id);
 	};
 	
 });
