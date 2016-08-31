@@ -15,8 +15,14 @@ app.config(
 
 app.controller('salesViewController', 
 	function($scope, $filter, Database){
+		$scope.navigateTo = function(sale_id) {
+			var host = $window.location.host;
+			var landingUrl = "http://" + host + "/sale/"+sale_id;
+			alert(landingUrl);
+			$window.location.href = landingUrl;
+		};
 		Database.getSales().success(function(result){
-			$scope.sales = results;
+			$scope.sales = result;
 		});
 		
 });
@@ -119,14 +125,6 @@ app.service('Database', function($http) {
 // App run
 app.run(
 	function($rootScope) {
-		//Enable tooltip and popover
-		$rootScope.$on('$viewContentLoaded', function () {
-				$(document).ready(function(){
-						$('[data-toggle="popover"]').popover();
-						$('[data-toggle="tooltip"]').tooltip();
-				});
-				$(document).foundation();
-		});
 });
 
 //Directives
