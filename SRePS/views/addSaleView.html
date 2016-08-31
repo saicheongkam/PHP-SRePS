@@ -18,7 +18,7 @@
 							<div class="price text-primary text-right">{{total | currency:"$"}}</div>
 						</div>
 					</div>
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover ">
 						<thead>
 							<tr>
 								<th class="col-xs-1"></th>
@@ -47,7 +47,7 @@
 									<td><input type="text" class="form-control" id="batch_id" name="batch_id" data-ng-model="toAdd.batch_id" data-ng-change="resolveProduct(toAdd.batch_id);" ng-model-options="{ debounce: 500 }" tabindex="1"/></td>
 									<td class="text-center">
 										<div class="higher" data-ng-show="toAdd.resolved==false">
-											<img class="loading" src="img/loading.svg" data-ng-show="true"/>
+											<img class="loading" src="img/loading.svg"/>
 											<span class="primary">Fetching..</span>
 										</div>
 										<div>
@@ -55,12 +55,15 @@
 										</div>
 									</td>
 									<td><input type="text" class="form-control" id="unit_price" data-ng-model="toAdd.unit_price | currency:'$'" tabindex="-1" readonly/></td>
-									<td><input type="number" class="form-control" id="qty" data-ng-model="toAdd.qty" data-ng-disabled="toAdd.resolved=='invalid'" ng-enter="addItem(toAdd); toAdd=null;" tabindex="2"/></td>
+									<td><input type="number" class="form-control" id="qty" data-ng-model="toAdd.qty" data-ng-disabled="toAdd.resolved=='invalid' || toAdd.resolved==null" ng-enter="addItem(toAdd); toAdd=null;" tabindex="2"/></td>
 									<td class="text-right sum"><input type="text" class="form-control" id="unit_price" data-ng-bind="(toAdd.unit_price*toAdd.qty) | currency:'$'" tabindex="-1" readonly/></td>
 								</form>
 							</tr>
-							<tr data-ng-click="addItem(toAdd);" style="cursor: pointer" data-ng-hide="toAdd.resolved=='invalid' || toAdd.resolved==null">
+							<tr class="animated fadeIn" data-ng-click="addItem(toAdd);" style="cursor: pointer" data-ng-hide="toAdd.resolved=='invalid' || toAdd.resolved==null">
 								<td class="text-center" colspan="7"><span class="glyphicon glyphicon-plus-sign"></span> Add Item </td>
+							</tr >
+							<tr class="animated fadeIn" data-ng-show="toAdd.resolved=='invalid' || toAdd.resolved==null">
+								<td class="text-center" colspan="7"><span class="glyphicon glyphicon-ban-circle"></span> Enter a Valid Product</td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -68,12 +71,23 @@
 								<td colspan="5"></td>
 								<td colspan="2" class-="pull-right">
 									<label for="total_paid">Total Paid:</label>
-									<input type="text" class="form-control" id="total_paid" data-ng-model="total_paid" ng-model-options="{ updateOn: 'blur'}" data-ng-change="total_paid=(total_paid | currency:'$')" tabindex="3"/>
+									<input type="text" class="form-control" id="total_paid" data-ng-model="total_paid" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 2500, 'blur': 0 }}" data-ng-change="change = ((total_paid - calculateTotal()) | currency:'$') ; total_paid=(total_paid | currency:'$'); " tabindex="3"/>
+								</td>
+							</tr>
+							<tr class="animated flipInX" data-ng-hide="total_paid==0 || total_paid==null">
+								<td colspan="5"></td>
+								<td colspan="2" class-="pull-right">
+									<label for="total_paid">Change:</label>
+									<input type="text" class="form-control" id="total_paid" data-ng-model="change;" data-ng-change="total_paid=(total_paid | currency:'$')" tabindex="-1" readonly/>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="7">
-									<button class="btn btn-primary pull-right" data-ng-click="finalise();" data-ng-disabled="cart.length==0 || total_paid=='0' "><span class="glyphicon glyphicon-done"></span> Finalise </button>
+										<button class="btn btn-primary pull-right" data-ng-click="finalise();" data-ng-disabled="cart.length==0 || total_paid=='0' || total_paid=='' " tabindex="4">
+											Finalise
+											<img class="loading inverted" src="img/loading.svg" data-ng-show="sending"/>
+											<span class="glyphicon glyphicon-ok" data-ng-show="!sending"></span> 
+										</button>
 								</td>
 							</tr>
 						</tfoot>

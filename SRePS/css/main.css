@@ -80,7 +80,7 @@ ul.nav-tabs li:hover
 	border: 1px #df2d1c dashed;
 	width: auto;
 	height: 48pt;
-	border-radius: 10px;
+	border-radius: 5px;
 }
 
 .primary
@@ -103,10 +103,20 @@ ul.nav-tabs li:hover
 img.loading {
 		width: 12px;
 		height: 12px;
-		
 		-webkit-animation:spin 0.5s linear infinite;
 		-moz-animation:spin 0.5s linear infinite;
 		animation:spin 0.5s linear infinite;
+}
+
+img.inverted
+{
+	-webkit-filter: brightness(10);
+  filter: brightness(10);
+}
+
+div.loading
+{
+	height: 12px;
 }
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }

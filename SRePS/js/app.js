@@ -62,6 +62,8 @@ app.controller('addSaleViewController',
 				$scope.calculateTotal();
 				document.getElementById('batch_id').focus();
 				$('#pricetag').addClass('animated flipInX');
+				$scope.toAdd = {};
+				$scope.toAdd.qty = 1;
 			}
 		};
 		$scope.removeItem = function(toRemove){
@@ -89,18 +91,22 @@ app.controller('addSaleViewController',
 			var toSend = { "SaleDate": $scope.date, 
 										 "Amount": $scope.calculateTotal(),
 										 "Paid": $scope.total_paid,
+										 "Change": $scope.change,
 										 "Staff_ID": 1,
 										 "Items": $scope.cart
 									 };
-			alert(toSend);
-//			Database.addSale().success(function(result){
-//			});
+			console.log(toSend);
+			$scope.sending = true;
+			Database.addSale().success(function(result){
+				//$scope.sending = false;
+			});
 		}
 		
 		$scope.date = new Date();
-		$scope.cart = [{"batch_id":"1","product":"Doxycycline","qty":"2", "unitprice":"12.50"}];
-		$scope.toAdd = {};
-		$scope.toAdd.qty = 1;
+		$scope.cart = [];
+		$scope.toAdd = {qty:1};
+		$scope.total_paid = 0;
+		$scope.change = 0;
 		$scope.calculateTotal();
 	
 });
