@@ -1,0 +1,58 @@
+<div class="row tab-pane">
+	<div class="col-xs-12 panel">
+		<div class="row panel-body">
+			<ol class="breadcrumb animated headShake">
+				<li><a href="#inventory">Inventory</a></li>
+				<li>Add Item</li>
+			</ol>
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span>Add Item</span>
+					<span class="pull-right">Date: <strong>{{date  | date : "MMM d, y"}}</strong></span>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-6 pull-left"><span>Approved by: <span class="label label-default">Jacob {{sale.staff}}</span></span></div>
+					</div>
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th class="col-xs-1"></th>
+								<th class="col-xs-1">Batch</th>
+								<th class="col-xs-2">Category</th>
+								<th class="col-xs-2">Manufacturer</th>
+								<th class="col-xs-2">Product</th>
+								<th class="col-xs-3">Description</th>
+								<th class="col-xs-1">Qty.</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="animated flipInX" data-ng-repeat="item in inventory" onclick="" >
+								<td class="text-right"><a data-ng-click="removeItem(item);" style="cursor: pointer"><span class="glyphicon glyphicon-minus-sign"></span></a></td>
+								<td>{{item.batch_id}}</td>
+								<td>{{item.category}}</td>
+								<td>{{item.manufacturer}}</td>
+								<td>{{item.product}}</td>
+								<td>{{item.desc}}</td>
+								<td>{{item.qty}}</td>
+							</tr>
+							<tr class="" data-ng-init="" toAdd.qty = "1">
+								<td><span class="glyphicon glyphicon-delete"></span></td>
+								<td><input type="number" class="form-control" id="batch_id" data-ng-model="toAdd.batch_id" tabindex="1"/></td>
+								<td><input type="text" class="form-control" id="category" data-ng-model="toAdd.category" tabindex="1"/></td>
+								<td><input type="text" class="form-control" id="manufacturer" data-ng-model="toAdd.manufacturer" tabindex="1"/></td>
+								<td><input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product" tabindex="1"/></td>
+								<td><input type="text" class="form-control" id="desc" data-ng-model="toAdd.desc" tabindex="1"/></td>
+								<td><input type="number" class="form-control" id="qty" data-ng-model="toAdd.qty" tabindex="1"/></td>
+							</tr>
+							<tr data-ng-click="addItem(toAdd); toAdd=null;" style="cursor: pointer">
+								<td class="text-center" colspan="7"><span class="glyphicon glyphicon-plus-sign"></span> Add Item </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		
+		</div>
+	</div>
+</div>

@@ -80,9 +80,56 @@ ul.nav-tabs li:hover
 	border: 1px #df2d1c dashed;
 	width: auto;
 	height: 48pt;
-	border-radius: 10px;
+	border-radius: 5px;
 }
 
+.primary
+{
+	color: #df2d1c;
+}
+
+.invalid
+{
+	border: 1px red solid;
+	color: #df2d1c;
+}
+
+.invalid
+{
+	border: 1px red solid;
+	color: #df2d1c;
+}
+
+img.loading {
+		width: 12px;
+		height: 12px;
+		-webkit-animation:spin 0.5s linear infinite;
+		-moz-animation:spin 0.5s linear infinite;
+		animation:spin 0.5s linear infinite;
+}
+
+img.inverted
+{
+	-webkit-filter: brightness(10);
+  filter: brightness(10);
+}
+
+div.loading
+{
+	height: 12px;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+div.higher
+{
+	padding-left: inherit;
+	padding-top: 6px;
+	position: absolute;
+	z-index: 1;
+}
 body
 {
 	background-color: rgba(255, 255, 255, 0.69);

@@ -15,7 +15,6 @@ require_once('config.php');
 $conn = mysqli_connect($host, $user, $password, $database);
 mysqli_set_charset($conn,'utf8');
 
-
 // retrieve the resource asked
 $resrc = preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
 if($resrc!='sales')

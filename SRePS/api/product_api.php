@@ -21,7 +21,7 @@ $resrc = preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
 //extract id if exist with uri
 $id=preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
 
-if($resrc!='product')
+if($resrc!='batch')
 {
 	header('X-PHP-Response-Code: 403', true, 403);
 	die('Illegal Operation');
