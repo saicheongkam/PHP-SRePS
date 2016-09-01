@@ -15,5 +15,84 @@
 					</label>
 			</div>
 		</div>
+		<div class="row panel-body">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th># Invoice</th>
+						<th>Date</th>
+						<th class="text-right">Amount</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="item in items" data-ng-click="navigateTo({{item.ID}});" style="cursor: pointer">
+						<td>{{item.ID}}</td>
+						<td>{{item.Date | date:"MMM d - h:mma"}}</td>
+						<td class="text-right">{{sale.Amount | currency:'$'}}</td>
+						<td class="sr-only"><a href="#sales/{{sale.ID}}" id="select-sale-{{sale.ID}}" class="sr-only">{{sale.id}}</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="container">
+			<div data-ng-controller="myModalCtrl">
+				<div data-modal="showModal" data-close="close()">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="text-center">Product Name</h1>
+							</div>
+							<div class="modal-body row">
+								<div class="col-xs-4">
+									<img src="img/drug1.svg" alt="drug">
+									<hr>
+									<p>Name: Doxycycline</p>
+									<p>Type: Bacterial</p>
+									<p>Category: Antibiotic</p>
+									<p>Price: $6.25</p>
+									<p>Reorder limit:</p>
+									<p>
+										<input class="slider-selection slider slider-horizontal" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
+									</p>
+								</div>
+								<div class="col-xs-8">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Details</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Batch ID</td>
+												<td>1</td>
+											</tr>
+											<tr>
+												<td>Expiry Date</td>
+												<td>{{date | date : "MMM d, yyyy"}}</td>
+											</tr>
+											<tr>
+												<td>Shelf No.</td>
+												<td>1</td>
+											</tr>
+											<tr>
+												<td>Qty.</td>
+												<td>47</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-danger" data-ng-click="close()">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 	</div>
 </div>

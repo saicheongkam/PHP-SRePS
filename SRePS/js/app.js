@@ -114,6 +114,12 @@ app.controller('addSaleViewController',
 app.controller('inventoryViewController', 
 	function($scope){
 		$scope.date = new Date();
+	
+	var slider = new Slider('#ex1', {
+	formatter: function(value) {
+		return 'Current value: ' + value;
+	}
+});
 		
 });
 
@@ -123,6 +129,16 @@ app.controller('addItemViewController',
 		$scope.addItem = function(toAdd){
 			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc,"qty":toAdd.qty});
 		};
+});
+
+app.controller("myModalCtrl", function($scope) {
+	$scope.showModal = false;
+	$scope.open = function() {	
+		$scope.showModal = true;	
+	};
+	$scope.close = function() {
+		$scope.showModal = false;
+	};
 });
 
 // Data factory
