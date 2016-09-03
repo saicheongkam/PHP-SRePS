@@ -22,7 +22,7 @@
 		<!-- Tiles -->
 		<div class="row panel-body">
 				<div>
-					<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory">
+					<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory" data-toggle="modal" data-target="#view-item">
 						<h5 class="text-center">{{product.name}}</h5>
 						<img class="img-responsive" src="img/{{product.type}}.svg" alt="{{product.type}}">
 						<p class="text-right">
@@ -34,14 +34,13 @@
 				</div>
 		</div>
 		
-		<!-- Modals -->
-		<div id="add-item" class="modal fade" role="dialog" class="container" data-ng-controller="inventoryModal">
+		<!-- Add-Item Modal -->
+		<div id="add-item" class="modal fade" role="dialog" class="container" data-ng-controller="addItemViewController">
 			<div data-modal="showModal" data-close="close()">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header model-primary">
 							<span>Add Item</span>
-							<span class="pull-right">Date: <strong>{{date  | date : "MMM d, y"}}</strong></span>
 						</div>
 						<div class="modal-body row">
 							<div class="panel-body">
@@ -124,7 +123,8 @@
 			</div>
 		</div>
 
-		<div class="container" data-ng-controller="inventoryModal">
+		<!-- View-Item Modal -->
+		<div id="view-item" class="modal fade" role="dialog" class="container" data-ng-controller="viewItemViewController">
 			<div data-modal="showModal" data-close="close()">
 				<div class="modal-dialog">
 					<div class="modal-content">

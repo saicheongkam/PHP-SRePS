@@ -148,8 +148,7 @@ app.controller('inventoryViewController', function($scope){
 		$scope.editLimit = false;
 });
 
-app.controller('addItemViewController', 
-	function($scope, Database){
+app.controller('addItemViewController', function($scope, Database){
 		$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
 		$scope.addItem = function(toAdd){
 			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
@@ -158,8 +157,8 @@ app.controller('addItemViewController',
 
 app.controller('inventoryModal', function($scope) {
 	$scope.showModal = false;
-	$scope.open = function() {	
-		$scope.showModal = true;	
+	$scope.open = function() {
+		$scope.showModal = true;
 	};
 	$scope.close = function() {
 		$scope.showModal = false;
