@@ -39,7 +39,7 @@ if (isset ($input))  {
 	}
 	
 	//get all items sold
-	$items=$input['items'];
+	$items=$input['Items'];
 }
 
 

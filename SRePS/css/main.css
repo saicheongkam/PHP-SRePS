@@ -130,6 +130,26 @@ div.higher
 	position: absolute;
 	z-index: 1;
 }
+
+.model-primary
+{
+	color: white;
+	border-radius: 4px 4px 0px 0px;
+	background-color: rgba(223, 45, 28, 0.9);
+	background-image: url(../img/greyzz.png);
+	background-blend-mode:multiply;
+}
+
+.modal-backdrop
+{
+	z-index: 0;
+}
+
+div.model
+{
+	z-index: 500;
+}
+
 body
 {
 	background-color: rgba(255, 255, 255, 0.69);
