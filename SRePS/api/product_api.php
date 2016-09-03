@@ -31,7 +31,7 @@ if($resrc!='product' && $resrc!='batch' )
 if(isset($input))
 {
 	//Update a product given id
-	if($method=='PUT' && $resrc=='product' && isset($id))
+	if($method=='PUT' && $resrc=='product' && $id)
 	{
 		$id=intval($id);
 		$set='';
@@ -85,7 +85,7 @@ if(isset($input))
 //GET stuff
 
 //get all product data based on batch id
-if ($method=='GET' && isset($id) && $resrc=='batch')
+if ($method=='GET' && $id && $resrc=='batch')
 {
 	$id=intval($id);
 	$query="SELECT p.Description, p.UnitPrice
@@ -117,8 +117,9 @@ if ($method=='GET' && isset($id) && $resrc=='batch')
 	
 }
 
+
 //get a a single product based on id supplied
-if ($method=='GET' && isset($id) && $resrc=='product')
+if ($method=='GET' && $id && $resrc=='product')
 {
 	$id=intval($id);
 	$query="SELECT p.Description, p.UnitPrice, p.Reorderlevel, c.Name as Drug
@@ -152,7 +153,7 @@ if ($method=='GET' && isset($id) && $resrc=='product')
 }
 
 //get all inventory
-if ($method=='GET' && $resrc=='product' && !isset($id))
+if ($method=='GET' && $resrc=='product' && !$id)
 {
 	
 	$query="SELECT p.Product_id, p.Description, p.Reorderlevel, p.Drug_ID, SUM(Quantity) as quantity 
@@ -160,7 +161,6 @@ if ($method=='GET' && $resrc=='product' && !isset($id))
 	INNER JOIN Batch as b 
 	ON p.Product_id = b.Product_id 
 	GROUP BY p.Product_id";
-	
 	//run query
 	$result=mysqli_query($conn,$query);
 
@@ -188,7 +188,7 @@ if ($method=='GET' && $resrc=='product' && !isset($id))
 			'quantity'=>$row['quantity']
 			);
 	}
-
+	
 	echo json_encode($json);
 
 }
