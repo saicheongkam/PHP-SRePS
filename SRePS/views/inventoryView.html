@@ -18,12 +18,16 @@
 			</form>
 			</div>
 		</div>
-		{{inventory.length}}
 		<div class="row panel-body">
-				<div class="pull-center">
-						<div class="col-xs-4 tile" data-ng-repeat="product in inventory">
-							<h4>{{product.name}}</h4>
-							<p class="primary qty text-right">{{product.qty}}</p>
+				<div>
+						<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory">
+							<h5 class="text-center">{{product.name}}</h5>
+							<img class="img-responsive" src="img/{{product.type}}.svg" alt="{{product.type}}">
+							<p class="text-right">
+								<span class="primary qty">
+									{{product.qty}}
+								</span>
+							</p>
 						</div>
 				</div>
 		</div>

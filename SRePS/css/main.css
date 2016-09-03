@@ -140,14 +140,11 @@ div.higher
 	background-blend-mode:multiply;
 }
 
-.modal-backdrop
-{
-	z-index: 0;
-}
+/* Modal */
 
-div.model
+.modal-dialog
 {
-	z-index: 500;
+	margin-top: 100px;
 }
 
 /* <Search> */
@@ -163,9 +160,6 @@ div.model
  -webkit-box-shadow:none; 
  border-color:#cccccc; 
 }
-.navbar-nav > li > a {
-  border-right: 1px solid #ddd;
-}
 .navbar-nav:last-child{ border-right:0}
 
 /* </Search> */
@@ -174,18 +168,14 @@ div.model
 {
 	display:inline-block;
 	margin: 2pt 2pt 2pt 2pt;
+	border-bottom-right-radius: 10px;
 	transform: scale(1);
 	z-index: 0;
 	cursor: pointer;
-	-webkit-box-shadow: 0px 0px 17px -1px rgba(0,0,0,0.2);
-	-moz-box-shadow: 0px 0px 17px -1px rgba(0,0,0,0.2);
-	box-shadow: 0px 0px 17px -1px rgba(0,0,0,0.2);
-	transition: background-color 1s ease,  box-shadow 1s, transform 1s ease, z-index 1s;
-}
-
-.qty
-{
-	font-size: 2em;
+	-webkit-box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.2);
+	box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.2);
+	transition: background-color 0.5s ease,  box-shadow 0.5s, transform 0.5s ease, z-index 0.5s;
 }
 
 .tile:hover
@@ -195,12 +185,28 @@ div.model
 	-webkit-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.5);
 	-moz-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.5);
 	box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.5);
-	transition:  box-shadow 1s, transform 1s ease, z-index 1s;
+	transition:  box-shadow 0.5s, transform 0.5s ease, z-index 0.5s;
 }
 
-body
+.qty
+{
+	font-size: 2em;
+	margin-bottom: 0px;
+}
+
+.offset
+{
+	height: 100px;
+}
+
+.tab-pane
+{
+	margin-top: 90px;
+}
+
+nav
 {
 	background-color: rgba(255, 255, 255, 0.69);
-	background-image: url("../img/greyzz.png");
+	background-image: url("../img/crossword.png");
 	background-repeat: repeat;
 }
