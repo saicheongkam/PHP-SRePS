@@ -53,7 +53,12 @@
 									<p>Price: $6.25</p>
 									<p>Reorder limit:</p>
 									<p>
-										<input class="slider-selection slider slider-horizontal" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
+										<div id="slider">
+											<input class="bar" type="range" id="rangeinput" value="50" onchange="rangevalue.value=value"/>
+											<span class="highlight"></span>
+											<output id="rangevalue">50</output>
+										</div>
+											<input class="slider-selection slider slider-horizontal" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
 									</p>
 								</div>
 								<div class="col-xs-8">
