@@ -44,79 +44,33 @@
 						</div>
 						<div class="modal-body row">
 							<div class="panel-body">
-								<div class="row">
-									<div class="col-xs-6 pull-left"><span>Approved by: <span class="label label-default">Jacob {{sale.staff}}</span></span></div>
-									<br>
-									<br>
-								</div>
-								
-								<div class="row">
-									<div class="col-xs-3">
-										<label for="batch_id">Batch</label>
-									</div>
-									<div class="col-xs-2">
-										<label for="shelf_no">Shelf No.</label>
-									</div>
-									<div class="col-xs-3">
-										<label for="qty">Qty.</label>
-									</div>
-									<div class="col-xs-4">
-										<label for="expiry">Expiry Date</label>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-3">
-										<input type="number" class="form-control" id="batch_id" min="1" data-ng-model="toAdd.batch_id">
-									</div>
-									<div class="col-xs-2">
-										<input type="number" class="form-control" id="shelf_no" min="1" data-ng-model="toAdd.shelf_no">
-									</div>
-									<div class="col-xs-3">
-										<input type="number" class="form-control" id="qty" min="1" data-ng-model="toAdd.qty">
-									</div>
-									<div class="col-xs-4">
-										<input type="date" class="form-control" id="expiry" data-ng-model="toAdd.expiry">
-									</div>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-xs-6">
-										<label for="manufacturer">Manufacturer</label>
-									</div>
-									<div class="col-xs-6">
+								<div class="row form-group">
+									<div class="col-xs-8">
 										<label for="product_name">Product</label>
+										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
+									</div>
+									<div class="col-xs-4">
+										<label for="type">Type</label>
+										<select class="form-control" id="type">
+											<option data-ng-repeat="type in types">{{type.name}}</option>
+										</select>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row form-group">
 									<div class="col-xs-6">
+										<label for="manufacturer">Supplier</label>
 										<input type="text" class="form-control" id="manufacturer" data-ng-model="toAdd.manufacturer">
 									</div>
 									<div class="col-xs-6">
+										<label for="product_name">Drug</label>
 										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
-									</div>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-xs-4">
-										<label for="category">Category</label>
-									</div>
-									<div class="col-xs-8">
-										<label for="desc">Description</label>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-4">
-										<input type="text" class="form-control" id="category" data-ng-model="toAdd.category">
-									</div>
-									<div class="col-xs-8">
-										<input type="text" class="form-control" id="desc" data-ng-model="toAdd.desc">
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button class="btn btn-success" data-ng-click="addItem(item); toAdd=null;">Confirm</button>
-							<button class="btn btn-danger" data-ng-click="close()">Cancel</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<button class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add</button>
 						</div>
 					</div>
 				</div>
