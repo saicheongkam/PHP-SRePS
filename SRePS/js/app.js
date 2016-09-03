@@ -88,17 +88,19 @@ app.controller('addSaleViewController',
 		}
 		$scope.finalise = function()
 		{
-			var toSend = { "SaleDate": $scope.date, 
+			var toSend = { "SaleDate":  $filter('date')($scope.date,'yyyy/MM/dd'),
 										 "Amount": $scope.calculateTotal(),
 										 "Paid": $scope.total_paid,
 										 "Change": $scope.change,
 										 "Staff_ID": 1,
-										 "Items": $scope.cart
-									 };
+										 "Items": $scope.cart};
 			console.log(toSend);
 			$scope.sending = true;
-			Database.addSale().success(function(result){
-				//$scope.sending = false;
+			Database.addSale(toSend).success(function (response) {
+					console.log(response);
+					$scope.sending = false;
+					$('#add-view').modal('hide');
+					return response;
 			});
 		}
 		
@@ -188,8 +190,8 @@ app.service('Database', function($http) {
 			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
 	
-	this.addSale = function (id) {
-			return $http.post("api/salesapi.php/sales/"+id);
+	this.addSale = function (toAdd) {
+			return $http.post("api/salesapi.php/sales/", toAdd, {headers: {'Content-Type': 'application/json'} });
 	};
 	
 	this.addProduct = function (batch_id) {
