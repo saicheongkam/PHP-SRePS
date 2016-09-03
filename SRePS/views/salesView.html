@@ -1,7 +1,7 @@
 <div class="row tab-pane">
 	<div class="col-xs-12 panel ">
 		<div class="row panel-heading">
-			<a href="#add" class="btn btn-primary animated headShake" role="button"> <span class="glyphicon glyphicon-plus-sign"></span> Add Sale</a>
+			<a href="#sale/add" class="btn btn-primary animated headShake" role="button"> <span class="glyphicon glyphicon-plus-sign"></span> Add Sale</a>
 			<div class="btn-group pull-right" data-toggle="buttons">
 					<label class="btn btn-default">
 							<input type="radio" name="day"> Daily
@@ -24,11 +24,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="sale in sales" onclick="getElementById('select-sale').click()" style="cursor: pointer">
+					<tr data-ng-repeat="sale in sales" data-ng-click="navigateTo(sale.id);" style="cursor: pointer">
 						<td>{{sale.id}}</td>
 						<td>{{sale.date | date:"MMM d - h:mma"}}</td>
-						<td class="text-right">${{sale.amount}}</td>
-						<td class="sr-only"><a href="#sales/{{sale.id}}" id="select-sale" class="sr-only">{{sale.id}}</a></td>
+						<td class="text-right">{{sale.amount | currency:'$'}}</td>
+						<td class="sr-only"><a href="#sales/{{sale.id}}" id="select-sale-{{sale.id}}" >{{sale.id}}</a></td>
 					</tr>
 				</tbody>
 			</table>
