@@ -139,14 +139,14 @@ WHERE s.Sale_ID=$id";
 	while($row=mysqli_fetch_assoc($result1))
 	{
 		$json[$row['Sale_ID']]['id']=$row['Sale_ID'];
--		$json[$row['Sale_ID']]['date']=$row['SaleDate'];
--		$json[$row['Sale_ID']]['staff']=$row['Name'];
--		$json[$row['Sale_ID']]['items'][]=array(
--			'batchID'=>$row['Batch_ID'],
--			'description'=>$row['Description'],
--			'quantitySold'=>$row['QuantitySold'],
--			'unitPrice'=>$row['UnitPrice']
--			);
+		$json[$row['Sale_ID']]['date']=$row['SaleDate'];
+		$json[$row['Sale_ID']]['staff']=$row['Name'];
+		$json[$row['Sale_ID']]['items'][]=array(
+			'batchID'=>$row['Batch_ID'],
+			'description'=>$row['Description'],
+			'quantitySold'=>$row['QuantitySold'],
+			'unitPrice'=>$row['UnitPrice']
+			);
 	}
 	
 	echo json_encode(array_values($json));
