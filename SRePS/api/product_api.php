@@ -121,10 +121,10 @@ if ($method=='GET' && isset($id) && $resrc=='batch')
 if ($method=='GET' && isset($id) && $resrc=='product')
 {
 	$id=intval($id);
-	$query="SELECT p.Description, p.UnitPrice, p.Reorderlevel, c.Description as Category
+	$query="SELECT p.Description, p.UnitPrice, p.Reorderlevel, c.Name as Drug
 	FROM Product p 
-	INNER JOIN Category c
-	ON p.Category_ID=c.Category_ID
+	INNER JOIN Drug c
+	ON p.Drug_ID=c.Drug_ID
 	WHERE p.Product_ID=$id";
 	
 	//run query
@@ -144,7 +144,7 @@ if ($method=='GET' && isset($id) && $resrc=='product')
 		$json['name']=$row['Description'];
 		$json['price']=$row['UnitPrice'];
 		$json['reOrderLevel']=$row['Reorderlevel'];
-		$json['category']=$row['Category'];
+		$json['drug']=$row['Drug'];
 	}
 
 	echo json_encode($json);
@@ -152,14 +152,14 @@ if ($method=='GET' && isset($id) && $resrc=='product')
 }
 
 //get all inventory
-if ($method=='GET' && $resrc=='product')
+if ($method=='GET' && $resrc=='product' && !isset($id))
 {
-
-	$query="SELECT p.product_id, p.description, p.Reorderlevel, p.Category_ID, SUM(Quantity) as quantity 
-	FROM product as p 
-	INNER JOIN batch as b 
-	ON p.product_id = b.product_id 
-	GROUP BY p.product_id";
+	
+	$query="SELECT p.Product_id, p.Description, p.Reorderlevel, p.Drug_ID, SUM(Quantity) as quantity 
+	FROM Product as p 
+	INNER JOIN Batch as b 
+	ON p.Product_id = b.Product_id 
+	GROUP BY p.Product_id";
 	
 	//run query
 	$result=mysqli_query($conn,$query);
@@ -181,10 +181,10 @@ if ($method=='GET' && $resrc=='product')
 	while($row=mysqli_fetch_assoc($result))
 	{
 		$json[]=array(
-			'id'=>$row['product_id'],
-			'name'=>$row['description'],
+			'id'=>$row['Product_id'],
+			'name'=>$row['Description'],
 			'reorderLevel'=>$row['Reorderlevel'],
-			'category'=>$row['Category_ID'],
+			'drug'=>$row['Drug_ID'],
 			'quantity'=>$row['quantity']
 			);
 	}
