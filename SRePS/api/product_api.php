@@ -29,7 +29,7 @@ if($resrc!='product' && $resrc!='batch' )
 
 if(isset($input))
 {
-	if($method='POST')
+	if($method=='POST' && $resrc=='product')
 	{
 		$set='';
 		$i=0;
@@ -84,7 +84,40 @@ if ($method=='GET' && isset($id) && $resrc=='batch')
 	echo json_encode($json);
 	
 }
- 
+
+//get a a single product based on id supplied
+if ($method=='GET' && isset($id) && $resrc=='product')
+{
+	$id=intval($id);
+	$query="SELECT p.Description, p.UnitPrice, p.Reorderlevel, c.Description as Category
+	FROM Product p 
+	INNER JOIN Category c
+	ON p.Category_ID=c.Category_ID
+	WHERE p.Product_ID=$id";
+	
+	//run query
+	$result=mysqli_query($conn,$query);
+	if (!$result) {
+  header('X-PHP-Response-Code: 404', true, 404);
+  die(mysqli_error($conn));
+}
+	
+	
+	//set return header 
+	header('Content-Type: application/json');
+	$json=array();
+	//generate json object from result
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$json['name']=$row['Description'];
+		$json['price']=$row['UnitPrice'];
+		$json['reOrderLevel']=$row['Reorderlevel'];
+		$json['category']=$row['Category'];
+	}
+
+	echo json_encode($json);
+	
+}
 	
 
 mysqli_close($conn);
