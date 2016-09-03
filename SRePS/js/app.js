@@ -96,11 +96,11 @@ app.controller('addSaleViewController',
 										 "Items": $scope.cart};
 			console.log(toSend);
 			$scope.sending = true;
-			Database.addSale(toSend).success(function (response) {
-					console.log(response);
-					$scope.sending = false;
-					$('#add-view').modal('hide');
-					return response;
+			Database.addSale(toSend).success(function(response){
+				alert(response);
+				$scope.sending = false;
+				$('#add-view').modal('hide');
+				return response;
 			});
 		}
 		
@@ -113,9 +113,32 @@ app.controller('addSaleViewController',
 	
 });
 
-app.controller('inventoryViewController', 
-	function($scope){
+app.controller('inventoryViewController', function($scope){
 		$scope.date = new Date();
+		$scope.inventory = [{"name":"Doxycycline",
+											 	"type": "syrup",
+											 	"category": "Antibiotic",
+											 	"price": "6.25",
+											 	"reorderLevel":"20",
+												"qty":"10",
+											 	"batch":[]
+											 },
+											 {"name":"Panadol",
+											 	"type": "tablets",
+											 	"category": "Antibiotic",
+											 	"price": "6.25",
+											 	"reorderLevel":"20",
+												"qty":"34",
+											 	"batch":[]
+											 },
+											 {"name":"Leaflox",
+											 	"type": "antibiotic",
+											 	"category": "Antibiotic",
+											 	"price": "6.25",
+											 	"reorderLevel":"20",
+												"qty":"56",
+											 	"batch":[]
+											 }];
 		
 		$scope.price = 6.25;
 		$scope.reorderLimit = 20;
