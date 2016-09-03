@@ -27,8 +27,38 @@ if($resrc!='product' && $resrc!='batch' )
 	die('Illegal Operation');
 }
 
+//PUT and POST
 if(isset($input))
 {
+	//Update a product given id
+	if($method=='PUT' && $resrc=='product' && isset($id))
+	{
+		$id=intval($id);
+		$set='';
+		$i=0;
+		$columnNames=array_keys($input);
+		
+		//create query to add product
+		foreach($columnNames as $columnName)
+		{
+			$set.=($i>0?',':'').$columnName.'=';
+			$set.=(is_numeric($input[$columnName])?$input[$columnName]:'"'.$input[$columnName].'"');
+			$i++;
+		}
+
+		$sql="UPDATE Product 
+		SET $set
+		WHERE Product_ID=$id";
+
+		//run query
+		$result=mysqli_query($conn,$sql);
+		if (!$result) {
+			header('X-PHP-Response-Code: 404', true, 404);
+			die(mysqli_error($conn));
+		}
+	}
+	
+	//add a new product
 	if($method=='POST' && $resrc=='product')
 	{
 		$set='';
@@ -51,6 +81,8 @@ if(isset($input))
 		}
 	}
 }
+
+//GET stuff
 
 //get all product data based on batch id
 if ($method=='GET' && isset($id) && $resrc=='batch')
@@ -117,6 +149,48 @@ if ($method=='GET' && isset($id) && $resrc=='product')
 
 	echo json_encode($json);
 	
+}
+
+//get all inventory
+if ($method=='GET' && $resrc=='product')
+{
+
+	$query="SELECT p.product_id, p.description, p.Reorderlevel, p.Category_ID, SUM(Quantity) as quantity 
+	FROM product as p 
+	INNER JOIN batch as b 
+	ON p.product_id = b.product_id 
+	GROUP BY p.product_id";
+	
+	//run query
+	$result=mysqli_query($conn,$query);
+
+	if (!$result) {
+  header('X-PHP-Response-Code: 404', true, 404);
+  die(mysqli_error($conn));
+}
+
+	
+
+		//set return header 
+
+	header('Content-Type: application/json');
+	$json=array();
+
+	//generate json object from result
+
+	while($row=mysqli_fetch_assoc($result))
+	{
+		$json[]=array(
+			'id'=>$row['product_id'],
+			'name'=>$row['description'],
+			'reorderLevel'=>$row['Reorderlevel'],
+			'category'=>$row['Category_ID'],
+			'quantity'=>$row['quantity']
+			);
+	}
+
+	echo json_encode($json);
+
 }
 	
 
