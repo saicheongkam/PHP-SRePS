@@ -1,22 +1,41 @@
 <div class="row tab-pane">
 	<div class="col-xs-12 panel ">
-		<div class="row panel-heading">
-			<a href="#addItem" class="btn btn-primary animated headShake" role="button"> <span class="glyphicon glyphicon-plus-sign"></span> Add Item</a>
-			<div class="btn-group pull-right" data-toggle="buttons">
-					<label class="btn btn-default">
-							<input type="radio" name="day"> Daily
-					</label>
-					<label class="btn btn-default">
-							<input type="radio" name="week"> Weekly
-					</label>
-					<label class="btn btn-default">
-							<input type="radio" name="month"> Monthly
-					</label>
+		<div class="row panel-heading" >
+			<!-- Toolbar -->
+			<div class="pull-left">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-item"><span class="glyphicon glyphicon-plus-sign"></span> Add Sale</button>
+				<button class="btn btn-default"><span class="glyphicon glyphicon-new-window"></span> Export</button>
+				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-alphabet"></span></button>
+				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-order-alt"></span></button>
 			</div>
-		</div>	
+			<div class="pull-right">
+				<form class="navbar-form" role="search">
+					<div class="input-group add-on">
+						<input class="form-control" placeholder="Search" name="srch-term" id="srch-term" type="text">
+						<div class="input-group-btn">
+							<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+						</div>
+					</div>
+			</form>
+			</div>
+		</div>
+		<!-- Tiles -->
+		<div class="row panel-body">
+				<div>
+					<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory">
+						<h5 class="text-center">{{product.name}}</h5>
+						<img class="img-responsive" src="img/{{product.type}}.svg" alt="{{product.type}}">
+						<p class="text-right">
+							<span class="primary qty">
+								{{product.qty}}
+							</span>
+						</p>
+					</div>
+				</div>
+		</div>
 		
-		<div class="container" data-ng-controller="inventoryModal">
-			<button class="btn btn-primary animated headShake" role="button" data-ng-click="open()">Add Item Test</button>
+		<!-- Modals -->
+		<div id="add-item" class="modal fade" role="dialog" class="container" data-ng-controller="inventoryModal">
 			<div data-modal="showModal" data-close="close()">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -24,7 +43,7 @@
 							<span>Add Item</span>
 							<span class="pull-right">Date: <strong>{{date  | date : "MMM d, y"}}</strong></span>
 						</div>
-						<div class="modal-body row">									
+						<div class="modal-body row">
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-xs-6 pull-left"><span>Approved by: <span class="label label-default">Jacob {{sale.staff}}</span></span></div>
@@ -62,7 +81,6 @@
 								</div>
 								<hr>
 								<div class="row">
-									
 									<div class="col-xs-6">
 										<label for="manufacturer">Manufacturer</label>
 									</div>
@@ -95,8 +113,6 @@
 										<input type="text" class="form-control" id="desc" data-ng-model="toAdd.desc">
 									</div>
 								</div>
-								
-								
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -109,12 +125,11 @@
 		</div>
 
 		<div class="container" data-ng-controller="inventoryModal">
-			<button class="btn btn-primary animated headShake" role="button" data-ng-click="open()">Inspect Item Test</button>
 			<div data-modal="showModal" data-close="close()">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header model-primary">
-							<h1 class="text-center">Actavis Doxycycline Capsules</h1>
+							<span>Actavis Doxycycline Capsules</span>
 						</div>
 						<div class="modal-body row">
 							<div class="col-xs-4">
@@ -133,7 +148,6 @@
 								<div data-ng-show="editLimit">
 									<input class="bar" type="range" max="999999" data-ng-model="reorderLimit" data-ng-blur="editLimit = false">
 								</div>
-								
 							</div>
 							<div class="col-xs-8">
 								<table class="table">
