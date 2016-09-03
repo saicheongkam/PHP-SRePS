@@ -21,16 +21,39 @@ $resrc = preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
 //extract id if exist with uri
 $id=preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
 
-if($resrc!='batch')
+if($resrc!='product' && $resrc!='batch' )
 {
 	header('X-PHP-Response-Code: 403', true, 403);
 	die('Illegal Operation');
 }
 
+if(isset($input))
+{
+	if($method='POST')
+	{
+		$set='';
+		$i=0;
+		$columnNames=array_keys($input);
+		//create query to add product
+		foreach($columnNames as $columnName)
+		{
+			$set.=($i>0?',':'').$columnName.'=';
+			$set.=(is_numeric($input[$columnName])?$input[$columnName]:'"'.$input[$columnName].'"');
+			$i++;
+		}
+		
+		$sql="INSERT INTO Product SET $set";
+		//run query
+		$result=mysqli_query($conn,$sql);
+		if (!$result) {
+			header('X-PHP-Response-Code: 404', true, 404);
+			die(mysqli_error($conn));
+		}
+	}
+}
 
-
-//get all sales data
-if ($method == 'GET' && isset($id))
+//get all product data based on batch id
+if ($method=='GET' && isset($id) && $resrc=='batch')
 {
 	$id=intval($id);
 	$query="SELECT p.Description, p.UnitPrice
