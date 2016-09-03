@@ -155,17 +155,7 @@ app.controller('addItemViewController', function($scope, Database){
 		};
 });
 
-app.controller('inventoryModal', function($scope) {
-	$scope.showModal = false;
-	$scope.open = function() {
-		$scope.showModal = true;
-	};
-	$scope.close = function() {
-		$scope.showModal = false;
-	};
-	$scope.save = function(){
-	
-	};
+app.controller('viewItemViewController', function($scope) {
 });
 
 // Data factory

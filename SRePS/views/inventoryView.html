@@ -3,7 +3,7 @@
 		<div class="row panel-heading" >
 			<!-- Toolbar -->
 			<div class="pull-left">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-item"><span class="glyphicon glyphicon-plus-sign"></span> Add Sale</button>
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-item"><span class="glyphicon glyphicon-plus-sign"></span> Add Item</button>
 				<button class="btn btn-default"><span class="glyphicon glyphicon-new-window"></span> Export</button>
 				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-alphabet"></span></button>
 				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-order-alt"></span></button>
@@ -146,41 +146,33 @@
 								<label>Reorder limit:</label><span> {{reorderLimit}}</span>
 								<span class="glyphicon glyphicon-pencil" data-ng-hide="editLimit" data-ng-click="editLimit = true"  style="cursor: pointer"></span>
 								<div data-ng-show="editLimit">
-									<input class="bar" type="range" max="999999" data-ng-model="reorderLimit" data-ng-blur="editLimit = false">
+									<input class="bar" type="range" min="1" max="100" data-ng-model="reorderLimit" data-ng-blur="editLimit = false">
 								</div>
 							</div>
 							<div class="col-xs-8">
-								<table class="table">
+								<table class="table table-striped">
 									<thead>
 										<tr>
-											<th>Details</th>
-											<th></th>
+											<th>Batch ID</th>
+											<th>Expiry Date</th>
+											<th>Shelf No.</th>
+											<th>Qty.</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-											<td>Batch ID</td>
 											<td>1</td>
-										</tr>
-										<tr>
-											<td>Expiry Date</td>
 											<td>{{date | date : "MMM d, yyyy"}}</td>
-										</tr>
-										<tr>
-											<td>Shelf No.</td>
-											<td>1</td>
-										</tr>
-										<tr>
-											<td>Qty.</td>
-											<td>47</td>
+											<td>2</td>
+											<td>21</td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button class="btn btn-success" data-ng-click="save(); close()">Save Changes</button>
-							<button class="btn btn-danger" data-ng-click="close()">Close</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<button class="btn btn-primary"><span class="glyphicon glyphicon-ok-circle"></span> Save</button>
 						</div>
 					</div>
 				</div>
