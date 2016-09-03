@@ -122,8 +122,10 @@ if ($method=='GET' && $id && $resrc=='batch')
 if ($method=='GET' && $id && $resrc=='product')
 {
 	$id=intval($id);
-	$query="SELECT p.Description, p.UnitPrice, p.Reorderlevel, c.Name as Drug
+	$query="SELECT p.Description, p.UnitPrice, p.Reorderlevel, c.Name as Drug, t.Name as Type
 	FROM Product p 
+	INNER JOIN Type t
+	ON p.Type_ID=p.Type_ID
 	INNER JOIN Drug c
 	ON p.Drug_ID=c.Drug_ID
 	WHERE p.Product_ID=$id";
@@ -146,6 +148,7 @@ if ($method=='GET' && $id && $resrc=='product')
 		$json['price']=$row['UnitPrice'];
 		$json['reOrderLevel']=$row['Reorderlevel'];
 		$json['drug']=$row['Drug'];
+		$json['type']=$row['Type'];
 	}
 
 	echo json_encode($json);
@@ -156,8 +159,10 @@ if ($method=='GET' && $id && $resrc=='product')
 if ($method=='GET' && $resrc=='product' && !$id)
 {
 	
-	$query="SELECT p.Product_id, p.Description, p.Reorderlevel, p.Drug_ID, SUM(Quantity) as quantity 
+	$query="SELECT p.Product_id, p.Description, p.Reorderlevel, p.Drug_ID, SUM(Quantity) as quantity, t.Name as Type 
 	FROM Product as p 
+	INNER JOIN Type t
+	ON p.Type_ID=t.Type_ID
 	INNER JOIN Batch as b 
 	ON p.Product_id = b.Product_id 
 	GROUP BY p.Product_id";
@@ -185,7 +190,8 @@ if ($method=='GET' && $resrc=='product' && !$id)
 			'name'=>$row['Description'],
 			'reorderLevel'=>$row['Reorderlevel'],
 			'drug'=>$row['Drug_ID'],
-			'quantity'=>$row['quantity']
+			'quantity'=>$row['quantity'],
+			'type'=>$row['Type']
 			);
 	}
 	
