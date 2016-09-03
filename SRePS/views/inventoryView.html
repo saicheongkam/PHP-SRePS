@@ -18,15 +18,15 @@
 			</form>
 			</div>
 		</div>
+		{{inventory.length}}
 		<div class="row panel-body">
-			<div class="container dynamicTile">
-				<div class="row">
-						<div class="col-xs-4 tile">
-								
+				<div class="pull-center">
+						<div class="col-xs-4 tile" data-ng-repeat="product in inventory">
+							<h4>{{product.name}}</h4>
+							<p class="primary qty text-right">{{product.qty}}</p>
 						</div>
 				</div>
 		</div>
-		
 		<div class="container">
 			<div data-ng-controller="myModalCtrl">
 				<div data-modal="showModal" data-close="close()">

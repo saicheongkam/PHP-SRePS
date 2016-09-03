@@ -111,15 +111,17 @@ app.controller('addSaleViewController',
 	
 });
 
-app.controller('inventoryViewController', 
-	function($scope){
+app.controller('inventoryViewController', function($scope){
 		$scope.date = new Date();
-	
-	var slider = new Slider('#ex1', {
-	formatter: function(value) {
-		return 'Current value: ' + value;
-	}
-});
+		$scope.inventory = [{"name":"Doxycycline",
+											 	"type": "Bacterial",
+											 	"category": "Antibiotic",
+											 	"price": "6.25",
+											 	"reorderLevel":"20",
+												"qty":"0",
+											 	"batch":[]
+											 }];
+		
 		
 });
 
