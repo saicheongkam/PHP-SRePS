@@ -210,3 +210,15 @@ nav
 	background-image: url("../img/crossword.png");
 	background-repeat: repeat;
 }
+
+/* animation */
+.wrapper {
+  position: relative;
+  height: 120px;
+}
+
+.reveal-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
