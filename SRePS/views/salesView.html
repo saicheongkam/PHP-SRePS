@@ -107,14 +107,14 @@
 							<td colspan="5"></td>
 							<td colspan="2" class-="pull-right">
 								<label for="total_paid">Total Paid:</label>
-								<input type="text" class="form-control" id="total_paid" data-ng-model="total_paid" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 2500, 'blur': 0 }}" data-ng-change="change = ((total_paid - calculateTotal()) | currency:'$') ; total_paid=(total_paid | currency:'$'); " tabindex="3"/>
+								<input type="text" class="form-control" id="total_paid" data-ng-model="total_paid" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 2500, 'blur': 0 }}" data-ng-change="change = ((total_paid - calculateTotal())) ;  " tabindex="3"/>
 							</td>
 						</tr>
 						<tr class="animated flipInX" data-ng-hide="total_paid==0 || total_paid==null">
 							<td colspan="5"></td>
 							<td colspan="2" class-="pull-right">
 								<label for="total_paid">Change:</label>
-								<input type="text" class="form-control" id="total_paid" data-ng-model="change;" data-ng-change="total_paid=(total_paid | currency:'$')" tabindex="-1" readonly/>
+								<input type="text" class="form-control" id="total_paid" data-ng-model="change;" tabindex="-1" readonly/>
 							</td>
 						</tr>
 					</tfoot>
