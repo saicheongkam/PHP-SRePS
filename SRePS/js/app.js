@@ -88,18 +88,19 @@ app.controller('addSaleViewController',
 		}
 		$scope.finalise = function()
 		{
-			var toSend = { "SaleDate": $scope.date, 
+			var toSend = { "SaleDate":  $filter('date')($scope.date,'yyyy/MM/dd'),
 										 "Amount": $scope.calculateTotal(),
 										 "Paid": $scope.total_paid,
 										 "Change": $scope.change,
 										 "Staff_ID": 1,
-										 "Items": $scope.cart
-									 };
+										 "Items": $scope.cart};
 			console.log(toSend);
 			$scope.sending = true;
-			Database.addSale().success(function(result){
-				alert(result);
+			Database.addSale(toSend).success(function(response){
+				alert(response);
 				$scope.sending = false;
+				$('#add-view').modal('hide');
+				return response;
 			});
 		}
 		
@@ -139,24 +140,32 @@ app.controller('inventoryViewController', function($scope){
 											 	"batch":[]
 											 }];
 		
-		
+		$scope.price = 6.25;
+		$scope.reorderLimit = 20;
+	
+		$scope.editPrice = false;
+	
+		$scope.editLimit = false;
 });
 
 app.controller('addItemViewController', 
 	function($scope, Database){
 		$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
 		$scope.addItem = function(toAdd){
-			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc,"qty":toAdd.qty});
+			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
 		};
 });
 
-app.controller("myModalCtrl", function($scope) {
+app.controller('inventoryModal', function($scope) {
 	$scope.showModal = false;
 	$scope.open = function() {	
 		$scope.showModal = true;	
 	};
 	$scope.close = function() {
 		$scope.showModal = false;
+	};
+	$scope.save = function(){
+	
 	};
 });
 
@@ -204,8 +213,8 @@ app.service('Database', function($http) {
 			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
 	
-	this.addSale = function (id) {
-			return $http.post("api/salesapi.php/sales/"+id);
+	this.addSale = function (toAdd) {
+			return $http.post("api/salesapi.php/sales/", toAdd, {headers: {'Content-Type': 'application/json'} });
 	};
 	
 	this.addProduct = function (batch_id) {
