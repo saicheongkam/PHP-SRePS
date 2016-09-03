@@ -4,7 +4,7 @@ var app = angular.module("myApp", ['ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
 		$routeProvider
 			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
-			.when('/sales/:salesid', { templateUrl: 'views/detailedView.html', controller: 'detailedViewController'})
+			.when('/sales/:salesid', { templateUrl: 'views/detailedSaleView.html', controller: 'detailedSaleViewController'})
 			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
@@ -24,20 +24,21 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 		
 });
 
-app.controller('detailedViewController', function($scope,$routeParams, $filter, Database){
+app.controller('detailedSaleViewController', function($scope,$routeParams, $filter, Database){
 	
 		$scope.calculateTotal = function(sales){
 			var sum = 0;
 			sales.items.forEach(function(item){
-					sum += parseFloat(item.unitprice) *parseInt(item.qty);
+					sum += parseFloat(item.unitPrice) *parseInt(item.quantitySold);
 			});
 			return sum;
 		}
 		
 		$scope.sale_id = $routeParams.salesid;
-	
+		
 		Database.getSale($scope.sale_id).success(function(result){
-				$scope.sale = results;
+				console.log(result);
+				$scope.sale = result[0];
 				$scope.sum = $scope.calculateTotal($scope.sale);
 		});
 		
