@@ -51,6 +51,8 @@ if($method=='POST' && isset($input))
 	
 	if(!$result)
 	{
+		header('Content-Type: application/json');
+	echo json_encode(array("error"=>"Query Failed","description"=>"Failed to Add Sale to Database"));
 		die(mysqli_error($conn));
 	}
 	
@@ -70,6 +72,10 @@ if($method=='POST' && isset($input))
 		die(mysqli_error($conn));
 	}
 	}
+	
+	//respond with status of query
+	header('Content-Type: application/json');
+	echo json_encode(array("success"=>"1"));
 
 }
 //get all sales data
@@ -85,6 +91,8 @@ ORDER BY s.Sale_ID";
 	//run query
 	$result1=mysqli_query($conn,$query1);
 	if (!$result1) {
+		header('Content-Type: application/json');
+	echo json_encode(array("error"=>"Query Failed","description"=>"Failed to get sales fro database"));
   header('X-PHP-Response-Code: 404', true, 404);
   die(mysqli_error($conn));
 }
@@ -100,7 +108,7 @@ ORDER BY s.Sale_ID";
 		$json[$row['Sale_ID']]['date']=$row['SaleDate'];
 		$json[$row['Sale_ID']]['amount']=$row['Amount'];
 	}
-
+	
 	echo json_encode(array_values($json));
 	
 }
