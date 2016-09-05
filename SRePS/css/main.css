@@ -210,3 +210,31 @@ nav
 	background-image: url("../img/crossword.png");
 	background-repeat: repeat;
 }
+
+.nav-tabs {
+	border-bottom: 1px transparent solid;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+{
+	border-bottom-color: transparent;
+	-webkit-box-shadow: 0px 0px 5px -1px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 0px 5px -1px rgba(0,0,0,0.2);
+	box-shadow: 0px 0px 5px -1px rgba(0,0,0,0.2);
+}
+
+.navbar-fixed-top
+{
+}
+
+/* animation */
+.wrapper {
+  position: relative;
+  height: 120px;
+}
+
+.reveal-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

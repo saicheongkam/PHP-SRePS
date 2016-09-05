@@ -51,6 +51,8 @@ if($method=='POST' && isset($input))
 	
 	if(!$result)
 	{
+		header('Content-Type: application/json');
+	echo json_encode(array("error"=>"Query Failed","description"=>"Failed to Add Sale to Database"));
 		die(mysqli_error($conn));
 	}
 	
@@ -70,10 +72,14 @@ if($method=='POST' && isset($input))
 		die(mysqli_error($conn));
 	}
 	}
+	
+	//respond with status of query
+	header('Content-Type: application/json');
+	echo json_encode(array("success"=>"1"));
 
 }
 //get all sales data
-if ($method == 'GET')
+if ($method == 'GET' && !$id)
 {
 	$query1="SELECT s.Sale_ID, s.SaleDate, s.Amount
 FROM Sales s
@@ -85,6 +91,8 @@ ORDER BY s.Sale_ID";
 	//run query
 	$result1=mysqli_query($conn,$query1);
 	if (!$result1) {
+		header('Content-Type: application/json');
+	echo json_encode(array("error"=>"Query Failed","description"=>"Failed to get sales fro database"));
   header('X-PHP-Response-Code: 404', true, 404);
   die(mysqli_error($conn));
 }
@@ -100,10 +108,51 @@ ORDER BY s.Sale_ID";
 		$json[$row['Sale_ID']]['date']=$row['SaleDate'];
 		$json[$row['Sale_ID']]['amount']=$row['Amount'];
 	}
-
+	
 	echo json_encode(array_values($json));
 	
 }
+
+if ($method == 'GET' && $id)
+{
+	$query1="SELECT s.Sale_ID, s.SaleDate, s.Amount, staff.Name, si.Batch_ID, si.QuantitySold, p.Description, p.UnitPrice
+FROM Sales s
+INNER JOIN Staff staff ON s.Staff_ID = staff.Staff_ID
+INNER JOIN SalesItem si ON s.Sale_ID = si.Sale_ID
+INNER JOIN Batch b ON si.Batch_ID = b.Batch_ID
+INNER JOIN Product p ON b.Product_ID = p.Product_ID
+WHERE s.Sale_ID=$id";
+	//run query
+	$result1=mysqli_query($conn,$query1);
+	if (!$result1) {
+		header('Content-Type: application/json');
+	echo json_encode(array("error"=>"Query Failed","description"=>"Failed to get sale fro database"));
+  header('X-PHP-Response-Code: 404', true, 404);
+  die(mysqli_error($conn));
+}
+	
+	
+	//set return header 
+	header('Content-Type: application/json');
+	$json=array();
+	//generate json object from result
+	while($row=mysqli_fetch_assoc($result1))
+	{
+		$json[$row['Sale_ID']]['id']=$row['Sale_ID'];
+		$json[$row['Sale_ID']]['date']=$row['SaleDate'];
+		$json[$row['Sale_ID']]['staff']=$row['Name'];
+		$json[$row['Sale_ID']]['items'][]=array(
+			'batchID'=>$row['Batch_ID'],
+			'description'=>$row['Description'],
+			'quantitySold'=>$row['QuantitySold'],
+			'unitPrice'=>$row['UnitPrice']
+			);
+	}
+	
+	echo json_encode(array_values($json));
+	
+}
+
  
 	
 

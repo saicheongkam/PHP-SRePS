@@ -6,7 +6,7 @@
 				<li>Invoice Details</li>
 			</ol>
 			<p>
-				<h4>Invoice # {{sale_id}}</h4>
+				<h4>Invoice # {{sale.id}}</h4>
 				<span>Approved by: <span class="label label-primary">{{sale.staff}}</span></span>
 				<span class="pull-right label label-default">{{sale.date | date : "MMM d, y h:mm:ss a"}}</span>
 			</p>
@@ -23,10 +23,10 @@
 				<tbody>
 					<tr class="animated flipInX" data-ng-repeat="item in sale.items">
 						<td>{{$index+1}}</td>
-						<td>{{item.product }}</td>
-						<td>${{item.unitprice }}</td>
-						<td>{{item.qty }}</td>
-						<td class="text-right sum">{{(item.unitprice*item.qty) | currency:"$"}}</td>
+						<td>{{item.description }}</td>
+						<td>${{item.unitPrice }}</td>
+						<td>{{item.quantitySold }}</td>
+						<td class="text-right sum">{{(item.unitPrice*item.quantitySold) | currency:"$"}}</td>
 					</tr>
 				</tbody>
 				<tfoot >
