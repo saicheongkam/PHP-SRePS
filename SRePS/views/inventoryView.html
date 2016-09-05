@@ -3,7 +3,7 @@
 		<div class="row panel-heading" >
 			<!-- Toolbar -->
 			<div class="pull-left">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-item"><span class="glyphicon glyphicon-plus-sign"></span> Add Sale</button>
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-item"><span class="glyphicon glyphicon-plus-sign"></span> Add Item</button>
 				<button class="btn btn-default"><span class="glyphicon glyphicon-new-window"></span> Export</button>
 				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-alphabet"></span></button>
 				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-order-alt"></span></button>
@@ -22,109 +22,63 @@
 		<!-- Tiles -->
 		<div class="row panel-body">
 				<div>
-					<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory">
+					<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory" data-toggle="modal" data-target="#view-item">
 						<h5 class="text-center">{{product.name}}</h5>
 						<img class="img-responsive" src="img/{{product.type}}.svg" alt="{{product.type}}">
 						<p class="text-right">
 							<span class="primary qty">
-								{{product.qty}}
+								{{product.quantity}}
 							</span>
 						</p>
 					</div>
 				</div>
 		</div>
 		
-		<!-- Modals -->
-		<div id="add-item" class="modal fade" role="dialog" class="container" data-ng-controller="inventoryModal">
+		<!-- Add-Item Modal -->
+		<div id="add-item" class="modal fade" role="dialog" class="container" data-ng-controller="addItemViewController">
 			<div data-modal="showModal" data-close="close()">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header model-primary">
 							<span>Add Item</span>
-							<span class="pull-right">Date: <strong>{{date  | date : "MMM d, y"}}</strong></span>
 						</div>
 						<div class="modal-body row">
 							<div class="panel-body">
-								<div class="row">
-									<div class="col-xs-6 pull-left"><span>Approved by: <span class="label label-default">Jacob {{sale.staff}}</span></span></div>
-									<br>
-									<br>
-								</div>
-								
-								<div class="row">
-									<div class="col-xs-3">
-										<label for="batch_id">Batch</label>
-									</div>
-									<div class="col-xs-2">
-										<label for="shelf_no">Shelf No.</label>
-									</div>
-									<div class="col-xs-3">
-										<label for="qty">Qty.</label>
-									</div>
-									<div class="col-xs-4">
-										<label for="expiry">Expiry Date</label>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-3">
-										<input type="number" class="form-control" id="batch_id" min="1" data-ng-model="toAdd.batch_id">
-									</div>
-									<div class="col-xs-2">
-										<input type="number" class="form-control" id="shelf_no" min="1" data-ng-model="toAdd.shelf_no">
-									</div>
-									<div class="col-xs-3">
-										<input type="number" class="form-control" id="qty" min="1" data-ng-model="toAdd.qty">
-									</div>
-									<div class="col-xs-4">
-										<input type="date" class="form-control" id="expiry" data-ng-model="toAdd.expiry">
-									</div>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-xs-6">
-										<label for="manufacturer">Manufacturer</label>
-									</div>
-									<div class="col-xs-6">
+								<div class="row form-group">
+									<div class="col-xs-8">
 										<label for="product_name">Product</label>
+										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
+									</div>
+									<div class="col-xs-4">
+										<label for="type">Type</label>
+										<select class="form-control" id="type">
+											<option data-ng-repeat="type in types">{{type.name}}</option>
+										</select>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row form-group">
 									<div class="col-xs-6">
+										<label for="manufacturer">Supplier</label>
 										<input type="text" class="form-control" id="manufacturer" data-ng-model="toAdd.manufacturer">
 									</div>
 									<div class="col-xs-6">
+										<label for="product_name">Drug</label>
 										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
-									</div>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-xs-4">
-										<label for="category">Category</label>
-									</div>
-									<div class="col-xs-8">
-										<label for="desc">Description</label>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-4">
-										<input type="text" class="form-control" id="category" data-ng-model="toAdd.category">
-									</div>
-									<div class="col-xs-8">
-										<input type="text" class="form-control" id="desc" data-ng-model="toAdd.desc">
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button class="btn btn-success" data-ng-click="addItem(item); toAdd=null;">Confirm</button>
-							<button class="btn btn-danger" data-ng-click="close()">Cancel</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<button class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="container" data-ng-controller="inventoryModal">
+		<!-- View-Item Modal -->
+		<div id="view-item" class="modal fade" role="dialog" class="container" data-ng-controller="viewItemViewController">
 			<div data-modal="showModal" data-close="close()">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -146,41 +100,33 @@
 								<label>Reorder limit:</label><span> {{reorderLimit}}</span>
 								<span class="glyphicon glyphicon-pencil" data-ng-hide="editLimit" data-ng-click="editLimit = true"  style="cursor: pointer"></span>
 								<div data-ng-show="editLimit">
-									<input class="bar" type="range" max="999999" data-ng-model="reorderLimit" data-ng-blur="editLimit = false">
+									<input class="bar" type="range" min="1" max="100" data-ng-model="reorderLimit" data-ng-blur="editLimit = false">
 								</div>
 							</div>
 							<div class="col-xs-8">
-								<table class="table">
+								<table class="table table-striped">
 									<thead>
 										<tr>
-											<th>Details</th>
-											<th></th>
+											<th>Batch ID</th>
+											<th>Expiry Date</th>
+											<th>Shelf No.</th>
+											<th>Qty.</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-											<td>Batch ID</td>
 											<td>1</td>
-										</tr>
-										<tr>
-											<td>Expiry Date</td>
 											<td>{{date | date : "MMM d, yyyy"}}</td>
-										</tr>
-										<tr>
-											<td>Shelf No.</td>
-											<td>1</td>
-										</tr>
-										<tr>
-											<td>Qty.</td>
-											<td>47</td>
+											<td>2</td>
+											<td>21</td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button class="btn btn-success" data-ng-click="save(); close()">Save Changes</button>
-							<button class="btn btn-danger" data-ng-click="close()">Close</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<button class="btn btn-primary"><span class="glyphicon glyphicon-ok-circle"></span> Save</button>
 						</div>
 					</div>
 				</div>

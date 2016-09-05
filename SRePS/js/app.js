@@ -1,11 +1,10 @@
-var app = angular.module("myApp", ['ngRoute']);
+var app = angular.module("myApp", ['ngRoute','ngAnimate']);
 
 // Route configarations
-app.config(
-	['$routeProvider', function($routeProvider) {
+app.config(['$routeProvider', function($routeProvider) {
 		$routeProvider
 			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
-			.when('/sales/:salesid', { templateUrl: 'views/detailedView.html', controller: 'detailedViewController'})
+			.when('/sales/:salesid', { templateUrl: 'views/detailedSaleView.html', controller: 'detailedSaleViewController'})
 			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
@@ -15,8 +14,7 @@ app.config(
 
 // Controllers
 
-app.controller('salesViewController', 
-	function($scope, $filter, $window, Database){
+app.controller('salesViewController', function($scope, $filter, $window, Database){
 		$scope.navigateTo = function(sale_id) {
 			document.getElementById('select-sale-'+sale_id).click();
 		};
@@ -26,28 +24,27 @@ app.controller('salesViewController',
 		
 });
 
-app.controller('detailedViewController', 
-	function($scope,$routeParams, $filter, Database){
+app.controller('detailedSaleViewController', function($scope,$routeParams, $filter, Database){
 	
 		$scope.calculateTotal = function(sales){
 			var sum = 0;
 			sales.items.forEach(function(item){
-					sum += parseFloat(item.unitprice) *parseInt(item.qty);
+					sum += parseFloat(item.unitPrice) *parseInt(item.quantitySold);
 			});
 			return sum;
 		}
 		
 		$scope.sale_id = $routeParams.salesid;
-	
+		
 		Database.getSale($scope.sale_id).success(function(result){
-				$scope.sale = results;
+				console.log(result);
+				$scope.sale = result[0];
 				$scope.sum = $scope.calculateTotal($scope.sale);
 		});
 		
 });
 
-app.controller('addSaleViewController', 
-	function($scope, $filter, Database){
+app.controller('addSaleViewController', function($scope, $filter, Database){
 		$scope.calculateTotal = function(){
 			var total = 0;
 			$scope.cart.forEach(function(item){
@@ -113,60 +110,25 @@ app.controller('addSaleViewController',
 	
 });
 
-app.controller('inventoryViewController', function($scope){
-		$scope.date = new Date();
-		$scope.inventory = [{"name":"Doxycycline",
-											 	"type": "syrup",
-											 	"category": "Antibiotic",
-											 	"price": "6.25",
-											 	"reorderLevel":"20",
-												"qty":"10",
-											 	"batch":[]
-											 },
-											 {"name":"Panadol",
-											 	"type": "tablets",
-											 	"category": "Antibiotic",
-											 	"price": "6.25",
-											 	"reorderLevel":"20",
-												"qty":"34",
-											 	"batch":[]
-											 },
-											 {"name":"Leaflox",
-											 	"type": "antibiotic",
-											 	"category": "Antibiotic",
-											 	"price": "6.25",
-											 	"reorderLevel":"20",
-												"qty":"56",
-											 	"batch":[]
-											 }];
-		
-		$scope.price = 6.25;
-		$scope.reorderLimit = 20;
-	
-		$scope.editPrice = false;
-	
-		$scope.editLimit = false;
+app.controller('inventoryViewController', function($scope, Database){
+		$scope.types = []
+		Database.getInventory().success(function(result){
+				$scope.inventory = result;
+		});
 });
 
-app.controller('addItemViewController', 
-	function($scope, Database){
+app.controller('addItemViewController', function($scope, Database){
 		$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
 		$scope.addItem = function(toAdd){
 			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
 		};
 });
 
-app.controller('inventoryModal', function($scope) {
-	$scope.showModal = false;
-	$scope.open = function() {	
-		$scope.showModal = true;	
-	};
-	$scope.close = function() {
-		$scope.showModal = false;
-	};
-	$scope.save = function(){
-	
-	};
+app.controller('viewItemViewController', function($scope) {
+		$scope.price = 6.25;
+		$scope.reorderLimit = 20;
+		$scope.editPrice = false;
+		$scope.editLimit = false;
 });
 
 // Data factory
@@ -183,26 +145,12 @@ app.factory("Data",
 
 // Services
 app.service('Database', function($http) {
-	var sales = [{
-				"id":100302, 
-				"date": new Date(),
-				"amount":"135.00",
-				"paid":"150.00",
-				"change":"50.00",
-				"items":[
-					{"batch_id":"1","product":"Doxycycline","qty":"2", "unitprice":"12.50"},
-					{"batch_id":"2","product":"Cyclobenzaprine","qty":"1","unitprice":"12.50"},
-					{"batch_id":"3","product":"Stemis","qty":"6","unitprice":"12.50"},
-					{"batch_id":"4","product":"Zoloft","qty":"1","unitprice":"12.50"}],
-				"staff":"James Bardock"
-			}];
-	
 	this.getSales = function () {
 		return $http.get("api/salesapi.php/sales")
 	};
 	
-	this.getProducts = function (batch_id) {
-			return $http.get("api/product_api.php/batch/");
+	this.getInventory= function () {
+			return $http.get("api/product_api.php/product/");
 	};
 	
 	this.getSale = function (id) {
@@ -271,3 +219,23 @@ app.directive('formatOnBlur', function ($filter, $window) {
 				}
 		};
 });
+
+// Animations 
+
+app.animation('.reveal-animation', function() {
+	return {
+		enter: function(element, done) {
+			element.css('display', 'none');
+			element.fadeIn(250, done);
+			return function() {
+				element.stop();
+			}
+		},
+		leave: function(element, done) {
+			element.fadeOut(250, done)
+			return function() {
+				element.stop();
+			}
+		}
+	}
+	});

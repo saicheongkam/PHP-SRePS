@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: mysql.ict.swin.edu.au:3306
--- Generation Time: Aug 30, 2016 at 05:25 PM
+-- Generation Time: Sep 03, 2016 at 06:23 PM
 -- Server version: 5.1.73
 -- PHP Version: 5.3.3
 
@@ -17,10 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `s100669579_db`
+-- Database: `php`
 --
-CREATE DATABASE `s100669579_db` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `s100669579_db`;
+CREATE DATABASE `php` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `php`;
 
 -- --------------------------------------------------------
 
@@ -57,14 +57,30 @@ INSERT INTO `Batch` (`Batch_ID`, `Product_ID`, `Quantity`, `ExpiryDate`, `Shelf`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Category`
+-- Table structure for table `Drug`
 --
 
-CREATE TABLE IF NOT EXISTS `Category` (
-  `Category_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `Description` varchar(50) NOT NULL,
-  PRIMARY KEY (`Category_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `Drug` (
+  `Drug_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL,
+  PRIMARY KEY (`Drug_ID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `Drug`
+--
+
+INSERT INTO `Drug` (`Drug_ID`, `Name`) VALUES
+(1, 'Stimulant'),
+(2, 'Hallucinogan'),
+(3, 'Anesthatic'),
+(4, 'Inhalants'),
+(5, 'Analgesics'),
+(6, 'Cannabis'),
+(7, 'Aminopenicillins'),
+(8, 'Antibiotics'),
+(9, 'antiandrogens'),
+(10, 'Antineoplastics');
 
 -- --------------------------------------------------------
 
@@ -75,29 +91,36 @@ CREATE TABLE IF NOT EXISTS `Category` (
 CREATE TABLE IF NOT EXISTS `Product` (
   `Product_ID` int(11) NOT NULL AUTO_INCREMENT,
   `Description` varchar(40) NOT NULL,
-  `ReorderLevel` int(11) NOT NULL,
+  `ReorderLevel` int(11) DEFAULT NULL,
   `Supplier` varchar(15) NOT NULL,
   `UnitPrice` decimal(15,2) NOT NULL,
-  `Category_ID` int(11) NOT NULL,
+  `Drug_ID` int(11) NOT NULL,
+  `Type_ID` int(11) NOT NULL,
   PRIMARY KEY (`Product_ID`),
-  KEY `Category_ID` (`Category_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+  KEY `fk_type_id` (`Type_ID`),
+  KEY `fk_Drug_ID` (`Drug_ID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `Product`
 --
 
-INSERT INTO `Product` (`Product_ID`, `Description`, `ReorderLevel`, `Supplier`, `UnitPrice`, `Category_ID`) VALUES
-(1, 'Cymbalta', 24, 'Consectetuer In', '182.00', 7),
-(2, 'Doxycycline', 16, 'Consectetuer Eu', '174.00', 7),
-(3, 'Metoprolol', 22, 'Enim Gravida As', '187.00', 5),
-(4, 'Xanax', 25, 'Suspendisse Tri', '179.00', 8),
-(5, 'Pantoprazole', 22, 'Varius Orci In ', '51.00', 6),
-(6, 'Citalopram', 18, 'Lectus Quis Mas', '156.00', 8),
-(7, 'Alprazolam', 23, 'Orci Ut Sagitti', '102.00', 8),
-(8, 'Azithromycin', 24, 'Ipsum Primis In', '81.00', 1),
-(9, 'Ciprofloxacin', 25, 'Velit Sed Males', '100.00', 5),
-(10, 'Trazodone', 17, 'Sed Pede Cum Co', '165.00', 4);
+INSERT INTO `Product` (`Product_ID`, `Description`, `ReorderLevel`, `Supplier`, `UnitPrice`, `Drug_ID`, `Type_ID`) VALUES
+(1, 'Cymbalta', 24, 'Consectetuer In', '182.00', 7, 1),
+(2, 'Doxycycline', 16, 'Consectetuer Eu', '174.00', 7, 2),
+(3, 'Meth', 30, 'update', '170.00', 5, 3),
+(4, 'Xanax', 25, 'Suspendisse Tri', '179.00', 8, 4),
+(5, 'Pantoprazole', 22, 'Varius Orci In ', '51.00', 6, 5),
+(6, 'Citalopram', 18, 'Lectus Quis Mas', '156.00', 8, 6),
+(7, 'Alprazolam', 23, 'Orci Ut Sagitti', '102.00', 8, 7),
+(8, 'Azithromycin', 24, 'Ipsum Primis In', '81.00', 1, 8),
+(9, 'Ciprofloxacin', 25, 'Velit Sed Males', '100.00', 5, 9),
+(10, 'Trazodone', 17, 'Sed Pede Cum Co', '165.00', 4, 10),
+(11, 'Crystal Meth', 30, 'lknjna', '150.00', 3, 11),
+(12, 'Crystal Meth', 30, 'lknjna', '150.00', 3, 12),
+(13, 'Dop Meth', 30, 'lol', '150.00', 5, 1),
+(14, 'LOL Meth', 30, 'lol', '150.00', 5, 2);
+(15, 'Test Med', 11, 'lol', '15.00', 7, 2);
 
 -- --------------------------------------------------------
 
@@ -114,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `Sales` (
   `Staff_ID` int(11) NOT NULL,
   PRIMARY KEY (`Sale_ID`),
   KEY `Staff_ID` (`Staff_ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 --
 -- Dumping data for table `Sales`
@@ -131,7 +154,11 @@ INSERT INTO `Sales` (`Sale_ID`, `SaleDate`, `Amount`, `Paid`, `Change`, `Staff_I
 (3, '2016-02-20', 71, 59, 157, 2),
 (2, '2016-01-26', 53, 48, 122, 6),
 (1, '2017-07-06', 75, 85, 144, 1),
-(14, '2016-02-12', 135, 150, 50, 5);
+(19, '2016-12-05', 135, 150, 50, 5),
+(20, '2016-12-05', 155, 235, 80, 5),
+(18, '2016-12-05', 135, 150, 50, 5),
+(21, '2016-12-05', 300, 150, 50, 5),
+(22, '2016-12-05', 300, 150, 50, 5);
 
 -- --------------------------------------------------------
 
@@ -162,7 +189,15 @@ INSERT INTO `SalesItem` (`Sale_ID`, `Batch_ID`, `QuantitySold`) VALUES
 (1, 4, 28),
 (7, 6, 29),
 (6, 10, 22),
-(3, 5, 27);
+(3, 5, 27),
+(20, 1, 2),
+(20, 2, 1),
+(20, 3, 6),
+(20, 4, 1),
+(22, 1, 2),
+(22, 2, 1),
+(22, 3, 6),
+(22, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -198,4 +233,33 @@ INSERT INTO `Staff` (`Staff_ID`, `Name`, `Role`, `Username`, `Pass`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Type`
+--
+
+CREATE TABLE IF NOT EXISTS `Type` (
+  `Type_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL,
+  `Description` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`Type_ID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+
+--
+-- Dumping data for table `Type`
+--
+
+INSERT INTO `Type` (`Type_ID`, `Name`, `Description`) VALUES
+(2, 'antibiotic ', 'a drug that cures illnesses and infections caused by bacteria. Doctors often give people a course of'),
+(3, 'antihistamine', 'a drug used to treat an allergy'),
+(4, 'capsule', 'a small round container filled with medicine that you swallow whole'),
+(5, 'decongestant', 'a drug that helps you breathe more easily when you have a cold'),
+(6, 'drops', 'liquid medicine that you put into your eyes, ears, or nose'),
+(7, 'emetic', 'a substance that makes you vomit\n'),
+(8, 'inhalant', 'a medicine or drug that you breathe into your lungs'),
+(9, 'painkiller', 'a medicine that reduces pain'),
+(10, 'prescription', 'a drug that you can only get if you have a prescription from your doctor'),
+(11, 'syrup', 'a sweet liquid that contains medicine'),
+(12, 'tablet', 'a small hard round piece of medicine that you swallow'),
+(13, 'vaccine', 'a substance put into the body, usually by injection, in order to provide protection against a diseas'),
+(14, 'vitamin', 'a pill containing vitamins');
+
 
