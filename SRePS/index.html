@@ -18,7 +18,7 @@
 		<link rel="icon" type="img/ico" href="img/favicon.ico">
 	</head>
 	<body>
-		<div class="container-fluid">
+		<div class="container-fluid" data-ng-controller="menuController">
 			<!--Navigator-->
 			<nav class="navbar navbar-default navbar-fixed-top">
 				<div class="container-fluid ">
@@ -35,17 +35,17 @@
 					</div>
 					<div class="collapse navbar-collapse" id="myNavbar">
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="" data-toggle="modal" data-target="#HelpdeskOption"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-							<li><a href="" data-toggle="modal" data-target="#HelpdeskOption"><span class="glyphicon glyphicon-phone"></span> Contact</a></li>
-							<li><a href="" data-toggle="modal" data-target="#HelpdeskOption"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+							<a href="" data-toggle="modal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+							<li><a href="" data-toggle="modal"><span class="glyphicon glyphicon-phone"></span> Contact</a></li>
+							<li><a href="" data-toggle="modal"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
 						</ul>
 					</div>
 				</div>
 				<ul class="nav nav-tabs">
-					<li class="active"><a data-toggle="tab" href="#sales"> <span class="glyphicon glyphicon-shopping-cart"></span> Sales</a></li>
-					<li><a data-toggle="tab" href="#inventory"> <span class="glyphicon glyphicon-list"></span> Inventory</a></li>
-					<li><a data-toggle="tab" href="#menu2"> <span class="glyphicon glyphicon-stats"></span> Statistics</a></li>
-					<li class="pull-right"><a data-toggle="tab" href="#menu2"> <span class="glyphicon glyphicon-user"></span> User</a></li>
+					<li data-ng-class="{active:isActive('sales')}"><a data-toggle="tab" href="#sales"> <span class="glyphicon glyphicon-shopping-cart"></span> Sales</a></li>
+					<li data-ng-class="{active:isActive('inventory')}"><a data-toggle="tab" href="#inventory"> <span class="glyphicon glyphicon-list"></span> Inventory</a></li>
+					<li class="disabled" ><a > <span class="glyphicon glyphicon-stats"></span> Statistics</a></li>
+					<li class="disabled pull-right"><a > <span class="glyphicon glyphicon-user"></span> User</a></li>
 				</ul>
 			</nav>
 			<!--Application-->

@@ -14,6 +14,14 @@ app.config(['$routeProvider', function($routeProvider) {
 
 // Controllers
 
+app.controller('menuController', function($scope,$window){
+	$scope.isActive = function(requestedTab){
+		var strs = $window.location.toString().split('/');
+		var thisTab = strs[strs.indexOf('#')+1];
+		return (requestedTab==thisTab);
+	};
+});
+
 app.controller('salesViewController', function($scope, $filter, $window, Database){
 		$scope.navigateTo = function(sale_id) {
 			document.getElementById('select-sale-'+sale_id).click();
@@ -133,11 +141,9 @@ app.controller('viewItemViewController', function($scope,Database) {
 		$scope.updateItem = function(itemToUpdate)
 		{
 			$scope.updating = true;
-			alert(itemToUpdate.price+":"+itemToUpdate.reOrderLevel);
 			var toSend = {"UnitPrice":itemToUpdate.price,"ReorderLevel":itemToUpdate.reOrderLevel}
-			Database.updateItem(toSend).success(function(result){
+			Database.updateItem(itemToUpdate.id,toSend).success(function(result){
 				$scope.updating = false;
-				alert(result);
 				$('#view-item').modal('hide');
 				return result;
 			});
@@ -187,8 +193,8 @@ app.service('Database', function($http) {
 			return $http.get("api/product_api.php/product/"+item_id);
 	};
 	
-	this.updateItem = function (item_id, data) {
-			return $http.put("api/product_api.php/product/"+item_id,data,{headers: {'Content-Type': 'application/json'} });
+	this.updateItem = function (id, itemToUpdate) {
+			return $http.put("api/product_api.php/product/"+id,itemToUpdate,{headers: {'Content-Type': 'application/json'} });
 	};
 	
 	

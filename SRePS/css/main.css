@@ -168,6 +168,11 @@ div.higher
 
 /* </Search> */
 
+.tile-container
+{
+	background-image: url(../img/pixel_weave.png);
+}
+
 .tile
 {
 	display:inline-block;
