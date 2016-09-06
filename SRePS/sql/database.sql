@@ -120,6 +120,7 @@ INSERT INTO `Product` (`Product_ID`, `Description`, `ReorderLevel`, `Supplier`, 
 (12, 'Crystal Meth', 30, 'lknjna', '150.00', 3, 12),
 (13, 'Dop Meth', 30, 'lol', '150.00', 5, 1),
 (14, 'LOL Meth', 30, 'lol', '150.00', 5, 2);
+(15, 'Test Med', 11, 'lol', '15.00', 7, 2);
 
 -- --------------------------------------------------------
 
