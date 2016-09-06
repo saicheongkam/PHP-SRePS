@@ -111,17 +111,30 @@ app.controller('addSaleViewController', function($scope, $filter, Database){
 });
 
 app.controller('inventoryViewController', function($scope, Database){
-		$scope.types = []
-		Database.getInventory().success(function(result){
-				$scope.inventory = result;
-		});
+	$scope.types = [{"name":"Antibiotic"}, {"name":"Syrup"}, {"name":"Capsule"}];
+	$scope.inventory = [{"batch_id":1,"type":"Antibiotic","manufacturer":"Actavis","name":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47},
+					   {"batch_id":2,"type":"Antibiotic","manufacturer":"Panadol","name":"Painkiller","desc":"Painkiller for aches","qty":52}];
+	
+	$scope.addItem = function(toAdd){
+		$scope.inventory.push({"batch_id":3,"type":toAdd.type,"manufacturer":toAdd.manufacturer,"name":toAdd.name,"desc":"desc","qty":38})
+	}
+	
+	$scope.clearForm = function(toAdd){
+		toAdd.name = "";
+		toAdd.manufacturer = "";
+		toAdd.type = "";
+	}
+	
+	Database.getInventory().success(function(result){
+			$scope.inventory = result;
+	});
 });
 
 app.controller('addItemViewController', function($scope, Database){
-		$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
-		$scope.addItem = function(toAdd){
-			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
-		};
+		//$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
+		//$scope.addItem = function(toAdd){
+		//	$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
+		//};
 });
 
 app.controller('viewItemViewController', function($scope) {
