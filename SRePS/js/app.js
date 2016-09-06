@@ -8,7 +8,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
-			.otherwise({ templateUrl: 'views/salesView.html', controller: 'salesViewController'} );
+			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );
 
@@ -111,10 +111,37 @@ app.controller('addSaleViewController', function($scope, $filter, Database){
 });
 
 app.controller('inventoryViewController', function($scope, Database){
-		$scope.types = []
+		$scope.selectedItem = 0;
+	
+		$scope.selectItem = function(item)
+		{
+			Database.getItem(item).success(function(result){
+				$scope.selectedItem = result;
+			});
+		}
+		
 		Database.getInventory().success(function(result){
 				$scope.inventory = result;
 		});
+		
+});
+
+app.controller('viewItemViewController', function($scope,Database) {
+		$scope.editPrice = false;
+		$scope.editLimit = false;
+		$scope.updating = false;
+		$scope.updateItem = function(itemToUpdate)
+		{
+			$scope.updating = true;
+			alert(itemToUpdate.price+":"+itemToUpdate.reOrderLevel);
+			var toSend = {"UnitPrice":itemToUpdate.price,"ReorderLevel":itemToUpdate.reOrderLevel}
+			Database.updateItem(toSend).success(function(result){
+				$scope.updating = false;
+				alert(result);
+				$('#view-item').modal('hide');
+				return result;
+			});
+		};
 });
 
 app.controller('addItemViewController', function($scope, Database){
@@ -122,13 +149,6 @@ app.controller('addItemViewController', function($scope, Database){
 		$scope.addItem = function(toAdd){
 			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
 		};
-});
-
-app.controller('viewItemViewController', function($scope) {
-		$scope.price = 6.25;
-		$scope.reorderLimit = 20;
-		$scope.editPrice = false;
-		$scope.editLimit = false;
 });
 
 // Data factory
@@ -145,33 +165,41 @@ app.factory("Data",
 
 // Services
 app.service('Database', function($http) {
+	//Sale APIS
 	this.getSales = function () {
 		return $http.get("api/salesapi.php/sales")
-	};
-	
-	this.getInventory= function () {
-			return $http.get("api/product_api.php/product/");
 	};
 	
 	this.getSale = function (id) {
 			return $http.get("api/salesapi.php/sales/"+id)
 	};
 	
-	this.getProduct = function (batch_id) {
-			return $http.get("api/product_api.php/batch/"+batch_id);
-	};
-	
 	this.addSale = function (toAdd) {
 			return $http.post("api/salesapi.php/sales/", toAdd, {headers: {'Content-Type': 'application/json'} });
 	};
 	
-	this.addProduct = function (batch_id) {
-			return $http.post("api/product_api.php/batch/"+id);
+	//Inventory APIS
+	this.getInventory= function () {
+			return $http.get("api/product_api.php/product/");
 	};
 	
-	this.addProduct = function (batch_id) {
-			return $http.post("api/product_api.php/batch/"+id);
+	this.getItem = function (item_id) {
+			return $http.get("api/product_api.php/product/"+item_id);
 	};
+	
+	this.updateItem = function (item_id, data) {
+			return $http.put("api/product_api.php/product/"+item_id,data,{headers: {'Content-Type': 'application/json'} });
+	};
+	
+	
+	this.getProduct = function (batch_id) {
+			return $http.get("api/product_api.php/batch/"+batch_id);
+	};
+	
+	this.addItem = function (item_id) {
+			return $http.post("api/product_api.php/batch/"+item_id);
+	};
+	
 	
 });
 

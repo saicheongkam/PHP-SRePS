@@ -122,10 +122,10 @@ if ($method=='GET' && $id && $resrc=='batch')
 if ($method=='GET' && $id && $resrc=='product')
 {
 	$id=intval($id);
-	$query="SELECT p.Description, p.UnitPrice, p.Reorderlevel, c.Name as Drug, t.Name as Type
+	$query="SELECT p.Product_ID, p.Description, p.UnitPrice, p.Reorderlevel, c.Name as Drug, t.Name as Type
 	FROM Product p 
 	INNER JOIN Type t
-	ON p.Type_ID=p.Type_ID
+	ON p.Type_ID=t.Type_ID
 	INNER JOIN Drug c
 	ON p.Drug_ID=c.Drug_ID
 	WHERE p.Product_ID=$id";
@@ -144,6 +144,7 @@ if ($method=='GET' && $id && $resrc=='product')
 	//generate json object from result
 	while($row=mysqli_fetch_assoc($result))
 	{
+		$json['id']=$row['Product_ID'];
 		$json['name']=$row['Description'];
 		$json['price']=$row['UnitPrice'];
 		$json['reOrderLevel']=$row['Reorderlevel'];
