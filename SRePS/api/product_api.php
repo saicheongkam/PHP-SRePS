@@ -160,13 +160,14 @@ if ($method=='GET' && $id && $resrc=='product')
 if ($method=='GET' && $resrc=='product' && !$id)
 {
 	
-	$query="SELECT p.Product_id, p.Description, p.Reorderlevel, p.Drug_ID, SUM(Quantity) as quantity, t.Name as Type 
-	FROM Product as p 
-	INNER JOIN Type t
-	ON p.Type_ID=t.Type_ID
-	INNER JOIN Batch as b 
-	ON p.Product_id = b.Product_id 
-	GROUP BY p.Product_id";
+	$query=
+		"SELECT p.Product_id, p.Description, p.Reorderlevel, p.Drug_ID, COALESCE(SUM(Quantity),0) as quantity, t.Name as Type 
+		FROM Product as p 
+		INNER JOIN Type t
+		ON p.Type_ID=t.Type_ID
+		LEFT OUTER JOIN Batch as b 
+		ON p.Product_id = b.Product_id 
+		GROUP BY p.Product_id";
 	//run query
 	$result=mysqli_query($conn,$query);
 

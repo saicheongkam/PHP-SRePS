@@ -26,6 +26,7 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 		$scope.navigateTo = function(sale_id) {
 			document.getElementById('select-sale-'+sale_id).click();
 		};
+		
 		Database.getSales().success(function(result){
 			$scope.sales = result;
 		});
@@ -52,7 +53,7 @@ app.controller('detailedSaleViewController', function($scope,$routeParams, $filt
 		
 });
 
-app.controller('addSaleViewController', function($scope, $filter, Database){
+app.controller('addSaleViewController', function($scope, $filter, Database, $window){
 		$scope.calculateTotal = function(){
 			var total = 0;
 			$scope.cart.forEach(function(item){
@@ -104,6 +105,8 @@ app.controller('addSaleViewController', function($scope, $filter, Database){
 			Database.addSale(toSend).success(function(response){
 				$scope.sending = false;
 				$('#add-view').modal('hide');
+				$window.location = "#/"; 
+				$window.location = "#/sales";
 				return response;
 			});
 		}
@@ -143,38 +146,29 @@ app.controller('viewItemViewController', function($scope,Database) {
 			Database.updateItem(itemToUpdate.id,toSend).success(function(result){
 				$scope.updating = false;
 				$('#view-item').modal('hide');
+				$window.location = "#/"; 
+				$window.location = "#/inventory";
 				return result;
 			});
 		};
 });
 
-app.controller('addItemViewController', function($scope, Database){
-		$scope.types = [
-											{id:1,name:"other"},
-											{id:2,name:"antibiotic"},
-											{id:3,name:"antihistamine"},
-											{id:4,name:"decongestant"},
-											{id:5,name:"drops"},
-											{id:6,name:"emetic"},
-											{id:7,name:"inhalant"},
-											{id:8,name:"painkiller"},
-											{id:9,name:"prescription"},
-											{id:10,name:"syrup"},
-											{id:11,name:"tablet"},
-											{id:12,name:"vaccine"},
-											{id:13,name:"vitamin"},
-											{id:14,name:"ointment"},
-											{id:15,name:"contraceptive"},
-											{id:16,name:"cream"},
-											{id:17,name:"bandage"},
-									];
+app.controller('addItemViewController', function($scope, Database, $window){
+	
+		Database.getDrugs().success(function(result){
+				$scope.types = result;
+		});
+		
 		$scope.addItem = function(toAdd){
 			$scope.sending = true;
-			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type};
+			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
 			Database.addItem(toSend).success(function(response){
 				alert(response);
 				$scope.sending = false;
 				$('#add-item').modal('hide');
+				//to refresh the view
+				$window.location = "#/"; 
+				$window.location = "#/inventory";
 				return response;
 			});
 		};
@@ -196,13 +190,12 @@ app.factory("Data",
 app.service('Database', function($http) {
 	//Sale APIS
 	this.getSales = function () {
-		return $http.get("api/salesapi.php/sales")
+		return $http.get("api/salesapi.php/sales");
 	};
 	
 	this.getSale = function (id) {
-			return $http.get("api/salesapi.php/sales/"+id)
+			return $http.get("api/salesapi.php/sales/"+id);
 	};
-	
 	this.addSale = function (toAdd) {
 			return $http.post("api/salesapi.php/sales/", toAdd, {headers: {'Content-Type': 'application/json'} });
 	};
@@ -211,22 +204,22 @@ app.service('Database', function($http) {
 	this.getInventory= function () {
 			return $http.get("api/product_api.php/product/");
 	};
-	
 	this.getItem = function (item_id) {
 			return $http.get("api/product_api.php/product/"+item_id);
 	};
-	
 	this.getProduct = function (batch_id) {
 			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
-	
-	
 	this.updateItem = function (id, dataToUpdate) {
 			return $http.put("api/product_api.php/product/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
 	};
-	
 	this.addItem = function (toAdd) {
 			return $http.post("api/product_api.php/product/",toAdd,{headers: {'Content-Type': 'application/json'} });
+	};
+	
+	//Drug APIS
+	this.getDrugs = function () {
+			return $http.get("api/drug_api.php/type/");
 	};
 	
 });
