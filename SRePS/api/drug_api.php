@@ -39,7 +39,7 @@ if($resrc=='type')
 			if(!$result)
 			{
 				header('Content-Type: application/json');
-			echo json_encode(array("error"=>"Query Failed","description"=>"Failed to Retrieve Deug types from Database"));
+			echo json_encode(array("error"=>"Query Failed","description"=>"Failed to Retrieve Drug types from Database"));
 				die(mysqli_error($conn));
 			}
 		

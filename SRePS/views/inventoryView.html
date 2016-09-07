@@ -1,6 +1,6 @@
 <div class="row tab-pane">
-	<div class="col-xs-12 panel ">
-		<div class="row panel-heading" >
+	<div class="col-xs-12 panel tile-container">
+		<div class="row panel-heading toolbar" >
 			<!-- Toolbar -->
 			<div class="pull-left">
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-item"><span class="glyphicon glyphicon-plus-sign"></span> Add Item</button>
@@ -8,7 +8,7 @@
 				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-alphabet"></span></button>
 				<button class="btn btn-link"><span class="glyphicon glyphicon-sort-by-order-alt"></span></button>
 			</div>
-			<div class="pull-right">
+			<!--<div class="pull-right">
 				<form class="navbar-form" role="search">
 					<div class="input-group add-on">
 						<input class="form-control" placeholder="Search" name="srch-term" id="srch-term" type="text">
@@ -17,12 +17,12 @@
 						</div>
 					</div>
 			</form>
-			</div>
+			</div>--> <!-- Under construction -->
 		</div>
 		<!-- Tiles -->
-		<div class="row panel-body">
+		<div class="row panel-body offset tile-container">
 				<div>
-					<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory" data-toggle="modal" data-target="#view-item">
+					<div class="col-xs-4 col-sm-3 col-md-2 col-lg-1 tile" data-ng-repeat="product in inventory" data-toggle="modal" data-target="#view-item" data-ng-click="selectItem(product.id);">
 						<h5 class="text-center">{{product.name}}</h5>
 						<img class="img-responsive" src="img/{{product.type}}.svg" alt="{{product.type}}">
 						<p class="text-right">
@@ -44,33 +44,48 @@
 						</div>
 						<div class="modal-body row">
 							<div class="panel-body">
-								<div class="row form-group">
-									<div class="col-xs-8">
-										<label for="product_name">Product</label>
-										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
-									</div>
-									<div class="col-xs-4">
-										<label for="type">Type</label>
-										<select class="form-control" id="type">
-											<option data-ng-repeat="type in types">{{type.name}}</option>
-										</select>
+								<div class="col-xs-7 ">
+									<div class="row form-group">
+										<div class="form-group">
+											<label for="product_name">Product</label>
+											<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
+										</div>
+										<div class="form-group">
+											<label for="type">Type</label>
+											<select class="form-control" id="type" data-ng-model="toAdd.type">
+												<option data-ng-repeat="type in types" value="{{type.id}}">{{type.name}}</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label for="manufacturer">Supplier</label>
+											<input type="text" class="form-control" id="manufacturer" data-ng-model="toAdd.supplier">
+										</div>
+										<div class="form-group">
+											<label for="product_name">Drug</label>
+											<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.drug">
+										</div>
 									</div>
 								</div>
-								<div class="row form-group">
-									<div class="col-xs-6">
-										<label for="manufacturer">Supplier</label>
-										<input type="text" class="form-control" id="manufacturer" data-ng-model="toAdd.manufacturer">
-									</div>
-									<div class="col-xs-6">
-										<label for="product_name">Drug</label>
-										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
+								<div class="col-xs-4 col-xs-offset-1 pull-right">
+									<div class="row">
+										<div class="tile col-xs-12">
+											<h4 class="text-center">{{toAdd.product}}</h4>
+											<p><img class="img img-responsive" src="img/{{types[toAdd.type-1].name}}.svg" alt="{{toAdd.type.name}}"/></p>
+											<p class="text-center">{{((toAdd.supplier)?"From:":"")}} <span class="badge">{{toAdd.supplier}}</span></p>
+											<p class="text-center primary">{{((toAdd.drug)?"Containts:":"")}}</p>
+											<p class="text-center"><span class="drug">{{toAdd.drug}}</span></p>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-							<button class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add</button>
+							<button class="btn btn-primary" data-ng-click="addItem(toAdd)">
+								Add 
+								<img class="loading inverted" src="img/loading.svg" data-ng-show="sending"/>
+								<span class="glyphicon glyphicon-plus-sign" data-ng-show="!sending"></span> 
+							</button>
 						</div>
 					</div>
 				</div>
@@ -83,24 +98,23 @@
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header model-primary">
-							<span>Actavis Doxycycline Capsules</span>
+							<span>{{selectedItem.name}}</span>
 						</div>
 						<div class="modal-body row">
-							<div class="col-xs-4">
-								<img src="img/drug1.svg" alt="drug" draggable="false">
+							<div class="col-xs-4 side-panel">
+								<img src="img/{{selectedItem.type}}.svg" alt="{{item.type}}" draggable="false">
 								<hr>
-								<p><label>Name:</label> <span> Doxycycline</span></p>
-								<p><label>Category:</label> <span> Antibiotic</span></p>
-								
-								<p><label>Price:</label> <span> {{price | currency:'$':2}}</span>
+								<p><label>Name:</label> <span> {{selectedItem.name}}</span></p>
+								<p><label>Drug:</label> <span> {{selectedItem.drug}}</span></p>
+								<p><label>Price:</label> <span> {{selectedItem.price | currency:'$':2}}</span>
 								<span class="glyphicon glyphicon-pencil" data-ng-hide="editPrice" data-ng-click="editPrice = true"  style="cursor: pointer"></span>
-								<input type="number" class="form-control" value="6.25" step="0.05" min="0" data-ng-model="price" data-ng-show="editPrice" data-ng-model-options="{updateOn: 'blur'}" 
+								<input type="number" class="form-control" value="6.25" step="0.05" min="0" data-ng-model="selectedItem.price" data-ng-show="editPrice" data-ng-model-options="{updateOn: 'blur'}" 
 									   data-ng-blur="editPrice = false"/></p>
 								
-								<label>Reorder limit:</label><span> {{reorderLimit}}</span>
+								<label>Reorder limit:</label><span> {{selectedItem.reOrderLevel}}</span>
 								<span class="glyphicon glyphicon-pencil" data-ng-hide="editLimit" data-ng-click="editLimit = true"  style="cursor: pointer"></span>
 								<div data-ng-show="editLimit">
-									<input class="bar" type="range" min="1" max="100" data-ng-model="reorderLimit" data-ng-blur="editLimit = false">
+									<input class="bar" type="range" min="1" max="100" data-ng-model="selectedItem.reOrderLevel" data-ng-blur="editLimit = false">
 								</div>
 							</div>
 							<div class="col-xs-8">
@@ -126,7 +140,10 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-							<button class="btn btn-primary"><span class="glyphicon glyphicon-ok-circle"></span> Save</button>
+							<button type="button" class="btn btn-primary" data-ng-click="updateItem(selectedItem);" >
+								Save
+								<img class="loading inverted" src="img/loading.svg" data-ng-show="updating"/>
+							</button>
 						</div>
 					</div>
 				</div>
