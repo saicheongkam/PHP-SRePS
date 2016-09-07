@@ -72,6 +72,11 @@ ul.nav-tabs li:hover
 	font-weight: 200;
 }
 
+.toprint
+{
+	background-color: white;
+}
+
 .pricetag
 {
 	line-height: 18pt;
