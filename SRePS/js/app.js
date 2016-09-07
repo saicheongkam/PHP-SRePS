@@ -29,20 +29,35 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 		
 		$scope.generateReport = function()
 		{
-			var doc = new jsPDF();
-			var specialElementHandlers = {
-					'#editor': function (element, renderer) {
-							return true;
-					}
-			};
-			
-			var doc = new jsPDF();
-
-			doc.setFontSize(40);
-			doc.text(35, 25, "Paranyan loves jsPDF");
-			
-			
-			doc.save('sample-file.pdf');
+			var doc = new jsPDF('p', 'pt', 'letter');
+			alert('here');
+			source = $('#content')[0];
+			margins = {
+								top: 80,
+								bottom: 60,
+								left: 40,
+								width: 522
+								};
+		 specialElementHandlers = {
+							// element with id of "bypass" - jQuery style selector
+							'#bypassme': function(element, renderer) {
+									// true = "handled elsewhere, bypass text extraction"
+									return true
+							}
+					};
+			doc.fromHTML(
+										source, // HTML string or DOM elem ref.
+										margins.left, // x coord
+										margins.top, {// y coord
+												'width': margins.width, // max width of content on PDF
+												'elementHandlers': specialElementHandlers
+										},
+						function(dispose) {
+								// dispose: object with X, Y of the last line add to the PDF 
+								//          this allow the insertion of new lines after html
+								doc.save('Test.pdf');
+						}
+						, margins);
 		}
 		Database.getSales().success(function(result){
 			$scope.sales = result;
