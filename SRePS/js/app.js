@@ -27,6 +27,23 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 			document.getElementById('select-sale-'+sale_id).click();
 		};
 		
+		$scope.generateReport = function()
+		{
+			var doc = new jsPDF();
+			var specialElementHandlers = {
+					'#editor': function (element, renderer) {
+							return true;
+					}
+			};
+			
+			var doc = new jsPDF();
+
+			doc.setFontSize(40);
+			doc.text(35, 25, "Paranyan loves jsPDF");
+			
+			
+			doc.save('sample-file.pdf');
+		}
 		Database.getSales().success(function(result){
 			$scope.sales = result;
 		});
