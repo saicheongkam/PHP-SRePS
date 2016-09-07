@@ -8,16 +8,25 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
-			.otherwise({ templateUrl: 'views/salesView.html', controller: 'salesViewController'} );
+			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );
 
 // Controllers
 
+app.controller('menuController', function($scope,$window){
+	$scope.isActive = function(requestedTab){
+		var strs = $window.location.toString().split('/');
+		var thisTab = strs[strs.indexOf('#')+1];
+		return (requestedTab==thisTab);
+	};
+});
+
 app.controller('salesViewController', function($scope, $filter, $window, Database){
 		$scope.navigateTo = function(sale_id) {
 			document.getElementById('select-sale-'+sale_id).click();
 		};
+		
 		Database.getSales().success(function(result){
 			$scope.sales = result;
 		});
@@ -44,7 +53,7 @@ app.controller('detailedSaleViewController', function($scope,$routeParams, $filt
 		
 });
 
-app.controller('addSaleViewController', function($scope, $filter, Database){
+app.controller('addSaleViewController', function($scope, $filter, Database, $window){
 		$scope.calculateTotal = function(){
 			var total = 0;
 			$scope.cart.forEach(function(item){
@@ -94,13 +103,13 @@ app.controller('addSaleViewController', function($scope, $filter, Database){
 			console.log(toSend);
 			$scope.sending = true;
 			Database.addSale(toSend).success(function(response){
-				alert(response);
 				$scope.sending = false;
 				$('#add-view').modal('hide');
+				$window.location = "#/"; 
+				$window.location = "#/sales";
 				return response;
 			});
 		}
-		
 		$scope.date = new Date();
 		$scope.cart = [];
 		$scope.toAdd = {qty:1};
@@ -111,24 +120,58 @@ app.controller('addSaleViewController', function($scope, $filter, Database){
 });
 
 app.controller('inventoryViewController', function($scope, Database){
-		$scope.types = []
+		$scope.selectedItem = 0;
+	
+		$scope.selectItem = function(item)
+		{
+			Database.getItem(item).success(function(result){
+				$scope.selectedItem = result;
+			});
+		}
+		
 		Database.getInventory().success(function(result){
 				$scope.inventory = result;
 		});
+		
 });
 
-app.controller('addItemViewController', function($scope, Database){
-		$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
-		$scope.addItem = function(toAdd){
-			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
+app.controller('viewItemViewController', function($scope,Database) {
+		$scope.editPrice = false;
+		$scope.editLimit = false;
+		$scope.updating = false;
+		$scope.updateItem = function(itemToUpdate)
+		{
+			$scope.updating = true;
+			var toSend = {"UnitPrice":itemToUpdate.price,"ReorderLevel":itemToUpdate.reOrderLevel}
+			Database.updateItem(itemToUpdate.id,toSend).success(function(result){
+				$scope.updating = false;
+				$('#view-item').modal('hide');
+				$window.location = "#/"; 
+				$window.location = "#/inventory";
+				return result;
+			});
 		};
 });
 
-app.controller('viewItemViewController', function($scope) {
-		$scope.price = 6.25;
-		$scope.reorderLimit = 20;
-		$scope.editPrice = false;
-		$scope.editLimit = false;
+app.controller('addItemViewController', function($scope, Database, $window){
+	
+		Database.getDrugs().success(function(result){
+				$scope.types = result;
+		});
+		
+		$scope.addItem = function(toAdd){
+			$scope.sending = true;
+			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
+			Database.addItem(toSend).success(function(response){
+				alert(response);
+				$scope.sending = false;
+				$('#add-item').modal('hide');
+				//to refresh the view
+				$window.location = "#/"; 
+				$window.location = "#/inventory";
+				return response;
+			});
+		};
 });
 
 // Data factory
@@ -145,32 +188,38 @@ app.factory("Data",
 
 // Services
 app.service('Database', function($http) {
+	//Sale APIS
 	this.getSales = function () {
-		return $http.get("api/salesapi.php/sales")
-	};
-	
-	this.getInventory= function () {
-			return $http.get("api/product_api.php/product/");
+		return $http.get("api/salesapi.php/sales");
 	};
 	
 	this.getSale = function (id) {
-			return $http.get("api/salesapi.php/sales/"+id)
+			return $http.get("api/salesapi.php/sales/"+id);
 	};
-	
-	this.getProduct = function (batch_id) {
-			return $http.get("api/product_api.php/batch/"+batch_id);
-	};
-	
 	this.addSale = function (toAdd) {
 			return $http.post("api/salesapi.php/sales/", toAdd, {headers: {'Content-Type': 'application/json'} });
 	};
 	
-	this.addProduct = function (batch_id) {
-			return $http.post("api/product_api.php/batch/"+id);
+	//Inventory APIS
+	this.getInventory= function () {
+			return $http.get("api/product_api.php/product/");
+	};
+	this.getItem = function (item_id) {
+			return $http.get("api/product_api.php/product/"+item_id);
+	};
+	this.getProduct = function (batch_id) {
+			return $http.get("api/product_api.php/batch/"+batch_id);
+	};
+	this.updateItem = function (id, dataToUpdate) {
+			return $http.put("api/product_api.php/product/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
+	};
+	this.addItem = function (toAdd) {
+			return $http.post("api/product_api.php/product/",toAdd,{headers: {'Content-Type': 'application/json'} });
 	};
 	
-	this.addProduct = function (batch_id) {
-			return $http.post("api/product_api.php/batch/"+id);
+	//Drug APIS
+	this.getDrugs = function () {
+			return $http.get("api/drug_api.php/type/");
 	};
 	
 });
