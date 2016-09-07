@@ -102,13 +102,11 @@ app.controller('addSaleViewController', function($scope, $filter, Database){
 			console.log(toSend);
 			$scope.sending = true;
 			Database.addSale(toSend).success(function(response){
-				alert(response);
 				$scope.sending = false;
 				$('#add-view').modal('hide');
 				return response;
 			});
 		}
-		
 		$scope.date = new Date();
 		$scope.cart = [];
 		$scope.toAdd = {qty:1};
@@ -151,9 +149,34 @@ app.controller('viewItemViewController', function($scope,Database) {
 });
 
 app.controller('addItemViewController', function($scope, Database){
-		$scope.inventory = [{"batch_id":"1","category":"Antibiotic","manufacturer":"Actavis","product":"Doxycycline","desc":"Antibiotic used for treating bacterial infections","qty":47}];
+		$scope.types = [
+											{id:1,name:"other"},
+											{id:2,name:"antibiotic"},
+											{id:3,name:"antihistamine"},
+											{id:4,name:"decongestant"},
+											{id:5,name:"drops"},
+											{id:6,name:"emetic"},
+											{id:7,name:"inhalant"},
+											{id:8,name:"painkiller"},
+											{id:9,name:"prescription"},
+											{id:10,name:"syrup"},
+											{id:11,name:"tablet"},
+											{id:12,name:"vaccine"},
+											{id:13,name:"vitamin"},
+											{id:14,name:"ointment"},
+											{id:15,name:"contraceptive"},
+											{id:16,name:"cream"},
+											{id:17,name:"bandage"},
+									];
 		$scope.addItem = function(toAdd){
-			$scope.inventory.push({"batch_id":toAdd.batch_id,"category":toAdd.category,"manufacturer":toAdd.manufacturer,"product":toAdd.product,"desc":toAdd.desc, "reorder":20, "qty":toAdd.qty});
+			$scope.sending = true;
+			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type};
+			Database.addItem(toSend).success(function(response){
+				alert(response);
+				$scope.sending = false;
+				$('#add-item').modal('hide');
+				return response;
+			});
 		};
 });
 
@@ -193,19 +216,18 @@ app.service('Database', function($http) {
 			return $http.get("api/product_api.php/product/"+item_id);
 	};
 	
-	this.updateItem = function (id, itemToUpdate) {
-			return $http.put("api/product_api.php/product/"+id,itemToUpdate,{headers: {'Content-Type': 'application/json'} });
-	};
-	
-	
 	this.getProduct = function (batch_id) {
 			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
 	
-	this.addItem = function (item_id) {
-			return $http.post("api/product_api.php/batch/"+item_id);
+	
+	this.updateItem = function (id, dataToUpdate) {
+			return $http.put("api/product_api.php/product/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
 	};
 	
+	this.addItem = function (toAdd) {
+			return $http.post("api/product_api.php/product/",toAdd,{headers: {'Content-Type': 'application/json'} });
+	};
 	
 });
 

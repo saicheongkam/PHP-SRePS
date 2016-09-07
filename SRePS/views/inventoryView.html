@@ -1,5 +1,5 @@
 <div class="row tab-pane">
-	<div class="col-xs-12 panel ">
+	<div class="col-xs-12 panel tile-container">
 		<div class="row panel-heading toolbar" >
 			<!-- Toolbar -->
 			<div class="pull-left">
@@ -44,33 +44,48 @@
 						</div>
 						<div class="modal-body row">
 							<div class="panel-body">
-								<div class="row form-group">
-									<div class="col-xs-8">
-										<label for="product_name">Product</label>
-										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
-									</div>
-									<div class="col-xs-4">
-										<label for="type">Type</label>
-										<select class="form-control" id="type">
-											<option data-ng-repeat="type in types">{{type.name}}</option>
-										</select>
+								<div class="col-xs-7 ">
+									<div class="row form-group">
+										<div class="form-group">
+											<label for="product_name">Product</label>
+											<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
+										</div>
+										<div class="form-group">
+											<label for="type">Type</label>
+											<select class="form-control" id="type" data-ng-model="toAdd.type">
+												<option data-ng-repeat="type in types" value="{{type.id}}">{{type.name}}</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label for="manufacturer">Supplier</label>
+											<input type="text" class="form-control" id="manufacturer" data-ng-model="toAdd.supplier">
+										</div>
+										<div class="form-group">
+											<label for="product_name">Drug</label>
+											<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.drug">
+										</div>
 									</div>
 								</div>
-								<div class="row form-group">
-									<div class="col-xs-6">
-										<label for="manufacturer">Supplier</label>
-										<input type="text" class="form-control" id="manufacturer" data-ng-model="toAdd.manufacturer">
-									</div>
-									<div class="col-xs-6">
-										<label for="product_name">Drug</label>
-										<input type="text" class="form-control" id="product_name" data-ng-model="toAdd.product">
+								<div class="col-xs-4 col-xs-offset-1 pull-right">
+									<div class="row">
+										<div class="tile col-xs-12">
+											<h4 class="text-center">{{toAdd.product}}</h4>
+											<p><img class="img img-responsive" src="img/{{types[toAdd.type-1].name}}.svg" alt="{{toAdd.type.name}}"/></p>
+											<p class="text-center">{{((toAdd.supplier)?"From:":"")}} <span class="badge">{{toAdd.supplier}}</span></p>
+											<p class="text-center primary">{{((toAdd.drug)?"Containts:":"")}}</p>
+											<p class="text-center"><span class="drug">{{toAdd.drug}}</span></p>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-							<button class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add</button>
+							<button class="btn btn-primary" data-ng-click="addItem(toAdd)">
+								Add 
+								<img class="loading inverted" src="img/loading.svg" data-ng-show="sending"/>
+								<span class="glyphicon glyphicon-plus-sign" data-ng-show="!sending"></span> 
+							</button>
 						</div>
 					</div>
 				</div>

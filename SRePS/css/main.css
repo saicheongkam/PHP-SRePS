@@ -88,6 +88,10 @@ ul.nav-tabs li:hover
 	color: #df2d1c;
 }
 
+.drug
+{
+	font-style: italic;
+}
 .invalid
 {
 	border: 1px red solid;
@@ -170,7 +174,7 @@ div.higher
 
 .tile-container
 {
-	background-image: url(../img/pixel_weave.png);
+	background-color:transparent;
 }
 
 .tile
@@ -276,4 +280,9 @@ nav
   position: absolute;
   top: 0;
   left: 0;
+}
+
+body
+{
+	background-image: url(../img/pixel_weave.png);
 }
