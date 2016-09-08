@@ -27,6 +27,24 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 			document.getElementById('select-sale-'+sale_id).click();
 		};
 		
+		$scope.generateReport = function()
+		{
+			var columns = [
+					{title: "Invoice#", dataKey: "id"},
+					{title: "Date", dataKey: "date"}, 
+					{title: "Amount Due", dataKey: "amount"}, 
+			];
+			var rows = $scope.sales;
+			// Only pt supported (not mm or in)
+			var doc = new jsPDF('p', 'pt');
+			doc.autoTable(columns, rows, {
+					margin: {top: 60},
+					beforePageContent: function(data) {
+							doc.text("Monthly Sales Report", 40, 40);
+					}
+			});
+			doc.save('table.pdf');
+		}
 		Database.getSales().success(function(result){
 			$scope.sales = result;
 		});
