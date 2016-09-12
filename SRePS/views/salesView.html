@@ -3,15 +3,15 @@
 		<div class="row panel-heading toolbar" >
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-view"><span class="glyphicon glyphicon-plus-sign"></span> Add Sale</button>
 			<button class="btn btn-default" data-ng-click="generateReport();"><span class="glyphicon glyphicon-new-window"></span> Export</button>
-			<div class="btn-group pull-right" data-toggle="buttons">
+			<div class="btn-group pull-right" data-toggle="buttons" data-ng-click="reloadTable()">
 					<label class="btn btn-default">
-							<input type="radio" name="day"> Daily
+							<input type="radio" name="day" data-ng-model="rangeFilter[0]" > Daily
 					</label>
 					<label class="btn btn-default">
-							<input type="radio" name="week"> Weekly
+							<input type="radio" name="week"  data-ng-model="rangeFilter[1]" > Weekly
 					</label>
 					<label class="btn btn-default">
-							<input type="radio" name="month"> Monthly
+							<input type="radio" name="month"  data-ng-model="rangeFilter[2]" > Monthly
 					</label>
 			</div>
 		</div>

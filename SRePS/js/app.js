@@ -45,9 +45,15 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 			});
 			doc.save('table.pdf');
 		}
-		Database.getSales().success(function(result){
+		
+		$scope.reloadTable = function()
+		{
+			Database.getSales().success(function(result){
 			$scope.sales = result;
-		});
+			});
+		}
+		
+		$scope.reloadTable();
 		
 });
 
@@ -209,6 +215,10 @@ app.service('Database', function($http) {
 	//Sale APIS
 	this.getSales = function () {
 		return $http.get("api/salesapi.php/sales");
+	};
+	
+	this.getSalesFrom = function (startDate,endDate) {
+		return $http.get("api/salesapi.php/sales/start/"+startDate+"/end/"+endDate);
 	};
 	
 	this.getSale = function (id) {
