@@ -45,6 +45,7 @@ if (isset ($input))  {
 
 if($resrc=='sales')
 	{
+		//adding a sale
 		if($method=='POST' && isset($input))
 		{
 
@@ -154,7 +155,47 @@ if($resrc=='sales')
 			echo json_encode(array_values($json));
 
 		}
+	//updating a sale 
+	//limitation only can change the items already purchased by customer
+		if($method=='PUT' && isset($input) && $id)
+		{
+
+			$sql="UPDATE `Sales` set $set WHERE Sale_ID=$id";
+			$result=mysqli_query($conn,$sql);
+
+			if(!$result)
+			{
+				header('Content-Type: application/json');
+			echo json_encode(array("error"=>"Query Failed","description"=>"Failed to Update Sale to Database"));
+				die(mysqli_error($conn));
+			}
+
+			//update items in SalesItem table
+			$batchID=0;
+			$qty=0;
+
+			foreach($items as $item)
+			{
+				$batchID=intval($item['batch_id']);
+				$qty=intval($item['qty']);
+				$sql="UPDATE `SalesItem` set `QuantitySold`=$qty
+				WHERE `Sale_ID`=$id AND `Batch_ID`=$batchID";
+				$result=mysqli_query($conn,$sql);
+
+			if(!$result)
+			{
+				die(mysqli_error($conn));
+			}
+			}
+
+			//respond with status of query
+			header('Content-Type: application/json');
+			echo json_encode(array("success"=>"1"));
+
+		}
 	}
+
+
 /*MonthlySales Methods*/
 else if($resrc='month_sales' && $id=='date')
 {
