@@ -3,6 +3,7 @@
 		<div class="row panel-heading toolbar" >
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-view"><span class="glyphicon glyphicon-plus-sign"></span> Add Sale</button>
 			<button class="btn btn-default" data-ng-click="generateReport();"><span class="glyphicon glyphicon-new-window"></span> Export</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-view"><span class="glyphicon glyphicon-edit"></span> Edit Sale TEST</button>
 			<div class="btn-group pull-right" data-toggle="buttons">
 					<label class="btn btn-default">
 							<input type="radio" name="day"> Daily
@@ -40,17 +41,16 @@
 	</div>
 </div>
 
-<!-- Add Sale Model-->
-<div id="add-view" class="modal fade" role="dialog" data-ng-controller="addSaleViewController">
-  <div class="modal-dialog">
-    <!-- Content-->
-    <div class="modal-content">
-      <div class="modal-header model-primary">
-        <h4 class="modal-title">Add Sale</h4>
-      </div>
-      <div class="modal-body">
+<!-- Add Sale Modal-->
+<!--<div id="add-view" class="modal fade" role="dialog" data-ng-controller="addSaleViewController">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header model-primary">
+				<h4 class="modal-title">Add Sale</h4>
+			</div>
+			<div class="modal-body">
 				<!-- Approved by and Price tag-->
-        <div class="row">
+<!--				<div class="row">
 					<div class="col-xs-6 pull-left"><span>Approved by: <span class="label label-default">Jacob {{sale.staff}}</span></span></div>
 					<div id="pricetag" class="col-xs-6 pull-right pricetag">
 						<strong>Total</strong>
@@ -82,20 +82,20 @@
 						<tr>
 							<form name="addItemForm">
 								<td><span class="glyphicon glyphicon-delete"></span></td>
-								<td>{{cart.length+1}}</td>
-								<td><input type="text" class="form-control" id="batch_id" name="batch_id" data-ng-model="toAdd.batch_id" data-ng-change="resolveProduct(toAdd.batch_id);" ng-model-options="{ debounce: 500 }" tabindex="1"/></td>
+								<td>{{cart.length+1}}</td>	
+								<td><input type="text" class="form-control" id="batch_id" name="batch_id" data-ng-model="toAdd.batch_id" data-ng-change="resolveProduct(toAdd.batch_id);" ng-model-	options="{ debounce: 500 }" tabindex="1"/></td>
 								<td class="text-center">
 									<div class="higher" data-ng-show="toAdd.resolved==false">
 										<img class="loading" src="img/loading.svg"/>
 										<span class="primary">Fetching..</span>
 									</div>
 									<div>
-										<input class="form-control" data-ng-class={invalid:(toAdd.resolved=='invalid')} name="product" type="text"  id="product_name" data-ng-model="toAdd.product" tabindex="-1" readonly/>
+										<input class="form-control" data-ng-class={invalid:(toAdd.resolved=='invalid')} name="product" type="text"  id="product_name" data-ng-model="toAdd.product" 	tabindex="-1" readonly/>
 									</div>
 								</td>
 								<td><input type="text" class="form-control" id="unit_price" data-ng-model="toAdd.unit_price | currency:'$'" tabindex="-1" readonly/></td>
-								<td><input type="number" class="form-control" id="qty" data-ng-model="toAdd.qty" data-ng-disabled="toAdd.resolved=='invalid' || toAdd.resolved==null" ng-enter="addItem(toAdd); toAdd=null;" tabindex="2"/></td>
-								<td class="text-right sum"><input type="text" class="form-control" id="unit_price" data-ng-bind="(toAdd.unit_price*toAdd.qty) | currency:'$'" tabindex="-1" readonly/></td>
+								<td><input type="number" class="form-control" id="qty" data-ng-model="toAdd.qty" data-ng-disabled="toAdd.resolved=='invalid' || toAdd.resolved==null" ng-	enter="addItem(toAdd); toAdd=null;" tabindex="2"/></td>
+								<td class="text-right sum"><input type="text" class="form-control" id="unit_price" data-ng-bind="(toAdd.unit_price*toAdd.qty) | currency:'$'" tabindex="-1" readonly/>	</td>
 							</form>
 						</tr>
 						<tr class="animated fadeIn" data-ng-click="addItem(toAdd);" style="cursor: pointer" data-ng-hide="toAdd.resolved=='invalid' || toAdd.resolved==null">
@@ -110,7 +110,7 @@
 							<td colspan="5"></td>
 							<td colspan="2" class-="pull-right">
 								<label for="total_paid">Total Paid:</label>
-								<input type="text" class="form-control" id="total_paid" data-ng-model="total_paid" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 2500, 'blur': 0 }}" data-ng-change="change = ((total_paid - calculateTotal())) ;  " tabindex="3"/>
+								<input type="text" class="form-control" id="total_paid" data-ng-model="total_paid" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 2500, 'blur': 0 	}}" data-ng-change="change = ((total_paid - calculateTotal())) ;  " tabindex="3"/>
 							</td>
 						</tr>
 						<tr class="animated flipInX" data-ng-hide="total_paid==0 || total_paid==null">
@@ -122,16 +122,118 @@
 						</tr>
 					</tfoot>
 				</table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 				<button type="button" class="btn btn-primary" data-ng-click="finalise();" data-ng-disabled="cart.length==0 || total_paid=='0' || total_paid=='' " >
 					Finalise
 					<img class="loading inverted" src="img/loading.svg" data-ng-show="sending"/>
 					<span class="glyphicon glyphicon-ok" data-ng-show="!sending"></span> 
 				</button>
 			</div>
-    </div>
+		</div>
+			
+<!-- Edit Sale Model-->
+<div id="edit-view" class="modal fade" role="dialog" data-ng-controller="salesViewController">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header model-primary">
+				<h4 class="modal-title">Edit Sale</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-6 pull-left"><span>Approved by: <span class="label label-default">Jacob {{sale.staff}}</span></span></div>
+					<div id="pricetag" class="col-xs-6 pull-right pricetag">
+						<strong>Total</strong>
+						<div class="price text-primary text-right">$53.85{{total | currency:"$"}}</div>
+					</div>
+				</div>
 
-  </div>
+				<div class="panel-group" id="accordion">
+				  <div class="panel panel-default">
+					<div class="panel-heading">
+						<span class="pull-right glyphicon glyphicon-remove" data-ng-click="" style="cursor: pointer"></span> 
+					  <h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+						2× Drug1 ($15.60)</a>
+					  </h4>
+						
+					</div>
+					<div id="collapse1" class="panel-collapse collapse in">
+						<div class="panel-body">
+						  Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+					  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+					  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+					  commodo consequat.
+						</div>
+					</div>
+				  </div>
+				  <div class="panel panel-default">
+					<div class="panel-heading">
+						<span class="pull-right glyphicon glyphicon-remove" data-ng-click="" style="cursor: pointer"></span> 
+					  <h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+						8× Drug2 ($32.00)</a>
+					  </h4>
+					</div>
+					<div id="collapse2" class="panel-collapse collapse">
+						<div class="panel-body row">
+							<div class="col-xs-4">
+								<img src="img/antihistamine.svg" alt="drug image">
+							</div>
+							<div class="col-xs-6 side-panel">
+								<p><label>Batch:</label> <span>2</span> <span class="glyphicon glyphicon-pencil" style="cursor: pointer"></span></p>
+								<p><label>Product</label> <span>Drug2</span></p>
+								<p><label>Unit Price:</label> <span>$4.00</span></p>	
+								<p><label>Qty:</label> <span>8</span> <span class="glyphicon glyphicon-pencil" style="cursor: pointer"></span></p>
+							</div>
+							<div class="col-xs-2">
+								<p class="pull-right text-center"><label>Total:</label> <span>$32.00</span></p>
+							</div>
+						</div>
+					  </div>
+					</div>
+				  <div class="panel panel-default">
+					<div class="panel-heading">
+						<span class="pull-right glyphicon glyphicon-remove" data-ng-click="" style="cursor: pointer"></span> 
+					  <h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+						1× Drug3 ($6.25)</a>
+					  </h4>
+					</div>
+					<div id="collapse3" class="panel-collapse collapse">
+						<div class="panel-body">
+						  Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+					  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+					  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+					  commodo consequat.
+						</div>
+					</div>
+				  </div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-xs-5 pull-right">
+						<label for="total_paid">Total Paid:</label>
+						<input type="text" class="form-control" id="total_paid" data-ng-model="total_paid" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 2500, 'blur': 0 }}">
+					</div>
+				</div>
+				<div class="row"  data-ng-hide="total_paid==0 || total_paid==null">
+					<hr>
+					<div class="col-xs-5 pull-right">
+						<div class="animated flipInX">
+							<label for="total_paid">Change:</label>
+							<input type="text" class="form-control" id="total_paid" data-ng-model="change;" readonly/>
+						</div>
+					</div>
+				</div>
+				<br>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" data-ng-click="" > Save
+				</button>
+			</div>
+		</div>
+		
+  	</div>
 </div>
