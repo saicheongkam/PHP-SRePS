@@ -29,6 +29,15 @@ if($resrc!='product' && $resrc!='batch')
 if (isset ($input))  {
 	
 	//Update a batch given id
+	//api PUT call http://localhost:8080/sreps/api/batch_api.php/batch/id
+	//data
+//	{  
+//   
+//   "Quantity":"69",
+//   "ExpiryDate":"2017-02-03",
+//   "Shelf":"3526-56"
+//   
+//	}
 	if($method=='PUT' && $resrc=='batch' && $id)
 	{
 		$id=intval($id);
@@ -59,6 +68,14 @@ if (isset ($input))  {
 	
 	
 	//add a new batch
+	//api POST call http://localhost:8080/sreps/api/batch_api.php/batch/
+	//data
+//	{  
+//   "Product_ID":"36",
+//   "Quantity":"69",
+//   "ExpiryDate":"2017-02-03",
+//   "Shelf":"3526-56"//   
+//	}
 	if($method=='POST' && $resrc=='batch')
 	{
 		$set='';
@@ -81,22 +98,11 @@ if (isset ($input))  {
 				die(mysqli_error($conn));
 		}
 	}
-//	// escape the columns and values from the input object
-//	$saleColumns = array('SaleDate','Amount','Paid','Change','Staff_ID');
-//	$values=array_values($input);
-//
-//	 
-//	// build the SET part of the SQL command
-//	$set = '';
-//	for ($i=0;$i<count($saleColumns);$i++) {
-//		$set.=($i>0?',':'').'`'.$saleColumns[$i].'`=';
-//		$set.=($values[$i]===null?'NULL':''.(is_numeric($values[$i])?$values[$i]:'"'.$values[$i].'"').'');
-//	}
-//	
-//	//get all items sold
-//	$items=$input['Items'];
+
 }
 //get all product data based on batch id
+//api GET call http://localhost:8080/sreps/api/batch_api.php/product/id
+
 if ($method=='GET' && $id && $resrc=='product')
 {
 	$id=intval($id);
