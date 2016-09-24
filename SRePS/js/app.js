@@ -8,6 +8,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
+			.when('/reports', { templateUrl: 'views/reportsView.html', controller: ''})
 			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );

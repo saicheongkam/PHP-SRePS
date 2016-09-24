@@ -12,9 +12,9 @@
 		<![endif]-->
 		<link href="css/bootstrap.min.css" rel="stylesheet"/> 
 		<link href="css/bootstrap-toggle.css" rel="stylesheet">
-		<link href="css/slider.css" rel="stylesheet"/>
 		<link href="css/animate.css" rel="stylesheet"/>
 		<link href="css/main.css" rel="stylesheet"/>
+		<link href="css/bootstrap-year-calendar.min.css" rel="stylesheet"/>
 		<link rel="icon" type="img/ico" href="img/favicon.ico">
 	</head>
 	<body>
@@ -44,7 +44,7 @@
 				<ul class="nav nav-tabs">
 					<li data-ng-class="{active:isActive('sales')}"><a data-toggle="tab" href="#sales"> <span class="glyphicon glyphicon-shopping-cart"></span> Sales</a></li>
 					<li data-ng-class="{active:isActive('inventory')}"><a data-toggle="tab" href="#inventory"> <span class="glyphicon glyphicon-list"></span> Inventory</a></li>
-					<li class="disabled" ><a><span class="glyphicon glyphicon-book"></span> Reports</a></li>
+					<li><a data-toggle="tab" href="#reports"><span class="glyphicon glyphicon-book"></span> Reports</a></li>
 					<li class="disabled" ><a><span class="glyphicon glyphicon-stats"></span> Statistics</a></li>
 					<li class="disabled pull-right"><a > <span class="glyphicon glyphicon-user"></span> User</a></li>
 				</ul>
@@ -62,7 +62,7 @@
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/bootstrap-toggle.js"></script>
 		<script src="js/ui-bootstrap.modal.js"></script>
-		<script src="js/bootstrap-slider.js"></script>
+		<script src="js/bootstrap-year-calendar.min.js"></script>
 		<!-- All Angular-js files -->
 		<script src="js/angular.min.js"></script>
 		<script src="js/angular-route.js"></script>
