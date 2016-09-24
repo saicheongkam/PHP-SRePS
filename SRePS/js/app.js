@@ -45,11 +45,42 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 			});
 			doc.save('table.pdf');
 		}
+		$scope.selection = {
+				range: "day"
+		};
+		$scope.date_range = 0;
+		$scope.calculateDateRange = function(range)
+		{
+			var difference = 0;
+			switch(range)
+			{
+				case "day": 
+					difference = 1;
+					break;
+				case "week": 
+					difference = 7;
+					break
+				case "month": 
+					difference = 30;
+					break
+			}
+			var endDate = new Date();
+			var startDate = new Date();
+			startDate.setDate(startDate.getDate() - difference );
+			startDate = startDate.toISOString().slice(0,10);
+			endDate = endDate.toISOString().slice(0,10);
+			return {start:startDate,end:endDate};
+		}
 		
+		$scope.fetching = false;
 		$scope.reloadTable = function()
 		{
-			Database.getSales().success(function(result){
-			$scope.sales = result;
+			$scope.date_range = $scope.calculateDateRange($scope.selection.range);
+			//alert($scope.date_range.start+" -> "+$scope.date_range.end);
+			$scope.fetching = true;
+			Database.getSalesFrom($scope.date_range.start,$scope.date_range.end).success(function(result){
+				$scope.sales = result;
+				$scope.fetching = false;
 			});
 		}
 		
@@ -229,7 +260,7 @@ app.service('Database', function($http) {
 	};
 	
 	this.getSalesFrom = function (startDate,endDate) {
-		return $http.get("api/salesapi.php/sales/start/"+startDate+"/end/"+endDate);
+		return $http.get("api/salesapi.php/month_sales/date?start="+startDate+"&end="+endDate);
 	};
 	
 	this.getSale = function (id) {
