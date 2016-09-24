@@ -208,6 +208,19 @@ div.higher
 	transition:  box-shadow 0.5s, transform 0.5s ease, z-index 0.5s;
 }
 
+.tile-img
+{
+	height: 50%;
+	margin: auto;
+}
+
+.tile-qty
+{
+	position: absolute;
+    bottom:0;
+    right:0;
+	margin-right: 10px;
+}
 .qty
 {
 	font-size: 2em;
