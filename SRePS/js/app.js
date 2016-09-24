@@ -145,14 +145,11 @@ app.controller('addSaleViewController', function($scope, $filter, Database, $win
 
 app.controller('inventoryViewController', function($scope, Database){
 		$scope.selectedItem = 0;
-	
-		$scope.selectItem = function(item)
-		{
+		$scope.selectItem = function(item){
 			Database.getItem(item).success(function(result){
 				$scope.selectedItem = result;
 			});
 		}
-		
 		Database.getInventory().success(function(result){
 				$scope.inventory = result;
 		});
@@ -160,12 +157,13 @@ app.controller('inventoryViewController', function($scope, Database){
 });
 
 app.controller('viewItemViewController', function($scope,Database) {
+		// View Item Controller
 		$scope.editPrice = false;
 		$scope.editLimit = false;
-		$scope.updating = false;
+		$scope.saving = false;
 		$scope.updateItem = function(itemToUpdate)
 		{
-			$scope.updating = true;
+			$scope.saving = true;
 			var toSend = {"UnitPrice":itemToUpdate.price,"ReorderLevel":itemToUpdate.reOrderLevel}
 			Database.updateItem(itemToUpdate.id,toSend).success(function(result){
 				$scope.updating = false;
@@ -175,7 +173,20 @@ app.controller('viewItemViewController', function($scope,Database) {
 				return result;
 			});
 		};
+		//Batch Controller
+		$scope.batches = [];
+		$scope.fetching = true;
+		Database.getBatches($scope.selectedItem.id).success(function(result){
+				$scope.fetching = false;
+				$scope.batches = result;
+				return result;
+		});
 });
+
+app.controller('batchViewController', function($scope,Database) {
+		
+});
+
 
 app.controller('addItemViewController', function($scope, Database, $window){
 	
@@ -238,6 +249,10 @@ app.service('Database', function($http) {
 	this.getProduct = function (batch_id) {
 			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
+			//Batch APIS
+			this.getBatches = function (prouct_id) {
+					return $http.get("api/batch_api.php/product/"+prouct_id);
+			};
 	this.updateItem = function (id, dataToUpdate) {
 			return $http.put("api/product_api.php/product/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
 	};

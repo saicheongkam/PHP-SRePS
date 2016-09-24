@@ -128,11 +128,17 @@
 										</tr>
 									</thead>
 									<tbody>
+										<tr data-ng-repeat="batch in batches">
+											<td>{{batch.id}}</td>
+											<td>{{batch.date}}</td>
+											<td>{{batch.shelf}}</td>
+											<td>{{batch.qty}}</td>
+										</tr>
 										<tr>
-											<td>1</td>
-											<td>{{date | date : "MMM d, yyyy"}}</td>
-											<td>2</td>
-											<td>21</td>
+											<td class="text-center"data-ng-show="fetching" colspan="4">
+												<img class="loading" src="img/loading.svg"/>
+												<span class="primary">Fetching..</span>
+											</td>
 										</tr>
 									</tbody>
 								</table>
@@ -142,7 +148,7 @@
 							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 							<button type="button" class="btn btn-primary" data-ng-click="updateItem(selectedItem);" >
 								Save
-								<img class="loading inverted" src="img/loading.svg" data-ng-show="updating"/>
+								<img class="loading inverted" src="img/loading.svg" data-ng-show="saving"/>
 							</button>
 						</div>
 					</div>
