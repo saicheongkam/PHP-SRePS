@@ -200,6 +200,7 @@ if($resrc=='sales')
 else if($resrc='month_sales' && $id=='date')
 {
 	//get sales between two ranges
+	//api call format: /salesapi.php/month_sales/date?start=2016-01-01&end=2017-01-01
 	
 	//extract parameters
 	parse_str($_SERVER['QUERY_STRING'], $query);
