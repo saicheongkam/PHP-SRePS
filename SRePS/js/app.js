@@ -175,10 +175,17 @@ app.controller('addSaleViewController', function($scope, $filter, Database, $win
 });
 
 app.controller('inventoryViewController', function($scope, Database){
-		$scope.selectedItem = 0;
+		$scope.selectedItem = {product:0,batches:0};
+	
 		$scope.selectItem = function(item){
 			Database.getItem(item).success(function(result){
-				$scope.selectedItem = result;
+				$scope.selectedItem.product = result;
+				$scope.fetching = true;
+				Database.getBatches($scope.selectedItem.product.id).success(function(result){
+					$scope.fetching = false;
+					$scope.selectedItem.batches = result;
+					return result;
+				});
 			});
 		}
 		Database.getInventory().success(function(result){
@@ -204,19 +211,9 @@ app.controller('viewItemViewController', function($scope,Database) {
 				return result;
 			});
 		};
-		//Batch Controller
-		$scope.batches = [];
-		$scope.fetching = true;
-		Database.getBatches($scope.selectedItem.id).success(function(result){
-				$scope.fetching = false;
-				$scope.batches = result;
-				return result;
-		});
-});
-
-app.controller('batchViewController', function($scope,Database) {
 		
 });
+
 
 
 app.controller('addItemViewController', function($scope, Database, $window){
@@ -229,7 +226,6 @@ app.controller('addItemViewController', function($scope, Database, $window){
 			$scope.sending = true;
 			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
 			Database.addItem(toSend).success(function(response){
-				alert(response);
 				$scope.sending = false;
 				$('#add-item').modal('hide');
 				//to refresh the view
@@ -284,6 +280,13 @@ app.service('Database', function($http) {
 			this.getBatches = function (prouct_id) {
 					return $http.get("api/batch_api.php/product/"+prouct_id);
 			};
+			this.updateBatch = function (id, dataToUpdate) {
+					return $http.put("api/batch_api.php/batch/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
+			};
+			this.addBatch = function (toAdd) {
+					return $http.post("api/batch_api.php/batch/",toAdd,{headers: {'Content-Type': 'application/json'} });
+			};
+	
 	this.updateItem = function (id, dataToUpdate) {
 			return $http.put("api/product_api.php/product/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
 	};
