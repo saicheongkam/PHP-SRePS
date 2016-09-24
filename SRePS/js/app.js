@@ -176,7 +176,6 @@ app.controller('addSaleViewController', function($scope, $filter, Database, $win
 
 app.controller('inventoryViewController', function($scope, Database){
 		$scope.selectedItem = {product:0,batches:0};
-	
 		$scope.selectItem = function(item){
 			Database.getItem(item).success(function(result){
 				$scope.selectedItem.product = result;
@@ -188,10 +187,14 @@ app.controller('inventoryViewController', function($scope, Database){
 				});
 			});
 		}
-		Database.getInventory().success(function(result){
-				$scope.inventory = result;
-		});
 		
+		$scope.reloadData = function ()
+		{
+			Database.getInventory().success(function(result){
+					$scope.inventory = result;
+			});
+		}
+		$scope.reloadData();
 });
 
 app.controller('viewItemViewController', function($scope,Database) {
@@ -199,19 +202,83 @@ app.controller('viewItemViewController', function($scope,Database) {
 		$scope.editPrice = false;
 		$scope.editLimit = false;
 		$scope.saving = false;
-		$scope.updateItem = function(itemToUpdate)
+	
+		$scope.closePanel = function ()
 		{
+			$scope.saving = false;
+			$('#view-item').modal('hide');
+			$scope.reloadData();
+		}
+		
+		$scope.updateItem = function(itemToUpdate){
 			$scope.saving = true;
 			var toSend = {"UnitPrice":itemToUpdate.price,"ReorderLevel":itemToUpdate.reOrderLevel}
 			Database.updateItem(itemToUpdate.id,toSend).success(function(result){
-				$scope.updating = false;
-				$('#view-item').modal('hide');
-				$window.location = "#/"; 
-				$window.location = "#/inventory";
+				
 				return result;
 			});
 		};
+	
+		//Batch Controller
+		$scope.toAdd = {};
+		$scope.editing = false;
+		$scope.editingBatch = 0;
 		
+		$scope.editBatch = function(toEdit){
+			$scope.toAdd =  JSON.parse(JSON.stringify(toEdit));
+			$scope.editing = true;
+			$scope.editingBatch = toEdit.batch_id;
+		}
+		
+		$scope.addBatch = function(toAdd){
+			$scope.editing = false;
+			$scope.editingBatch = 0;
+			for(i=0;i<$scope.selectedItem.batches.length;i++)
+			{
+				var currentBatch = $scope.selectedItem.batches[i];
+				if(currentBatch.batch_id==toAdd.batch_id){
+					// Update batch detected
+					$scope.selectedItem.batches[i] = JSON.parse(JSON.stringify(toAdd));
+					$scope.toAdd = {};
+					return;
+				}
+			}
+			//Add batch detected!
+			var newAddition = JSON.parse(JSON.stringify(toAdd));
+			$scope.selectedItem.batches.push(newAddition);
+			$scope.toAdd = {};
+		}
+		
+		$scope.finalise = function() {
+			$scope.parityCheck = 0;
+			$scope.selectedItem.batches.forEach(function(batch){
+				if(batch.batch_id==null){
+					//Addition
+					$scope.saving = true;
+					var toAdd = {"Product_ID": $scope.selectedItem.product.id,
+													"Quantity":batch.quantity,
+													"ExpiryDate":batch.expirydate,
+													"Shelf":batch.shelf	};
+					Database.addBatch(toAdd).success(function(result){
+						$scope.parityCheck+=1;
+						if ($scope.parityCheck==$scope.selectedItem.batches.length) $scope.closePanel();
+						return result;
+					});
+				}else if(batch.batch_id>0){
+					//Update
+					$scope.saving = true;
+					var toUpdate = {"Product_ID": $scope.selectedItem.product.id,
+													"Quantity":batch.quantity,
+													"ExpiryDate":batch.expirydate,
+													"Shelf":batch.shelf	};
+					Database.updateBatch(batch.batch_id,toUpdate).success(function(result){
+						$scope.parityCheck+=1;
+						if ($scope.parityCheck==$scope.selectedItem.batches.length) $scope.closePanel();
+						return result;
+					});
+				}
+			});
+		}
 });
 
 
