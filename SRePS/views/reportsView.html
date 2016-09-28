@@ -5,48 +5,59 @@
 	<div class="col-xs-8 panel tile-container">
 		<div class="row offset">
 			<div class="btn-group col-xs-12">
-				<button type="button" class="btn btn-default btn-lg col-xs-1"><span class="glyphicon glyphicon-triangle-left"></span></button>
-				<button type="button" class="btn btn-default btn-lg col-xs-2"><span class="not-present">2015</span></button>
-				<button type="button" class="btn btn-default btn-lg col-xs-6"><span>2016</span></button>
-				<button type="button" class="btn btn-default btn-lg col-xs-2 year-disabled"><span class="not-present">2017</span></button>
-				<button type="button" class="btn btn-default btn-lg col-xs-1 disabled"><span class="glyphicon glyphicon-triangle-right"></span></button>
+				<button type="button" class="btn btn-default btn-lg col-xs-1" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
+					<span class="glyphicon glyphicon-triangle-left"></span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg col-xs-2" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
+					<span class="not-present">{{previousYear}}</span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg col-xs-6">
+					<span>{{currentYear}}</span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg col-xs-2" data-ng-disabled="nextYearDisabled" data-ng-click="next()">
+					<span class="not-present">{{nextYear}}</span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg col-xs-1"  data-ng-disabled="nextYearDisabled" data-ng-click="next()">
+					<span class="glyphicon glyphicon-triangle-right"></span>
+				</button>
 			</div>
 		</div>
+		
 		<div class="row offset">
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 1) || (nextYear != upperLimit), monthDisabled: (currentMonth < 1) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">January</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 2) || (nextYear != upperLimit), monthDisabled: (currentMonth < 2) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">February</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 3) || (nextYear != upperLimit), monthDisabled: (currentMonth < 3) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">March</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 4) || (nextYear != upperLimit), monthDisabled: (currentMonth < 4) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">April</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 5) || (nextYear != upperLimit), monthDisabled: (currentMonth < 5) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">May</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 6) || (nextYear != upperLimit), monthDisabled: (currentMonth < 6) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">June</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 7) || (nextYear != upperLimit), monthDisabled: (currentMonth < 7) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">July</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 8) || (nextYear != upperLimit), monthDisabled: (currentMonth < 8) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">August</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 9) || (nextYear != upperLimit), monthDisabled: (currentMonth < 9) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">September</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month-disabled">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 10) || (nextYear != upperLimit), monthDisabled: (currentMonth < 10) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">October</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month-disabled">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 11) || (nextYear != upperLimit), monthDisabled: (currentMonth < 11) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">November</h5>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3 month-disabled">
+			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (nextMonth >= 12) || (nextYear != upperLimit), monthDisabled: (currentMonth < 12) && (nextYear == upperLimit)}">
 				<h5 class="text-center month-text">December</h5>
 			</div>
 		</div>

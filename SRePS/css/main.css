@@ -234,7 +234,7 @@ div.higher
 	transition: background-color 0.5s ease,  box-shadow 0.5s, transform 0.5s ease, z-index 0.5s;
 }
 
-.month-disabled
+.monthDisabled
 {
 	display:inline-block;
 	background: #D5D5D5;
@@ -263,14 +263,6 @@ div.higher
 .not-present
 {
 	color: #A0A0A0
-}
-
-.year-disabled
-{
-	background: #D5D5D5;
-	cursor: not-allowed;
-
-	color: #909090
 }
 
 .offset
