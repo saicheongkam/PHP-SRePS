@@ -3,23 +3,202 @@ var app = angular.module("myApp", ['ngRoute','ngAnimate']);
 // Route configarations
 app.config(['$routeProvider', function($routeProvider) {
 		$routeProvider
+			.when('/users', { templateUrl: 'views/usersView.html', controller: 'userViewController',resolve:{
+					"check":function($location){
+						if(sessionStorage.user == null){
+							$location.path('/login');  
+						}
+					}					
+				}})
+			.when('/users/adduser', { templateUrl: 'views/addUserView.html', controller: 'userViewController'})
+			.when('/login', { templateUrl: 'views/loginView.html', controller: 'loginViewController'})
 			.when('/sales', { templateUrl: 'views/salesView.html', controller: 'salesViewController'})
 			.when('/sales/:salesid', { templateUrl: 'views/detailedSaleView.html', controller: 'detailedSaleViewController'})
 			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
-			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
-			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
+			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})			
+			.otherwise({ templateUrl: 'views/homepage.html', controller: '',resolve:{
+					"check":function($location){
+						if(sessionStorage.user == null){
+							$location.path('/login');  
+						}
+					}
+				}
+			} );
 	}]
 );
 
 // Controllers
 
-app.controller('menuController', function($scope,$window){
+app.controller('menuController', function($scope,$window, Database){
+	$scope.user_name = "User";
+	$scope.showLogout = false;	
+	$scope.role = "";
+	
+	// Check user session
+	if(sessionStorage.user != null){
+		var user = JSON.parse(sessionStorage.user);
+		if(user){
+			$scope.user_name = user.name;
+			$scope.role = user.role;
+			$scope.showLogout = true;
+		}
+	}	
+	
 	$scope.isActive = function(requestedTab){
 		var strs = $window.location.toString().split('/');
 		var thisTab = strs[strs.indexOf('#')+1];
-		return (requestedTab==thisTab);
+		return (requestedTab==thisTab);		
 	};
+	
+	//Hide menu
+	$scope.isDisabled = function(tab){
+		var result = true;
+		var sales = ["Sales Person","Manager","Owner"];
+		var report = ["Manager","Owner"];
+		var full = ["Owner"];				
+		if(tab == "sales"){
+			result = sales.indexOf($scope.role) > -1;			
+		}
+		if(tab == "inventory" || tab == "report" || tab == "stat"){
+			result = report.indexOf($scope.role) > -1;			
+		}
+		if(tab == "adduser"){
+			result = full.indexOf($scope.role) > -1;
+		}		
+		return !result;
+	}
+
+	//Call logout
+	$scope.logout = function(){
+		Database.doLogout().success(function(result){
+			sessionStorage.clear();
+			$window.location = "#/login";
+			window.location.reload();			
+		});		
+	}
+});
+
+app.controller('loginViewController', function($scope, $filter, $window, Database){	
+	$scope.showError = false;
+	$scope.errorMsg = "";
+
+	$scope.login = function(){	
+		var toSend = {"username":$scope.username,"password":$scope.userpass};
+		if( !$scope.username ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter username";	
+			angular.element('#login-username').focus();
+			return;
+		}else if( !$scope.userpass ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter password";
+			angular.element('#login-password').focus();			
+			return;			
+		}else{
+			$scope.showError = false;
+			$scope.errorMsg = "";			
+			Database.doLogin(toSend).success(function(result){
+				if(result.error){
+					$scope.showError = true;
+					$scope.errorMsg = result.message;						
+				}else{
+					sessionStorage.setItem('user', JSON.stringify(result));
+					$window.location = "#/sales";
+					window.location.reload(); 
+				}
+			});			
+		}	
+	}
+});
+
+app.controller('userViewController', function($scope, $filter, $window, Database){	
+	$scope.roles = ['Sales Person', 'Manager', 'Owner'];
+	$scope.userrole = "Sales Person";
+	$scope.users = null;
+	Database.getUsers().success(function(result){
+		$scope.users = result;		
+	});
+	$scope.showReset = function(Id){
+		$scope.staff_Id = Id;
+		$('#reset-password').modal('show');		
+	}
+	
+	$scope.showDelete = function(Id){
+		$scope.staff_Id = Id;
+		$('#delete-user').modal('show');		
+	}	
+	
+	//Reset password
+	$scope.resetPw = function(){
+		if( !$scope.reset_pw ){	
+			angular.element('#txt-reset-pw').focus();
+			return;
+		}else{
+			var toSend = {"id":$scope.staff_Id,"password":$scope.reset_pw};
+			Database.resetPassword(toSend).success(function(result){
+				if(result.error){
+					$window.alert(result.message);
+				}else{
+					$window.alert(result.message);
+					$('#reset-password').modal('hide');								
+				}
+			});			
+		}		
+	}
+	
+	//Delete user
+	$scope.delUser = function(){
+		var toSend = {"id":$scope.staff_Id};
+		Database.deleteUser(toSend).success(function(result){
+			if(result.error){
+				$window.alert(result.message);
+			}else{
+				$window.alert(result.message);
+				$('#delete-user').modal('hide');
+				$window.location.reload();		
+			}
+		});		
+	}	
+	// Create user 
+	$scope.createUser = function(){
+		if( !$scope.staffname ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter a Full Name";	
+			angular.element('#staff-name').focus();
+			return;
+		}else if( !$scope.username ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter a Username";
+			angular.element('#user-name').focus();			
+			return;			
+		}else if(!$scope.userpass){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter  a Password";
+			angular.element('#user-password').focus();			
+			return;					
+		}else if($scope.userpass != $scope.confirmpass){
+			$scope.showError = true;
+			$scope.errorMsg = "Password fields are not the same";
+			angular.element('#confirm-password').focus();			
+			return;					
+		}else{		
+			$scope.showError = false;
+			$scope.errorMsg = "";				
+			var toSend = {"staffname":$scope.staffname,"role":$scope.userrole ,"username":$scope.username,"password":$scope.userpass};
+			Database.createUser(toSend).success(function(result){
+				if(result.error){
+					$scope.showError = true;
+					$scope.errorMsg = result.message;						
+				}else{
+					$('#user-confirmation').modal('show');
+					$('#user-confirmation').on('hidden.bs.modal', function (e) {
+						$window.location = "#/users";
+					})					
+				}
+			});	
+		}
+	}
 });
 
 app.controller('salesViewController', function($scope, $filter, $window, Database){
@@ -45,46 +224,9 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 			});
 			doc.save('table.pdf');
 		}
-		$scope.selection = {
-				range: "day"
-		};
-		$scope.date_range = 0;
-		$scope.calculateDateRange = function(range)
-		{
-			var difference = 0;
-			switch(range)
-			{
-				case "day": 
-					difference = 1;
-					break;
-				case "week": 
-					difference = 7;
-					break
-				case "month": 
-					difference = 30;
-					break
-			}
-			var endDate = new Date();
-			var startDate = new Date();
-			startDate.setDate(startDate.getDate() - difference );
-			startDate = startDate.toISOString().slice(0,10);
-			endDate = endDate.toISOString().slice(0,10);
-			return {start:startDate,end:endDate};
-		}
-		
-		$scope.fetching = false;
-		$scope.reloadTable = function()
-		{
-			$scope.date_range = $scope.calculateDateRange($scope.selection.range);
-			//alert($scope.date_range.start+" -> "+$scope.date_range.end);
-			$scope.fetching = true;
-			Database.getSalesFrom($scope.date_range.start,$scope.date_range.end).success(function(result){
-				$scope.sales = result;
-				$scope.fetching = false;
-			});
-		}
-		
-		$scope.reloadTable();
+		Database.getSales().success(function(result){
+			$scope.sales = result;
+		});
 		
 });
 
@@ -175,113 +317,38 @@ app.controller('addSaleViewController', function($scope, $filter, Database, $win
 });
 
 app.controller('inventoryViewController', function($scope, Database){
-		$scope.selectedItem = {product:0,batches:0};
-		$scope.selectItem = function(item){
+		$scope.selectedItem = 0;
+	
+		$scope.selectItem = function(item)
+		{
 			Database.getItem(item).success(function(result){
-				$scope.selectedItem.product = result;
-				$scope.fetching = true;
-				Database.getBatches($scope.selectedItem.product.id).success(function(result){
-					$scope.fetching = false;
-					$scope.selectedItem.batches = result;
-					return result;
-				});
+				$scope.selectedItem = result;
 			});
 		}
 		
-		$scope.reloadData = function ()
-		{
-			Database.getInventory().success(function(result){
-					$scope.inventory = result;
-			});
-		}
-		$scope.reloadData();
+		Database.getInventory().success(function(result){
+				$scope.inventory = result;
+		});
+		
 });
 
 app.controller('viewItemViewController', function($scope,Database) {
-		// View Item Controller
 		$scope.editPrice = false;
 		$scope.editLimit = false;
-		$scope.saving = false;
-	
-		$scope.closePanel = function ()
+		$scope.updating = false;
+		$scope.updateItem = function(itemToUpdate)
 		{
-			$scope.saving = false;
-			$('#view-item').modal('hide');
-			$scope.reloadData();
-		}
-		
-		$scope.updateItem = function(itemToUpdate){
-			$scope.saving = true;
+			$scope.updating = true;
 			var toSend = {"UnitPrice":itemToUpdate.price,"ReorderLevel":itemToUpdate.reOrderLevel}
 			Database.updateItem(itemToUpdate.id,toSend).success(function(result){
-				
+				$scope.updating = false;
+				$('#view-item').modal('hide');
+				$window.location = "#/"; 
+				$window.location = "#/inventory";
 				return result;
 			});
 		};
-	
-		//Batch Controller
-		$scope.toAdd = {};
-		$scope.editing = false;
-		$scope.editingBatch = 0;
-		
-		$scope.editBatch = function(toEdit){
-			$scope.toAdd =  JSON.parse(JSON.stringify(toEdit));
-			$scope.editing = true;
-			$scope.editingBatch = toEdit.batch_id;
-		}
-		
-		$scope.addBatch = function(toAdd){
-			$scope.editing = false;
-			$scope.editingBatch = 0;
-			for(i=0;i<$scope.selectedItem.batches.length;i++)
-			{
-				var currentBatch = $scope.selectedItem.batches[i];
-				if(currentBatch.batch_id==toAdd.batch_id){
-					// Update batch detected
-					$scope.selectedItem.batches[i] = JSON.parse(JSON.stringify(toAdd));
-					$scope.toAdd = {};
-					return;
-				}
-			}
-			//Add batch detected!
-			var newAddition = JSON.parse(JSON.stringify(toAdd));
-			$scope.selectedItem.batches.push(newAddition);
-			$scope.toAdd = {};
-		}
-		
-		$scope.finalise = function() {
-			$scope.parityCheck = 0;
-			$scope.selectedItem.batches.forEach(function(batch){
-				if(batch.batch_id==null){
-					//Addition
-					$scope.saving = true;
-					var toAdd = {"Product_ID": $scope.selectedItem.product.id,
-													"Quantity":batch.quantity,
-													"ExpiryDate":batch.expirydate,
-													"Shelf":batch.shelf	};
-					Database.addBatch(toAdd).success(function(result){
-						$scope.parityCheck+=1;
-						if ($scope.parityCheck==$scope.selectedItem.batches.length) $scope.closePanel();
-						return result;
-					});
-				}else if(batch.batch_id>0){
-					//Update
-					$scope.saving = true;
-					var toUpdate = {"Product_ID": $scope.selectedItem.product.id,
-													"Quantity":batch.quantity,
-													"ExpiryDate":batch.expirydate,
-													"Shelf":batch.shelf	};
-					Database.updateBatch(batch.batch_id,toUpdate).success(function(result){
-						$scope.parityCheck+=1;
-						if ($scope.parityCheck==$scope.selectedItem.batches.length) $scope.closePanel();
-						return result;
-					});
-				}
-			});
-		}
 });
-
-
 
 app.controller('addItemViewController', function($scope, Database, $window){
 	
@@ -293,6 +360,7 @@ app.controller('addItemViewController', function($scope, Database, $window){
 			$scope.sending = true;
 			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
 			Database.addItem(toSend).success(function(response){
+				alert(response);
 				$scope.sending = false;
 				$('#add-item').modal('hide');
 				//to refresh the view
@@ -322,10 +390,6 @@ app.service('Database', function($http) {
 		return $http.get("api/salesapi.php/sales");
 	};
 	
-	this.getSalesFrom = function (startDate,endDate) {
-		return $http.get("api/salesapi.php/month_sales/date?start="+startDate+"&end="+endDate);
-	};
-	
 	this.getSale = function (id) {
 			return $http.get("api/salesapi.php/sales/"+id);
 	};
@@ -343,28 +407,72 @@ app.service('Database', function($http) {
 	this.getProduct = function (batch_id) {
 			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
-			//Batch APIS
-			this.getBatches = function (prouct_id) {
-					return $http.get("api/batch_api.php/product/"+prouct_id);
-			};
-			this.updateBatch = function (id, dataToUpdate) {
-					return $http.put("api/batch_api.php/batch/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
-			};
-			this.addBatch = function (toAdd) {
-					return $http.post("api/batch_api.php/batch/",toAdd,{headers: {'Content-Type': 'application/json'} });
-			};
-	
 	this.updateItem = function (id, dataToUpdate) {
 			return $http.put("api/product_api.php/product/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
 	};
 	this.addItem = function (toAdd) {
 			return $http.post("api/product_api.php/product/",toAdd,{headers: {'Content-Type': 'application/json'} });
-	};
+	};	
 	
 	//Drug APIS
 	this.getDrugs = function () {
 			return $http.get("api/drug_api.php/type/");
 	};
+	
+	//Login API call
+	this.doLogin = function (toAdd) {
+		return $http({
+			method: 'POST',
+			url:'api/loginapi.php',
+			data: $.param({username: toAdd.username,password:toAdd.password}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		}); 		
+	};	
+	
+	// User logout
+	this.doLogout = function(){
+		return $http({
+			method: 'POST',
+			url:'api/logout.php'						
+		}); 			
+	}
+	//Get users API
+	this.getUsers = function () {
+		return $http.get("api/getusers_api.php");
+	};	
+	
+	//Create user API
+	this.createUser = function (toAdd) {
+		//console.log(toAdd);
+		return $http({
+			method: 'POST',
+			url:'api/adduser_api.php',
+			data: $.param({staffname:toAdd.staffname,role:toAdd.role,username: toAdd.username,password:toAdd.password}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		}); 		
+	};	
+	
+	//Password reset API
+	this.resetPassword = function (toAdd) {
+		//console.log(toAdd);
+		return $http({
+			method: 'POST',
+			url:'api/password_api.php',
+			data: $.param({id:toAdd.id,password:toAdd.password}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		}); 		
+	};	
+
+	// Delete user API
+	this.deleteUser = function (toAdd) {
+		//console.log(toAdd);
+		return $http({
+			method: 'POST',
+			url:'api/deluser_api.php',
+			data: $.param({id:toAdd.id}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		}); 		
+	};	
 	
 });
 
