@@ -46,9 +46,46 @@ app.controller('salesViewController', function($scope, $filter, $window, Databas
 			});
 			doc.save('table.pdf');
 		}
-		Database.getSales().success(function(result){
-			$scope.sales = result;
-		});
+		$scope.selection = {
+				range: "day"
+		};
+		$scope.date_range = 0;
+		$scope.calculateDateRange = function(range)
+		{
+			var difference = 0;
+			switch(range)
+			{
+				case "day": 
+					difference = 1;
+					break;
+				case "week": 
+					difference = 7;
+					break
+				case "month": 
+					difference = 30;
+					break
+			}
+			var endDate = new Date();
+			var startDate = new Date();
+			startDate.setDate(startDate.getDate() - difference );
+			startDate = startDate.toISOString().slice(0,10);
+			endDate = endDate.toISOString().slice(0,10);
+			return {start:startDate,end:endDate};
+		}
+		
+		$scope.fetching = false;
+		$scope.reloadTable = function()
+		{
+			$scope.date_range = $scope.calculateDateRange($scope.selection.range);
+			//alert($scope.date_range.start+" -> "+$scope.date_range.end);
+			$scope.fetching = true;
+			Database.getSalesFrom($scope.date_range.start,$scope.date_range.end).success(function(result){
+				$scope.sales = result;
+				$scope.fetching = false;
+			});
+		}
+		
+		$scope.reloadTable();
 		
 });
 
@@ -139,38 +176,113 @@ app.controller('addSaleViewController', function($scope, $filter, Database, $win
 });
 
 app.controller('inventoryViewController', function($scope, Database){
-		$scope.selectedItem = 0;
-	
-		$scope.selectItem = function(item)
-		{
+		$scope.selectedItem = {product:0,batches:0};
+		$scope.selectItem = function(item){
 			Database.getItem(item).success(function(result){
-				$scope.selectedItem = result;
+				$scope.selectedItem.product = result;
+				$scope.fetching = true;
+				Database.getBatches($scope.selectedItem.product.id).success(function(result){
+					$scope.fetching = false;
+					$scope.selectedItem.batches = result;
+					return result;
+				});
 			});
 		}
 		
-		Database.getInventory().success(function(result){
-				$scope.inventory = result;
-		});
-		
+		$scope.reloadData = function ()
+		{
+			Database.getInventory().success(function(result){
+					$scope.inventory = result;
+			});
+		}
+		$scope.reloadData();
 });
 
 app.controller('viewItemViewController', function($scope,Database) {
+		// View Item Controller
 		$scope.editPrice = false;
 		$scope.editLimit = false;
-		$scope.updating = false;
-		$scope.updateItem = function(itemToUpdate)
+		$scope.saving = false;
+	
+		$scope.closePanel = function ()
 		{
-			$scope.updating = true;
+			$scope.saving = false;
+			$('#view-item').modal('hide');
+			$scope.reloadData();
+		}
+		
+		$scope.updateItem = function(itemToUpdate){
+			$scope.saving = true;
 			var toSend = {"UnitPrice":itemToUpdate.price,"ReorderLevel":itemToUpdate.reOrderLevel}
 			Database.updateItem(itemToUpdate.id,toSend).success(function(result){
-				$scope.updating = false;
-				$('#view-item').modal('hide');
-				$window.location = "#/"; 
-				$window.location = "#/inventory";
+				
 				return result;
 			});
 		};
+	
+		//Batch Controller
+		$scope.toAdd = {};
+		$scope.editing = false;
+		$scope.editingBatch = 0;
+		
+		$scope.editBatch = function(toEdit){
+			$scope.toAdd =  JSON.parse(JSON.stringify(toEdit));
+			$scope.editing = true;
+			$scope.editingBatch = toEdit.batch_id;
+		}
+		
+		$scope.addBatch = function(toAdd){
+			$scope.editing = false;
+			$scope.editingBatch = 0;
+			for(i=0;i<$scope.selectedItem.batches.length;i++)
+			{
+				var currentBatch = $scope.selectedItem.batches[i];
+				if(currentBatch.batch_id==toAdd.batch_id){
+					// Update batch detected
+					$scope.selectedItem.batches[i] = JSON.parse(JSON.stringify(toAdd));
+					$scope.toAdd = {};
+					return;
+				}
+			}
+			//Add batch detected!
+			var newAddition = JSON.parse(JSON.stringify(toAdd));
+			$scope.selectedItem.batches.push(newAddition);
+			$scope.toAdd = {};
+		}
+		
+		$scope.finalise = function() {
+			$scope.parityCheck = 0;
+			$scope.selectedItem.batches.forEach(function(batch){
+				if(batch.batch_id==null){
+					//Addition
+					$scope.saving = true;
+					var toAdd = {"Product_ID": $scope.selectedItem.product.id,
+													"Quantity":batch.quantity,
+													"ExpiryDate":batch.expirydate,
+													"Shelf":batch.shelf	};
+					Database.addBatch(toAdd).success(function(result){
+						$scope.parityCheck+=1;
+						if ($scope.parityCheck==$scope.selectedItem.batches.length) $scope.closePanel();
+						return result;
+					});
+				}else if(batch.batch_id>0){
+					//Update
+					$scope.saving = true;
+					var toUpdate = {"Product_ID": $scope.selectedItem.product.id,
+													"Quantity":batch.quantity,
+													"ExpiryDate":batch.expirydate,
+													"Shelf":batch.shelf	};
+					Database.updateBatch(batch.batch_id,toUpdate).success(function(result){
+						$scope.parityCheck+=1;
+						if ($scope.parityCheck==$scope.selectedItem.batches.length) $scope.closePanel();
+						return result;
+					});
+				}
+			});
+		}
 });
+
+
 
 app.controller('addItemViewController', function($scope, Database, $window){
 	
@@ -182,7 +294,6 @@ app.controller('addItemViewController', function($scope, Database, $window){
 			$scope.sending = true;
 			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
 			Database.addItem(toSend).success(function(response){
-				alert(response);
 				$scope.sending = false;
 				$('#add-item').modal('hide');
 				//to refresh the view
@@ -263,6 +374,10 @@ app.service('Database', function($http) {
 		return $http.get("api/salesapi.php/sales");
 	};
 	
+	this.getSalesFrom = function (startDate,endDate) {
+		return $http.get("api/salesapi.php/month_sales/date?start="+startDate+"&end="+endDate);
+	};
+	
 	this.getSale = function (id) {
 			return $http.get("api/salesapi.php/sales/"+id);
 	};
@@ -280,6 +395,17 @@ app.service('Database', function($http) {
 	this.getProduct = function (batch_id) {
 			return $http.get("api/product_api.php/batch/"+batch_id);
 	};
+			//Batch APIS
+			this.getBatches = function (prouct_id) {
+					return $http.get("api/batch_api.php/product/"+prouct_id);
+			};
+			this.updateBatch = function (id, dataToUpdate) {
+					return $http.put("api/batch_api.php/batch/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
+			};
+			this.addBatch = function (toAdd) {
+					return $http.post("api/batch_api.php/batch/",toAdd,{headers: {'Content-Type': 'application/json'} });
+			};
+	
 	this.updateItem = function (id, dataToUpdate) {
 			return $http.put("api/product_api.php/product/"+id,dataToUpdate,{headers: {'Content-Type': 'application/json'} });
 	};
