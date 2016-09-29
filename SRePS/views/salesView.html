@@ -3,16 +3,15 @@
 		<div class="row panel-heading toolbar" >
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-view"><span class="glyphicon glyphicon-plus-sign"></span> Add Sale</button>
 			<button class="btn btn-default" data-ng-click="generateReport();"><span class="glyphicon glyphicon-new-window"></span> Export</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-view"><span class="glyphicon glyphicon-edit"></span> Edit Sale TEST</button>
-			<div class="btn-group pull-right" data-toggle="buttons">
-					<label class="btn btn-default">
-							<input type="radio" name="day"> Daily
+			<div class="btn-group pull-right" > <!--data-toggle="buttons" -->
+					<label class="btn btn-default" data-ng-class="{active:(selection.range=='day')}"><!--active -->
+							<input class="sr-only" type="radio" name="range" data-ng-model="selection.range" value="day" checked="checked" data-ng-change="reloadTable()"> Daily
 					</label>
-					<label class="btn btn-default">
-							<input type="radio" name="week"> Weekly
+					<label class="btn btn-default" data-ng-class="{active:(selection.range=='week')}">
+							<input class="sr-only" type="radio" name="range" data-ng-model="selection.range" value="week" data-ng-change="reloadTable()"> Weekly
 					</label>
-					<label class="btn btn-default">
-							<input type="radio" name="month"> Monthly
+					<label class="btn btn-default" data-ng-class="{active:(selection.range=='month')}">
+							<input class="sr-only" type="radio" name="range" data-ng-model="selection.range" value="month" data-ng-change="reloadTable()"> Monthly
 					</label>
 			</div>
 		</div>
@@ -26,6 +25,12 @@
 					</tr>
 				</thead>
 				<tbody>
+					<tr>
+						<td class="text-center" data-ng-show="fetching" colspan="3">
+							<img class="loading" src="img/loading.svg"/>
+							<span class="primary">Fetching..</span>
+						</td>
+					</tr>
 					<tr data-ng-repeat="sale in sales" data-ng-click="navigateTo(sale.id);" style="cursor: pointer">
 						<td>{{sale.id}}</td>
 						<td>{{sale.date | date:"MMM d - h:mma"}}</td>
@@ -33,6 +38,19 @@
 						<td class="sr-only"><a href="#sales/{{sale.id}}" id="select-sale-{{sale.id}}" >{{sale.id}}</a></td>
 					</tr>
 				</tbody>
+				<tfoot>
+					<tr data-ng-hide="sales.length>0">
+						<td class="text-center" colspan="3" >
+							<p>No Records to show from <br/>
+							<span class="badge badge-default"><strong>{{date_range.start}}</strong> → <strong>{{date_range.end}}</strong></span>
+						</td>
+					</tr>
+					<tr data-ng-show="sales.length>0">
+						<td class="text-right" colspan="3" >
+							<p>Shwoing results from <br/> <span class="primary"><strong>{{date_range.start}}</strong> → <strong>{{date_range.end}}</strong></span>
+						</td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 		<div class="floating-action">
