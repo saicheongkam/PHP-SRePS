@@ -187,6 +187,8 @@ div.higher
 	display:inline-block;
 	background: white;
 	height: 200px;
+	margin: 2pt 2pt 2pt 2pt;
+	border-bottom-right-radius: 10px;
 	transform: scale(0.95);
 	z-index: 0;
 	cursor: pointer;
@@ -263,6 +265,11 @@ div.higher
 	margin-top: 90px;
 }
 
+.tab-pane-login
+{
+	margin-top: 140px;
+}
+		
 nav
 {
 	background-color: rgba(255, 255, 255, 0.69);
@@ -339,3 +346,12 @@ body
 {
 	background-image: url(../img/pixel_weave.png);
 }
+
+.center {
+				 float: none;
+				 margin-left: auto;
+				 margin-right: auto;
+			}
+			[ng\:cloak], [ng-cloak], .ng-cloak {
+			  display: none !important;
+			}    
