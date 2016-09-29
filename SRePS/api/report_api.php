@@ -28,13 +28,41 @@ if($resrc!='sales')
 
 if($method=='GET' && $repType=='items')
 {
+		//extract parameters from the query string
+	parse_str($_SERVER['QUERY_STRING'], $query);
+	
+	if(!$query)
+	{
+		header('Content-Type: application/json');
+			echo json_encode(array("error"=>"Bad Call","description"=>"Invalid API Call"));
+			header('X-PHP-Response-Code: 404', true, 404);
+			die(mysqli_error($conn));
+	}
+	//check if date format correct
+	if(preg_match('/^\d{4}-\d{2}-\d{2}$/',$query['start']) && preg_match('/^\d{4}-\d{2}-\d{2}$/',$query['end']))
+	{
+		$start=$query['start'];
+		$end=$query['end'];
+	}
+	else
+	{
+		header('Content-Type: application/json');
+			echo json_encode(array("error"=>"Invalid Date","description"=>"Dates not in correct format"));
+			header('X-PHP-Response-Code: 404', true, 404);
+			die(mysqli_error($conn));
+	}
+	
+	
 	$query="SELECT t.Name AS Type, d.Name AS Drug, p.Description AS Product, SUM(si.QuantitySold) AS Sales
-	FROM Sales s
-	NATURAL JOIN SalesItem si
-	NATURAL JOIN Batch b
-	NATURAL JOIN Product p
-	NATURAL JOIN Drug d JOIN Type t ON p.Type_ID = t.Type_ID
-	GROUP BY p.Type_ID, p.Drug_ID, p.Product_ID";
+FROM Sales s
+NATURAL JOIN SalesItem si 
+NATURAL JOIN Batch b 
+NATURAL JOIN Product p
+NATURAL JOIN Drug d
+JOIN Type t
+ON p.Type_ID = t.Type_ID
+WHERE s.SaleDate >='$start' AND s.SaleDate<='$end'
+GROUP BY p.Type_ID, p.Drug_ID, p.Product_ID";
 	
 	$result=mysqli_query($conn,$query);
 			if (!$result) {
