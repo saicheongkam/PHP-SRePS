@@ -1,24 +1,32 @@
 <div class="row tab-pane">
 	
-	<div class="col-xs-2">
+	<div class="col-xs-2 hidden-xs hidden-sm">
+		<my-directive></my-directive>
 	</div>
 	
-	<div class="col-xs-8 panel tile-container">
+	<div class="col-xs-12 col-lg-8 panel tile-container">
 		<div class="row offset">
 			<div class="btn-group col-xs-12">
-				<button type="button" class="btn btn-default btn-lg col-xs-1" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
+				<button id="left" type="button" class="btn btn-default btn-lg col-xs-1" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
 					<span class="glyphicon glyphicon-triangle-left"></span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-2" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
+				
+				<button id="previouspreviousYear" type="button" class="btn btn-default btn-lg hidden-xs" data-ng-hide="previousClicked" animate data-ng-class="{previouspreviousYearAnimateR:nextClicked && animateEnabled}" data-ng-disabled="previousYearDisabled"><span class="not-present yeat-text">{{previousYear-1}}</span>
+				</button>
+				<button id="previousYear" type="button" class="btn btn-default btn-lg col-xs-2 hidden-xs" animate data-ng-class="{previousYearAnimateR:nextClicked && animateEnabled, previousYearAnimateL:previousClicked && animateEnabled}" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
 					<span class="not-present">{{previousYear}}</span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-6">
+				<button id="currentYear" type="button" class="btn btn-default btn-lg col-xs-10 col-sm-6" animate data-ng-class="{currentYearAnimateR:nextClicked && animateEnabled, currentYearAnimateL:previousClicked && animateEnabled}">
 					<span>{{currentYear}}</span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-2" data-ng-disabled="nextYearDisabled" data-ng-click="next()">
+				<button id="nextYear" type="button" class="btn btn-default btn-lg col-xs-2 hidden-xs" animate data-ng-class="{nextYearAnimateR:nextClicked && animateEnabled, nextYearAnimateL:previousClicked && animateEnabled}" data-ng-disabled="nextYearDisabled" data-ng-click="next()">
 					<span class="not-present">{{nextYear}}</span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-1"  data-ng-disabled="nextYearDisabled" data-ng-click="next()">
+				<button id="nextnextYear" type="button" class="btn btn-default btn-lg hidden-xs" data-ng-hide="nextClicked" animate data-ng-class="{nextnextYearAnimateL:previousClicked && animateEnabled}" data-ng-disabled="nextYearDisabled">
+					<span class="not-present">{{nextYear+1}}</span>
+				</button>
+				
+				<button id="right" type="button" class="btn btn-default btn-lg col-xs-1"  data-ng-disabled="nextYearDisabled" data-ng-click="next()">
 					<span class="glyphicon glyphicon-triangle-right"></span>
 				</button>
 			</div>
@@ -64,6 +72,6 @@
 		</div>
 	</div>
 	
-	<div class="col-xs-2">
+	<div class="col-xs-2 hidden-xs hidden-sm">
 	</div>
 </div>

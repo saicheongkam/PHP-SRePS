@@ -304,9 +304,34 @@ app.controller('addItemViewController', function($scope, Database, $window){
 		};
 });
 
-app.controller('reportsViewController', function($scope,Database) {
+app.directive('animate', ['$window', function ($window) {
+
+	return {
+		link: link,
+		restrict: 'A',
+	};
 	
-	$scope.currentYear = 2016;
+	function link($scope, element, attrs){
+		
+		$scope.width = $window.innerWidth;
+		
+		angular.element($window).bind('resize', function(){	
+			$scope.width = $window.innerWidth;
+			
+			if ($scope.width < 768)
+				$scope.animateEnabled = false;
+			else
+				$scope.animateEnabled = true;
+			
+			$scope.$digest();
+		});
+	}
+}]);
+
+app.controller('reportsViewController', function($scope,Database, $window) {
+	var currentDate = new Date();
+	
+	$scope.currentYear = 1900 + currentDate.getYear();
 	$scope.previousYear = $scope.currentYear - 1;
 	$scope.nextYear = $scope.currentYear + 1
 	
@@ -316,12 +341,17 @@ app.controller('reportsViewController', function($scope,Database) {
 	$scope.nextYearDisabled = false;
 	$scope.previousYearDisabled = false;
 	
-	$scope.currentMonth = 9;
+	$scope.currentMonth = currentDate.getMonth() + 1;
 	$scope.nextMonth = $scope.currentMonth + 1;
+	
+	$scope.animateEnabled = true;	
 	
 	
 	$scope.previous = function()
 	{
+		$scope.previousClicked = true;
+		$scope.nextClicked = false;
+		
 		$scope.currentYear--;
 		$scope.previousYear--;
 		$scope.nextYear--;
@@ -331,6 +361,9 @@ app.controller('reportsViewController', function($scope,Database) {
 	
 	$scope.next = function()
 	{
+		$scope.nextClicked = true;
+		$scope.previousClicked = false;
+		
 		$scope.currentYear++;
 		$scope.previousYear++;
 		$scope.nextYear++;

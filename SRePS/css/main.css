@@ -328,7 +328,160 @@ div.higher
 
 	box-shadow: 0px 0px 2px -1px rgba(0,0,0,0.5);
 
-} 
+}
+
+#left {
+	position: relative;
+	z-index: 1;
+}
+
+#previouspreviousYear{
+	position: relative;
+	z-index: 0;
+	width: 0%;
+	height: 46px;
+	font-size: 0px;
+	left: -33px;
+}
+
+#previousYear{
+	position: relative;
+	z-index: 0;
+}
+
+#currentYear{
+	position: relative;
+	z-index: 0;
+}
+
+#nextYear{
+	position:relative;
+	z-index: 0;
+}
+
+#nextnextYear{
+	position: relative;
+	z-index: 0;
+	width: 0%;
+	height: 46px;
+	font-size: 0px;
+	left: 30px;
+}
+
+#right{
+	position: absolute;
+	z-index: 1;
+	left:90.4%;}
+
+.previouspreviousYearAnimateR
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: previouspreviousMoveR 5s reverse;
+}
+
+.previousYearAnimateR
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: previousMoveR 5s reverse;
+}
+
+.currentYearAnimateR
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: currentMoveR 5s reverse;
+}
+
+.nextYearAnimateR
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: nextMoveR 5s reverse;
+}
+
+.previousYearAnimateL
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: previousMoveL 0.5s reverse;
+}
+
+.currentYearAnimateL
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: currentMoveL 0.5s reverse;
+}
+
+.nextYearAnimateL
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: nextMoveL 0.5s reverse;
+}
+
+.nextnextYearAnimateL
+{
+	transition-timing-function: ease-out;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	animation: nextnextMoveL 0.5s reverse;
+}
+
+@keyframes previouspreviousMoveR {
+    0% {width:0%; left:-33px;}
+	70% { width:16.666666667%; font-size:18px;}
+	100% { width:16.666666667%; font-size:18px; left:0px;} 
+}
+
+@keyframes previousMoveR {
+    0% {width:16.666666667%; left: -33px;}
+    100% {width:50%; left: 0px;}
+}
+
+@keyframes currentMoveR {
+    0% {width:50%; left: -33px;}
+    100% {width:16.666666667%; left: 0px;}
+}
+
+
+@keyframes nextMoveR {
+    0% {width:16.666666667%; height: 46px; left: -33px;}
+	70% {width:8%; height: 46px; font-size:0px; left: -13px;}
+    100% {width:0%; height: 46px; font-size:0px; left: 0px;}
+}
+
+		
+@keyframes previousMoveL {
+    0% {width:16.666666667%; height:46px; left: 0px;}
+    100% {width:0%; height:46px; font-size:0pt; left:-8%;}
+}
+
+@keyframes currentMoveL {
+    0% {width:50%; left: 0px;}
+    100% {width:16.666666667%; left: -33px;}
+}
+
+
+@keyframes nextMoveL {
+    from {width:16.666666667%; left: 0px;}
+    to {width:50%; left: -33px;}
+}
+
+@keyframes nextnextMoveL {
+	0% {width:0%; left:5.5%;}
+	70% { width:16.666666667%; font-size:18px; left:-31px;}
+	100% { width:16.666666667%; font-size:18px; left:-33px;} 
+}
 
 .month-text
 {
