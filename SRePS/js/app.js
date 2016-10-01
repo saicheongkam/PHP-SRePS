@@ -371,6 +371,25 @@ app.controller('reportDetailViewController', function($scope, $filter, $routePar
 	});
 	
 	//helpers
+	$scope.calculateTotalForType = function(item)
+	{
+		var total = 0;
+		for(l=0;l<item.drugs.length; l++)
+		{
+			total += $scope.calculateTotalForDrug(item.drugs[l].products);
+		}
+		return total;
+	}
+	
+	$scope.calculateTotalForDrug = function(products)
+	{
+		var total = 0;
+		for(i=0;i<products.length; i++)
+		{
+			total += parseInt(products[i].sold);
+		}
+		return total;
+	}
 	
 	$scope.calculateWidth = function(x,list)
 	{

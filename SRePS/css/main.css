@@ -393,9 +393,14 @@ tr.editing
 
 /* Bar chart stuff */
 
+.table-header
+{
+	border-bottom: 2px #d8d8d8 solid;
+	padding: 0.1em;
+}
 .chart
 {
-	border: 1px #ffb2aa dashed;
+	display: block;
 }
 
 .chart-data
@@ -414,6 +419,11 @@ tr.editing
   overflow: scroll;
   max-height: 1em;
   line-height: 1em;
+}
+
+.no-data
+{
+	color: darkgrey;
 }
 
 .chart-bar
