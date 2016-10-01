@@ -9,6 +9,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
 			.when('/reports', { templateUrl: 'views/reportsView.html', controller: 'reportsViewController'})
+			.when('/report/:month/:year', { templateUrl: 'views/reportDetailView.html', controller: 'reportDetailViewController'})
 			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );
@@ -282,8 +283,6 @@ app.controller('viewItemViewController', function($scope,Database) {
 		}
 });
 
-
-
 app.controller('addItemViewController', function($scope, Database, $window){
 	
 		Database.getDrugs().success(function(result){
@@ -355,6 +354,13 @@ app.controller('reportsViewController', function($scope,Database) {
 	$scope.checkLimit();
 });
 
+app.controller('reportDetailViewController', function($scope, $filter, $routeParams, Database) {
+	$scope.year = $routeParams.year;
+	$scope.month = $routeParams.month;
+	Database.getReportItems($scope.month,$scope.year);
+	//$scope.sale = 
+});
+
 // Data factory
 app.factory("Data", 
 	function () {
@@ -416,6 +422,19 @@ app.service('Database', function($http) {
 	//Drug APIS
 	this.getDrugs = function () {
 			return $http.get("api/drug_api.php/type/");
+	};
+	
+	//Report APIS
+	this.getReportSales = function (month,year) {
+			return $http.get("api/report_api.php/sales/sale?month="+month+"&year="+year);
+	};
+	
+	this.getReportItems = function (month, year) {
+			var date = new Date(year, month, 0, 0, 0, 0, 0);
+			var start = date.clearTime().moveToFirstDayOfMonth();
+			var end = date.clearTime().moveToLastDayOfMonth();
+			alert(month+", "+ year +" ["+start.toISOString().slice(0,10)+" -> "+ end.toISOString().slice(0,10) +"]");
+			//return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
 	};
 	
 });
