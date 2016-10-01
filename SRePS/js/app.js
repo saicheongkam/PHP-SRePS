@@ -291,7 +291,7 @@ app.controller('addItemViewController', function($scope, Database, $window){
 		
 		$scope.addItem = function(toAdd){
 			$scope.sending = true;
-			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
+			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":14,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
 			Database.addItem(toSend).success(function(response){
 				$scope.sending = false;
 				$('#add-item').modal('hide');
@@ -357,8 +357,19 @@ app.controller('reportsViewController', function($scope,Database) {
 app.controller('reportDetailViewController', function($scope, $filter, $routeParams, Database) {
 	$scope.year = $routeParams.year;
 	$scope.month = $routeParams.month;
-	Database.getReportItems($scope.month,$scope.year);
-	//$scope.sale = 
+	$scope.fetching = { items: true, sales: "true"};
+	$scope.items = [];
+	Database.getReportItems($scope.month, $scope.year).success(function(response){
+		$scope.fetching.items = false;
+		$scope.items = response;
+	});
+	
+	$scope.sales = [];
+	Database.getReportSales($scope.month,$scope.year).success(function(response){
+		$scope.fetching.sales = false;
+		$scope.sales = response;
+	});
+	 
 });
 
 // Data factory
@@ -433,8 +444,9 @@ app.service('Database', function($http) {
 			var date = new Date(year, month, 0, 12, 0, 0, 0);
 			var start = new Date(date.moveToFirstDayOfMonth().getTime());
 			var end = new Date(date.moveToLastDayOfMonth().getTime());
-			alert(date.toDateString()+" ["+start.toISOString().slice(0,10)+" -> "+ end.toISOString().slice(0,10) +"]");
-			//return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
+			start = start.toISOString().slice(0,10);
+			end = end.toISOString().slice(0,10);
+			return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
 	};
 	
 });
@@ -483,6 +495,15 @@ app.directive('formatOnBlur', function ($filter, $window) {
 				}
 		};
 });
+
+// Filter
+
+app.filter('monthName', [function() {
+		return function (monthNumber) { //1 = January
+				var monthNames = [ 'January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December' ];
+				return monthNames[monthNumber - 1];
+		}
+}]);
 
 // Animations 
 
