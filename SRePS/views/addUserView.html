@@ -1,0 +1,74 @@
+  
+<div class="row" data-ng-controller="userViewController" style="margin-top:100px">       
+	<div class="col-md-4 col-md-offset-4">
+		<div class="panel panel-primary" >
+			<div class="panel-heading clearfix">				
+				<h3 class="panel-title pull-left">Add Staff</h3>
+				<a href="#/users" class="btn btn-default btn-sm pull-right"><span class="glyphicon glyphicon-arrow-left"></span>  Back</a>				
+			</div>     
+
+			<div class="panel-body" >
+				<div id="login-alert" class="alert alert-danger col-sm-12" ng-show="showError">{{errorMsg}}</div>						
+				<form id="loginform" role="form">
+					
+					<div class="form-group">
+						<label for="staff-name">Full Name</label>
+						<input id="staff-name" type="text" class="form-control" name="username" value="" placeholder="Staff name" data-ng-model="staffname">                                        
+					</div>	
+					<div class="form-group">
+						<label for="staff-name">Role</label>
+						<select  class="form-control" data-ng-model="userrole" ng-options="o as o for o in roles" ng-change="changeValue(userrole)"></select						                                       
+					</div>						
+					<div class="form-group">
+						<label for="user-name">Username</label>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+							<input id="user-name" type="text" class="form-control" name="username" value="" placeholder="Username" data-ng-model="username">                                        
+						</div>	
+					</div>
+					<div class="form-group">
+						<label for="user-password">Password</label>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+							<input id="user-password" type="password" class="form-control" name="password" placeholder="Password" data-ng-model="userpass">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="confirm-password">Confirm Password</label>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+							<input id="confirm-password" type="password" class="form-control" name="password" placeholder="Confirm password" data-ng-model="confirmpass">
+						</div>	
+					</div>
+					<div class="form-group">                                    
+						<div class="col-sm-12 controls center-block">
+							<a id="btn-login" class="btn btn-danger center-block" data-ng-click="createUser()">Add  </a>
+						</div>
+					</div>
+						</div>
+					</div>    
+				</form>
+			</div>                     
+		</div>  
+	</div>
+	<div class="modal fade" tabindex="-1" role="dialog" id="user-confirmation">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title">Add Staff</h4>
+		  </div>
+		  <div class="modal-body">
+			<h5>Done</h5>
+		  </div>
+		  <div class="modal-footer">        
+			<button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->	
+</div>
+
+
+
+    

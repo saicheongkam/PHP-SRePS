@@ -8,6 +8,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/sale/add', { templateUrl: 'views/addSaleView.html', controller: 'addSaleViewController'})
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
+			.when('/reports', { templateUrl: 'views/reportsView.html', controller: 'reportsViewController'})
 			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );
@@ -301,6 +302,57 @@ app.controller('addItemViewController', function($scope, Database, $window){
 				return response;
 			});
 		};
+});
+
+app.controller('reportsViewController', function($scope,Database) {
+	
+	$scope.currentYear = 2016;
+	$scope.previousYear = $scope.currentYear - 1;
+	$scope.nextYear = $scope.currentYear + 1
+	
+	$scope.upperLimit = $scope.nextYear;
+	$scope.lowerLimit = 1999;
+	
+	$scope.nextYearDisabled = false;
+	$scope.previousYearDisabled = false;
+	
+	$scope.currentMonth = 9;
+	$scope.nextMonth = $scope.currentMonth + 1;
+	
+	
+	$scope.previous = function()
+	{
+		$scope.currentYear--;
+		$scope.previousYear--;
+		$scope.nextYear--;
+		
+		$scope.checkLimit();
+	};
+	
+	$scope.next = function()
+	{
+		$scope.currentYear++;
+		$scope.previousYear++;
+		$scope.nextYear++;
+		
+		$scope.checkLimit();
+	};
+	
+	
+	$scope.checkLimit = function()
+	{
+		if ($scope.nextYear >= $scope.upperLimit)
+			$scope.nextYearDisabled = true;
+		else
+			$scope.nextYearDisabled = false;
+		
+		if ($scope.previousYear <= $scope.lowerLimit)
+			$scope.previousYearDisabled = true;
+		else
+			$scope.previousYearDisabled = false;
+	};
+	
+	$scope.checkLimit();
 });
 
 // Data factory
