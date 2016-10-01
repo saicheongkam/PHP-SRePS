@@ -116,4 +116,63 @@ GROUP BY p.Type_ID, p.Drug_ID, p.Product_ID";
 //	print_r($grp);
 	
 }
+
+if($method=='GET' && $repType=='sale')
+{
+		//extract parameters from the query string
+	parse_str($_SERVER['QUERY_STRING'], $query);
+	
+	if(!$query)
+	{
+		header('Content-Type: application/json');
+			echo json_encode(array("error"=>"Bad Call","description"=>"Invalid API Call"));
+			header('X-PHP-Response-Code: 404', true, 404);
+			die(mysqli_error($conn));
+	}
+	//check if date format correct
+	if(preg_match('/^\d{4}$/',$query['year']) && preg_match('/^\d{2}$/',$query['month']))
+	{
+		$month=$query['month'];
+		$year=$query['year'];
+	}
+	else
+	{
+		header('Content-Type: application/json');
+			echo json_encode(array("error"=>"Invalid Date","description"=>"Dates not in correct format"));
+			header('X-PHP-Response-Code: 404', true, 404);
+			die(mysqli_error($conn));
+	}
+	
+	
+	$query="SELECT SaleDate as Date,sum(Amount) as Total
+	FROM `sales`
+	WHERE month(SaleDate) =$month and year(SaleDate)=$year
+	GROUP BY day(SaleDate)";
+	
+	$result=mysqli_query($conn,$query);
+			if (!$result) {
+				header('Content-Type: application/json');
+			echo json_encode(array("error"=>"Query Failed","description"=>"Failed to get sales monthly report from database"));
+			header('X-PHP-Response-Code: 404', true, 404);
+			die(mysqli_error($conn));
+		}
+
+
+		//set return header 
+		header('Content-Type: application/json');
+		$json=array();
+		//generate json object from result
+		while($row=mysqli_fetch_assoc($result))
+		{
+			$json[]=array(
+				'date'=>$row['Date'],
+				'total'=>$row['Total']
+			);
+		}
+	
+	echo json_encode($json);
+
+	
+	
+}
 ?>
