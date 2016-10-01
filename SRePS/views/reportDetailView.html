@@ -34,8 +34,21 @@
 				<h4>Montly Sales of Items</h4>
 				<div class="col-xs-12" data-ng-repeat="item in items">
 					<h5>{{item.type | uppercase}}</h5>
-					<div class="col-xs-6" data-ng-repeat="drug in item.drugs">
-						<h6 class="text-center"><em>{{drug.drug}}</em></h6>
+					<div class="col-xs-6 chart" data-ng-repeat="drug in item.drugs">
+						<div class="row chart-data">
+							<div class="col-xs-10-offset-1 chart-data-row" data-ng-repeat="product in drug.products">
+								<div class="col-xs-3 chart-bar-label text-right">
+									{{product.name}}
+								</div>
+								<div class="col-xs-7" >
+									<div class="chart-bar" data-ng-style="{width: calculateWidth(product.sold, drug.products) + '%'}"></div>
+								</div>
+								<span class="chart-bar-label primary">{{product.sold}}</span>
+							</div>
+						</div>
+						<div class="row">
+							<h6 class="text-center"><em>{{drug.drug}}</em></h6>
+						</div>
 					</div>
 				</div>
 			</div>

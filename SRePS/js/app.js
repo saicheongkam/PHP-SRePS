@@ -369,6 +369,22 @@ app.controller('reportDetailViewController', function($scope, $filter, $routePar
 		$scope.fetching.sales = false;
 		$scope.sales = response;
 	});
+	
+	//helpers
+	
+	$scope.calculateWidth = function(x,list)
+	{
+		var total = 0;
+		var high = 0;
+		for(i=0;i<list.length; i++)
+		{
+			if(parseInt(list[i].sold) > high) 
+				high = list[i].sold;
+			total+= parseInt(list[i].sold);
+		}
+		if(total==0) return 0;
+		return ((x/high)*98)+2;
+	}
 	 
 });
 
