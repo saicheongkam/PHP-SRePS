@@ -314,7 +314,7 @@ div.higher
 	transition-timing-function: ease-out;
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
-	animation: previouspreviousMoveR 5s reverse;
+	animation: previouspreviousMoveR 0.5s reverse;
 }
 
 .previousYearAnimateR
@@ -322,7 +322,7 @@ div.higher
 	transition-timing-function: ease-out;
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
-	animation: previousMoveR 5s reverse;
+	animation: previousMoveR 0.5s reverse;
 }
 
 .currentYearAnimateR
@@ -330,7 +330,7 @@ div.higher
 	transition-timing-function: ease-out;
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
-	animation: currentMoveR 5s reverse;
+	animation: currentMoveR 0.5s reverse;
 }
 
 .nextYearAnimateR
@@ -338,7 +338,7 @@ div.higher
 	transition-timing-function: ease-out;
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
-	animation: nextMoveR 5s reverse;
+	animation: nextMoveR 0.5s reverse;
 }
 
 .previousYearAnimateL
@@ -418,9 +418,6 @@ div.higher
 	70% { width:16.666666667%; font-size:18px; left:-31px;}
 	100% { width:16.666666667%; font-size:18px; left:-33px;} 
 }
-=======
-/* Calender Studd */
->>>>>>> origin/reports-view
 
 .month-text
 {
