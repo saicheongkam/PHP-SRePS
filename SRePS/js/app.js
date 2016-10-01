@@ -430,10 +430,10 @@ app.service('Database', function($http) {
 	};
 	
 	this.getReportItems = function (month, year) {
-			var date = new Date(year, month, 0, 0, 0, 0, 0);
-			var start = date.clearTime().moveToFirstDayOfMonth();
-			var end = date.clearTime().moveToLastDayOfMonth();
-			alert(month+", "+ year +" ["+start.toISOString().slice(0,10)+" -> "+ end.toISOString().slice(0,10) +"]");
+			var date = new Date(year, month, 0, 12, 0, 0, 0);
+			var start = new Date(date.moveToFirstDayOfMonth().getTime());
+			var end = new Date(date.moveToLastDayOfMonth().getTime());
+			alert(date.toDateString()+" ["+start.toISOString().slice(0,10)+" -> "+ end.toISOString().slice(0,10) +"]");
 			//return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
 	};
 	
