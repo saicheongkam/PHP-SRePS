@@ -315,6 +315,7 @@ div.higher
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
 	animation: previouspreviousMoveR 0.5s reverse;
+	animation-fill-mode: forwards;
 }
 
 .previousYearAnimateR
@@ -323,6 +324,7 @@ div.higher
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
 	animation: previousMoveR 0.5s reverse;
+	animation-fill-mode: forwards;
 }
 
 .currentYearAnimateR
@@ -331,6 +333,7 @@ div.higher
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
 	animation: currentMoveR 0.5s reverse;
+	animation-fill-mode: forwards;
 }
 
 .nextYearAnimateR
@@ -339,6 +342,7 @@ div.higher
 	-webkit-transition-timing-function: ease-out;
 	-moz-transition-timing-function: ease-out;
 	animation: nextMoveR 0.5s reverse;
+	animation-fill-mode: forwards;
 }
 
 .previousYearAnimateL
@@ -391,15 +395,15 @@ div.higher
 
 
 @keyframes nextMoveR {
-    0% {width:16.666666667%; height: 46px; left: -33px;}
-	70% {width:8%; height: 46px; font-size:0px; left: -13px;}
+    0% {width:16.666666667%; height: 46px; left: -2.7%;}
+	70% {width:8%; height: 46px; font-size:0px; left: -0.6%;}
     100% {width:0%; height: 46px; font-size:0px; left: 0px;}
 }
 
 		
 @keyframes previousMoveL {
-    0% {width:16.666666667%; height:46px; left: 0px;}
-    100% {width:0%; height:46px; font-size:0pt; left:-8%;}
+    0% {width:16.666666667%; height:46px; left:0%}
+    100% {width:0%; height:46px; font-size:0pt; left:-2%}
 }
 
 @keyframes currentMoveL {
@@ -414,8 +418,8 @@ div.higher
 }
 
 @keyframes nextnextMoveL {
-	0% {width:0%; left:5.5%;}
-	70% { width:16.666666667%; font-size:18px; left:-31px;}
+	0% {width:0%; left:0%;}
+	70% { width:16.666666667%; font-size:18px; left:-33px;}
 	100% { width:16.666666667%; font-size:18px; left:-33px;} 
 }
 

@@ -315,7 +315,7 @@ app.directive('animate', ['$window', function ($window) {
 		
 		$scope.width = $window.innerWidth;
 		
-		angular.element($window).bind('resize', function(){	
+		angular.element($window).on('resize', function(){	
 			$scope.width = $window.innerWidth;
 			
 			if ($scope.width < 768)
@@ -329,6 +329,7 @@ app.directive('animate', ['$window', function ($window) {
 }]);
 
 app.controller('reportsViewController', function($scope,Database, $window) {
+		
 	var currentDate = new Date();
 	
 	$scope.currentYear = 1900 + currentDate.getYear();
@@ -344,12 +345,26 @@ app.controller('reportsViewController', function($scope,Database, $window) {
 	$scope.currentMonth = currentDate.getMonth() + 1;
 	$scope.nextMonth = $scope.currentMonth + 1;
 	
-	$scope.animateEnabled = true;	
+	$scope.animateEnabled = true;
+	
+	
+	$scope.calendarClick = function()
+	{
+		if ($scope.previousClicked == false && $scope.nextClicked == false && angular.element('#left').click)
+			$scope.previousClicked = true;
+		
+		if ($scope.nextClicked == false && $scope.previousClicked == false && angular.element('#right').click)
+			$scope.nextClicked = true;
+	}
 	
 	
 	$scope.previous = function()
 	{
-		$scope.previousClicked = true;
+		if ($scope.previousClicked == false)
+			$scope.previousClicked = true;
+		else
+			$scope.previousClicked = false;
+		
 		$scope.nextClicked = false;
 		
 		$scope.currentYear--;
@@ -358,10 +373,15 @@ app.controller('reportsViewController', function($scope,Database, $window) {
 		
 		$scope.checkLimit();
 	};
+
 	
 	$scope.next = function()
 	{
-		$scope.nextClicked = true;
+		//if ($scope.nextClicked == false)
+			$scope.nextClicked = true;
+		//else
+		//	$scope.nextClicked = false;
+		
 		$scope.previousClicked = false;
 		
 		$scope.currentYear++;
