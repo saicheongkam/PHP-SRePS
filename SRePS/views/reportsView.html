@@ -1,69 +1,148 @@
-<div class="row tab-pane">
+<div class="row tab-pane" data-ng-click="calendarClick()">
 	
-	<div class="col-xs-2">
+	<div class="col-xs-2 hidden-xs hidden-sm">
+		<my-directive></my-directive>
 	</div>
 	
-	<div class="col-xs-8 panel tile-container">
+	<div class="col-xs-12 col-lg-8 panel tile-container">
 		<div class="row offset">
 			<div class="btn-group col-xs-12">
-				<button type="button" class="btn btn-default btn-lg col-xs-1" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
+				<button id="left" type="button" class="btn btn-default btn-lg col-xs-1" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
 					<span class="glyphicon glyphicon-triangle-left"></span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-2" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
+				
+				<button id="previouspreviousYear" type="button" class="btn btn-default btn-lg hidden-xs" data-ng-hide="previousClicked || !nextClicked" animate data-ng-class="{previouspreviousYearAnimateR:nextClicked && animateEnabled}" data-ng-disabled="previousYearDisabled"><span class="not-present yeat-text">{{previousYear-1}}</span>
+				</button>
+				<button id="previousYear" type="button" class="btn btn-default btn-lg col-xs-2 hidden-xs" animate data-ng-class="{previousYearAnimateR:nextClicked && animateEnabled, previousYearAnimateL:previousClicked && animateEnabled}" data-ng-disabled="previousYearDisabled" data-ng-click="previous()">
 					<span class="not-present">{{previousYear}}</span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-6">
+				<button id="currentYear" type="button" class="btn btn-default btn-lg col-xs-10 col-sm-6" animate data-ng-class="{currentYearAnimateR:nextClicked && animateEnabled, currentYearAnimateL:previousClicked && animateEnabled}">
 					<span>{{currentYear}}</span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-2" data-ng-disabled="nextYearDisabled" data-ng-click="next()">
+				<button id="nextYear" type="button" class="btn btn-default btn-lg col-xs-2 hidden-xs" animate data-ng-class="{nextYearAnimateR:nextClicked && animateEnabled, nextYearAnimateL:previousClicked && animateEnabled}" data-ng-disabled="nextYearDisabled" data-ng-click="next()">
 					<span class="not-present">{{nextYear}}</span>
 				</button>
-				<button type="button" class="btn btn-default btn-lg col-xs-1"  data-ng-disabled="nextYearDisabled" data-ng-click="next()">
+				<button id="nextnextYear" type="button" class="btn btn-default btn-lg hidden-xs" data-ng-hide="!previousClicked || nextClicked" animate data-ng-class="{nextnextYearAnimateL:previousClicked && animateEnabled}" data-ng-disabled="nextYearDisabled">
+					<span class="not-present">{{nextYear+1}}</span>
+				</button>
+				
+				<button id="right" type="button" class="btn btn-default btn-lg col-xs-1"  data-ng-disabled="nextYearDisabled" data-ng-click="next()">
 					<span class="glyphicon glyphicon-triangle-right"></span>
 				</button>
 			</div>
 		</div>
 		
 		<div class="row offset">
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 1) || (nextYear != upperLimit), monthDisabled: (currentMonth < 1) && (nextYear == upperLimit)}">
+			<a href="#report/1/{{currentYear}}" data-ng-show="(currentMonth >= 1) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">January</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 1) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 1) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">January</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 2) || (nextYear != upperLimit), monthDisabled: (currentMonth < 2) && (nextYear == upperLimit)}">
+			
+			<a href="#report/2/{{currentYear}}" data-ng-show="(currentMonth >= 2) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">February</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 2) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 2) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">February</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 3) || (nextYear != upperLimit), monthDisabled: (currentMonth < 3) && (nextYear == upperLimit)}">
+			
+			<a href="#report/3/{{currentYear}}" data-ng-show="(currentMonth >= 3) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">March</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 3) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 3) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">March</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 4) || (nextYear != upperLimit), monthDisabled: (currentMonth < 4) && (nextYear == upperLimit)}">
+			
+			<a href="#report/4/{{currentYear}}" data-ng-show="(currentMonth >= 4) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">April</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 4) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 4) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">April</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 5) || (nextYear != upperLimit), monthDisabled: (currentMonth < 5) && (nextYear == upperLimit)}">
+			
+			<a href="#report/5/{{currentYear}}" data-ng-show="(currentMonth >= 5) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">May</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 5) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 5) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">May</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 6) || (nextYear != upperLimit), monthDisabled: (currentMonth < 6) && (nextYear == upperLimit)}">
+			
+			<a href="#report/6/{{currentYear}}" data-ng-show="(currentMonth >= 6) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">June</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 6) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 6) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">June</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 7) || (nextYear != upperLimit), monthDisabled: (currentMonth < 7) && (nextYear == upperLimit)}">
+			
+			<a href="#report/7/{{currentYear}}" data-ng-show="(currentMonth >= 7) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">July</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 7) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 7) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">July</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 8) || (nextYear != upperLimit), monthDisabled: (currentMonth < 8) && (nextYear == upperLimit)}">
+			
+			<a href="#report/8/{{currentYear}}" data-ng-show="(currentMonth >= 8) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">August</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 8) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 8) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">August</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 9) || (nextYear != upperLimit), monthDisabled: (currentMonth < 9) && (nextYear == upperLimit)}">
+			
+			<a href="#report/9/{{currentYear}}" data-ng-show="(currentMonth >= 9) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">September</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 9) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 9) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">September</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 10) || (nextYear != upperLimit), monthDisabled: (currentMonth < 10) && (nextYear == upperLimit)}">
+			
+			<a href="#report/10/{{currentYear}}" data-ng-show="(currentMonth >= 10) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">October</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 10) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 10) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">October</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 11) || (nextYear != upperLimit), monthDisabled: (currentMonth < 11) && (nextYear == upperLimit)}">
+			
+			<a href="#report/11/{{currentYear}}" data-ng-show="(currentMonth >= 11) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">November</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 11) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn" data-ng-show="(currentMonth < 11) && (nextYear == upperLimit)">
+					<h5 class="text-center month-text">November</h5>
+				</div>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3" data-ng-class="{month: (currentMonth >= 12) || (nextYear != upperLimit), monthDisabled: (currentMonth < 12) && (nextYear == upperLimit)}">
+			
+			<a href="#report/12/{{currentYear}}" data-ng-show="(currentMonth >= 12) || (nextYear != upperLimit)"><div class="col-xs-6 col-sm-4 col-md-3 month animated fadeIn">
 				<h5 class="text-center month-text">December</h5>
+			</div></a>
+			<div data-ng-show="(currentMonth < 12) && (nextYear == upperLimit)">
+				<div class="col-xs-6 col-sm-4 col-md-3 monthDisabled animated fadeIn">
+					<h5 class="text-center month-text">December</h5>
+				</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="col-xs-2">
+	<div class="col-xs-2 hidden-xs hidden-sm">
 	</div>
 </div>
