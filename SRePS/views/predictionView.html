@@ -6,7 +6,7 @@
 				<li>{{year}}</li>
 				<li>{{month | monthName}} </li>
 			</ol>
-			<div>
+			<div class="col-lg-6">
 				<h3>Prediction Report
 				<span class="pull-right"><span class="label label-primary">{{month | monthName}} / {{year}}</span></span></h3>
 				<table class="table table-bordered table-striped table-hover">
@@ -30,15 +30,21 @@
 					</tfoot>
 				</table>
 			</div>
-			<div>
+			<div class="col-lg-6">
 				<h4>Predictive Analysis</h4>
 				<div class="histogram">
-					<div class="histogram-axis">
-						<div class="histogram-axis-y primary">Revenue</div>
-					</div>
+					<div class="histogram-axis-y primary">Revenue</div>
 					<div class="histogram-data">
-						<div >
+						<div class="histogram-bar" data-ng-repeat="predict_item in predict_items" data-ng-style="{'height':calculateHeight(predict_item.total), 'width':calculateWidth(), 'left': ((calculateWidth() * $index))}">
+							<div class="histogram-bar-text text-center">{{predict_item.month}}</div>
+							<div class="histogram-bar-text text-center"><strong>{{predict_item.total | currency:"$"}}</strong></div>
+						</div>
+						<div class="histogram-bar predicted" data-ng-style="{'height':calculateHeight(average_revenue), 'width':calculateWidth(), 'left': ((calculateWidth() * predict_items.length))}">
+							<div class="histogram-bar-text text-center">Predicted Revenue</div>
+							<div class="histogram-bar-text text-center"><strong>{{average_revenue | currency:"$"}}</strong></div>
+						</div>
 					</div>
+					<div class="histogram-axis-x primary">Time</div>
 				</div>
 				<div class="col-xs-12 col-lg-6" data-ng-repeat="item in items" data-ng-init="totalForType = calculateTotalForType(item);">
 					<h5 class="table-header">

@@ -455,37 +455,61 @@ app.controller('predictionViewController', function($scope, $filter, $routeParam
 	$scope.fetching = {items: true, sales: "true"};
 	$scope.predict_items = [];
 	$scope.average_revenue = 0;
-	
-	
+	$scope.predict_total = 0;
+	$scope.highest_item =0;
 	//helpers
-	$scope.calculateAverage = function(predict_items)
+	$scope.calculateTotal = function(predict_items)
 	{
 		var total = 0;
 		for(var i=0;i<predict_items.length; i++)
 		{
 			total += parseFloat(predict_items[i].total);
 		}
-		return total/predict_items.length;
+		return total;
 	}
 	
-	$scope.calculateWidth = function(x,list)
+	$scope.getHighest = function(predict_items)
+	{
+		var high = 0;
+		for(var i=0;i<predict_items.length; i++)
+		{
+			var value = parseFloat(predict_items[i].total);
+			if (value>high)
+			{
+				high = value;
+			}
+		}
+		return high;
+	}
+	
+	$scope.calculateTotal = function(predict_items)
 	{
 		var total = 0;
-		var high = 0;
-		for(i=0;i<list.length; i++)
+		for(var i=0;i<predict_items.length; i++)
 		{
-			if(parseInt(list[i].sold) > high) 
-				high = list[i].sold;
-			total+= parseInt(list[i].sold);
+			total += parseFloat(predict_items[i].total);
 		}
-		if(total==0) return 0;
-		return ((x/high)*98)+2;
+		return total;
+	}
+	
+	$scope.calculateWidth = function()
+	{
+		var total_width = document.getElementsByClassName("histogram")[0].clientWidth;
+		return (total_width / ($scope.predict_items.length + 1)) - 20;
+		
+	}
+	$scope.calculateHeight = function(x)
+	{
+		return (x / $scope.highest_item)*200;
+		
 	}
 	
 	Database.getPredictItems($scope.month, $scope.year).success(function(response){
 		$scope.fetching.items = false;
 		$scope.predict_items = response;
-		$scope.average_revenue = $scope.calculateAverage ($scope.predict_items);
+		$scope.highest_item = $scope.getHighest($scope.predict_items);
+		$scope.predict_total = $scope.calculateTotal($scope.predict_items);
+		$scope.average_revenue = $scope.predict_total / $scope.predict_items.length ;
 	});
 	 
 });

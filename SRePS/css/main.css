@@ -618,30 +618,63 @@ tr.editing
 .histogram
 {
 	background-color: floralwhite;
-	height: 300px;
-}
-
-.histogram-axis
-{
+	height: 200px;
 	border-left: 2px solid #df2d1c;
 	border-bottom: 2px solid #df2d1c;
-	height: 100%;
 	transform: scale(0.92);
+	position: relative;
+}
+
+
+.histogram-data
+{
+	height: 100%;
+	position: relative;
+	margin-top: -1em;
+}
+
+.histogram-bar
+{
+	display: inline-block;
+	background: #df2d1c;
+  vertical-align: bottom;
+	position: fixed;
+	bottom: 0;
+	transform: scaleX(0.98);
 }
 
 .histogram-axis-y
 {
+	
+  line-height: 1em;
+	z-index: 2;
+	
 	transform: rotate(90deg);
 	transform-origin: left top 0;
 	-moz-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	-o-transform: rotate(90deg);
-
 }
 
-.histogram-bar
+.histogram-axis-x
 {
-	z-index: 1;
+	z-index: 2;
+ 	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.histogram-bar-text
+{
+	color: white;
+	display: block;
+}
+
+.predicted
+{
+	background-color: rgba(223, 45, 28, 0.8);
+	background-image: url(../img/greyzz.png);
+	background-blend-mode:multiply;
 }
 
 body
