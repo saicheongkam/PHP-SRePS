@@ -613,8 +613,36 @@ tr.editing
 	height: 1em;
 }
 
+/* Histogram stuff */
 
+.histogram
+{
+	background-color: floralwhite;
+	height: 300px;
+}
 
+.histogram-axis
+{
+	border-left: 2px solid #df2d1c;
+	border-bottom: 2px solid #df2d1c;
+	height: 100%;
+	transform: scale(0.92);
+}
+
+.histogram-axis-y
+{
+	transform: rotate(90deg);
+	transform-origin: left top 0;
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+
+}
+
+.histogram-bar
+{
+	z-index: 1;
+}
 
 body
 {

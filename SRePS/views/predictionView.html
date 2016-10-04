@@ -7,7 +7,7 @@
 				<li>{{month | monthName}} </li>
 			</ol>
 			<div>
-				<h3><span class="primary">Prediction</span> Report
+				<h3>Prediction Report
 				<span class="pull-right"><span class="label label-primary">{{month | monthName}} / {{year}}</span></span></h3>
 				<table class="table table-bordered table-striped table-hover">
 					<thead>
@@ -32,6 +32,14 @@
 			</div>
 			<div>
 				<h4>Predictive Analysis</h4>
+				<div class="histogram">
+					<div class="histogram-axis">
+						<div class="histogram-axis-y primary">Revenue</div>
+					</div>
+					<div class="histogram-data">
+						<div >
+					</div>
+				</div>
 				<div class="col-xs-12 col-lg-6" data-ng-repeat="item in items" data-ng-init="totalForType = calculateTotalForType(item);">
 					<h5 class="table-header">
 						<span>{{item.type | uppercase}}</span>
