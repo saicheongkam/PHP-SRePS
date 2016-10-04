@@ -391,6 +391,50 @@ tr.editing
 	background-blend-mode:multiply;
 }
 
+/* Bar chart stuff */
+
+.table-header
+{
+	border-bottom: 2px #d8d8d8 solid;
+	padding: 0.1em;
+}
+.chart
+{
+	display: block;
+}
+
+.chart-data
+{
+	padding-top: 1em;
+}
+
+.chart-data-row
+{
+	padding-top: 0.2em;
+}
+
+.chart-bar-label
+{
+	display: block;
+  overflow: scroll;
+  max-height: 1em;
+  line-height: 1em;
+}
+
+.no-data
+{
+	color: darkgrey;
+}
+
+.chart-bar
+{
+	background:  #df2d1c;
+	height: 1em;
+}
+
+
+
+
 body
 {
 	background-image: url(../img/pixel_weave.png);

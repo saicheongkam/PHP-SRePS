@@ -9,6 +9,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/inventory', { templateUrl: 'views/inventoryView.html', controller: 'inventoryViewController'})
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
 			.when('/reports', { templateUrl: 'views/reportsView.html', controller: 'reportsViewController'})
+			.when('/report/:month/:year', { templateUrl: 'views/reportDetailView.html', controller: 'reportDetailViewController'})
 			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );
@@ -282,8 +283,6 @@ app.controller('viewItemViewController', function($scope,Database) {
 		}
 });
 
-
-
 app.controller('addItemViewController', function($scope, Database, $window){
 	
 		Database.getDrugs().success(function(result){
@@ -292,7 +291,7 @@ app.controller('addItemViewController', function($scope, Database, $window){
 		
 		$scope.addItem = function(toAdd){
 			$scope.sending = true;
-			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":1,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
+			var toSend = {"Description":toAdd.product,"Supplier":toAdd.supplier,"Drug_ID":14,"Type_ID":toAdd.type, "UnitPrice":0,"ReorderLevel":1};
 			Database.addItem(toSend).success(function(response){
 				$scope.sending = false;
 				$('#add-item').modal('hide');
@@ -353,6 +352,71 @@ app.controller('reportsViewController', function($scope,Database) {
 	};
 	
 	$scope.checkLimit();
+});
+
+app.controller('reportDetailViewController', function($scope, $filter, $routeParams, Database) {
+	$scope.year = $routeParams.year;
+	$scope.month = $routeParams.month;
+	$scope.fetching = { items: true, sales: "true"};
+	$scope.items = [];
+	Database.getReportItems($scope.month, $scope.year).success(function(response){
+		$scope.fetching.items = false;
+		$scope.items = response;
+	});
+	
+	$scope.sales = [];
+	$scope.total_revenue = 0;
+	Database.getReportSales($scope.month,$scope.year).success(function(response){
+		$scope.fetching.sales = false;
+		$scope.sales = response;
+		$scope.total_revenue = $scope.calculateTotalRevenue($scope.sales);
+	});
+	
+	//helpers
+	$scope.calculateTotalRevenue = function(revenueList)
+	{
+		var total = 0;
+		for(var i=0;i<revenueList.length; i++)
+		{
+			total += parseFloat(revenueList[i].total);
+		}
+		return total;
+	}
+	
+	$scope.calculateTotalForType = function(item)
+	{
+		var total = 0;
+		for(l=0;l<item.drugs.length; l++)
+		{
+			total += $scope.calculateTotalForDrug(item.drugs[l].products);
+		}
+		return total;
+	}
+	
+	$scope.calculateTotalForDrug = function(products)
+	{
+		var total = 0;
+		for(i=0;i<products.length; i++)
+		{
+			total += parseFloat(products[i].sold);
+		}
+		return total;
+	}
+	
+	$scope.calculateWidth = function(x,list)
+	{
+		var total = 0;
+		var high = 0;
+		for(i=0;i<list.length; i++)
+		{
+			if(parseInt(list[i].sold) > high) 
+				high = list[i].sold;
+			total+= parseInt(list[i].sold);
+		}
+		if(total==0) return 0;
+		return ((x/high)*98)+2;
+	}
+	 
 });
 
 // Data factory
@@ -418,6 +482,20 @@ app.service('Database', function($http) {
 			return $http.get("api/drug_api.php/type/");
 	};
 	
+	//Report APIS
+	this.getReportSales = function (month,year) {
+			return $http.get("api/report_api.php/sales/sale?month="+month+"&year="+year);
+	};
+	
+	this.getReportItems = function (month, year) {
+			var date = new Date(year, month, 0, 12, 0, 0, 0);
+			var start = new Date(date.moveToFirstDayOfMonth().getTime());
+			var end = new Date(date.moveToLastDayOfMonth().getTime());
+			start = start.toISOString().slice(0,10);
+			end = end.toISOString().slice(0,10);
+			return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
+	};
+	
 });
 
 // App run
@@ -464,6 +542,15 @@ app.directive('formatOnBlur', function ($filter, $window) {
 				}
 		};
 });
+
+// Filter
+
+app.filter('monthName', [function() {
+		return function (monthNumber) { //1 = January
+				var monthNames = [ 'January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December' ];
+				return monthNames[monthNumber - 1];
+		}
+}]);
 
 // Animations 
 

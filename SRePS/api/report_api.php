@@ -52,17 +52,17 @@ if($method=='GET' && $repType=='items')
 			die(mysqli_error($conn));
 	}
 	
-	
-	$query="SELECT t.Name AS Type, d.Name AS Drug, p.Description AS Product, SUM(si.QuantitySold) AS Sales
-FROM Sales s
-NATURAL JOIN SalesItem si 
-NATURAL JOIN Batch b 
-NATURAL JOIN Product p
-NATURAL JOIN Drug d
-JOIN Type t
-ON p.Type_ID = t.Type_ID
-WHERE s.SaleDate >='$start' AND s.SaleDate<='$end'
-GROUP BY p.Type_ID, p.Drug_ID, p.Product_ID";
+	//Modified to include nulls when a product is never sold 
+	$query="SELECT t.Name AS Type, d.Name AS Drug, p.Description AS Product, COALESCE(SUM(si.QuantitySold * p.UnitPrice),0) AS Sales
+FROM Product p
+NATURAL LEFT JOIN Batch b
+NATURAL LEFT JOIN SalesItem si
+NATURAL LEFT JOIN Sales s
+NATURAL LEFT JOIN Drug d
+LEFT JOIN Type t ON p.Type_ID = t.Type_ID
+WHERE ( s.SaleDate >='$start' AND s.SaleDate<='$end' ) OR (s.SaleDate IS NULL)
+GROUP BY  p.Type_ID, p.Drug_ID, p.Product_ID 
+ORDER BY Sales DESC, Type";
 	
 	$result=mysqli_query($conn,$query);
 			if (!$result) {
@@ -147,7 +147,7 @@ if($method=='GET' && $repType=='sale')
 	$query="SELECT SaleDate as Date,sum(Amount) as Total
 	FROM `sales`
 	WHERE month(SaleDate) =$month and year(SaleDate)=$year
-	GROUP BY day(SaleDate)";
+	GROUP BY SaleDate";
 	
 	$result=mysqli_query($conn,$query);
 			if (!$result) {
