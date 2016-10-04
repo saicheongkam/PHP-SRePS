@@ -130,7 +130,7 @@ if($method=='GET' && $repType=='sale')
 			die(mysqli_error($conn));
 	}
 	//check if date format correct
-	if(preg_match('/^\d{4}$/',$query['year']) && preg_match('/^\d{2}$/',$query['month']))
+	if(preg_match('/^\d{4}$/',$query['year']) && preg_match('/^\d{1,2}$/',$query['month']))
 	{
 		$month=$query['month'];
 		$year=$query['year'];
