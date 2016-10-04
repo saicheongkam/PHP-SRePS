@@ -10,6 +10,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
 			.when('/reports', { templateUrl: 'views/reportsView.html', controller: 'reportsViewController'})
 			.when('/report/:month/:year', { templateUrl: 'views/reportDetailView.html', controller: 'reportDetailViewController'})
+			.when('/predict/:month/:year', { templateUrl: 'views/predictionView.html', controller: 'predictionViewController'})
 			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );
@@ -303,30 +304,6 @@ app.controller('addItemViewController', function($scope, Database, $window){
 		};
 });
 
-app.directive('animate', ['$window', function ($window) {
-
-	return {
-		link: link,
-		restrict: 'A',
-	};
-	
-	function link($scope, element, attrs){
-		
-		$scope.width = $window.innerWidth;
-		
-		angular.element($window).on('resize', function(){	
-			$scope.width = $window.innerWidth;
-			
-			if ($scope.width < 768)
-				$scope.animateEnabled = false;
-			else
-				$scope.animateEnabled = true;
-			
-			$scope.$digest();
-		});
-	}
-}]);
-
 app.controller('reportsViewController', function($scope,Database, $window) {
 		
 	var currentDate = new Date();
@@ -472,17 +449,46 @@ app.controller('reportDetailViewController', function($scope, $filter, $routePar
 	 
 });
 
-// Data factory
-app.factory("Data", 
-	function () {
-		return {
-			sales: function () {
-				return [{"date": new Date() ,"id":100302,"amount":"$41.25"}];
-			}
-		};
+app.controller('predictionViewController', function($scope, $filter, $routeParams, Database) {
+	$scope.year = $routeParams.year;
+	$scope.month = $routeParams.month;
+	$scope.fetching = {items: true, sales: "true"};
+	$scope.predict_items = [];
+	$scope.average_revenue = 0;
+	
+	
+	//helpers
+	$scope.calculateAverage = function(predict_items)
+	{
+		var total = 0;
+		for(var i=0;i<predict_items.length; i++)
+		{
+			total += parseFloat(predict_items[i].total);
+		}
+		return total/predict_items.length;
 	}
-);
-
+	
+	$scope.calculateWidth = function(x,list)
+	{
+		var total = 0;
+		var high = 0;
+		for(i=0;i<list.length; i++)
+		{
+			if(parseInt(list[i].sold) > high) 
+				high = list[i].sold;
+			total+= parseInt(list[i].sold);
+		}
+		if(total==0) return 0;
+		return ((x/high)*98)+2;
+	}
+	
+	Database.getPredictItems($scope.month, $scope.year).success(function(response){
+		$scope.fetching.items = false;
+		$scope.predict_items = response;
+		$scope.average_revenue = $scope.calculateAverage ($scope.predict_items);
+	});
+	 
+});
 
 // Services
 app.service('Database', function($http) {
@@ -549,6 +555,11 @@ app.service('Database', function($http) {
 			return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
 	};
 	
+	//Prediction APIS
+	this.getPredictItems = function (month,year) {
+			return $http.get("api/prediction_api.php/sales/sale?month="+month+"&year="+year);
+	};
+	
 });
 
 // App run
@@ -557,6 +568,30 @@ app.run(
 });
 
 //Directives
+
+app.directive('animate', ['$window', function ($window) {
+
+	return {
+		link: link,
+		restrict: 'A',
+	};
+	
+	function link($scope, element, attrs){
+		
+		$scope.width = $window.innerWidth;
+		
+		angular.element($window).on('resize', function(){	
+			$scope.width = $window.innerWidth;
+			
+			if ($scope.width < 768)
+				$scope.animateEnabled = false;
+			else
+				$scope.animateEnabled = true;
+			
+			$scope.$digest();
+		});
+	}
+}]);
 
 app.directive('ngEnter', function () {
 		return function (scope, element, attrs) {
