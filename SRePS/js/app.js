@@ -365,12 +365,24 @@ app.controller('reportDetailViewController', function($scope, $filter, $routePar
 	});
 	
 	$scope.sales = [];
+	$scope.total_revenue = 0;
 	Database.getReportSales($scope.month,$scope.year).success(function(response){
 		$scope.fetching.sales = false;
 		$scope.sales = response;
+		$scope.total_revenue = $scope.calculateTotalRevenue($scope.sales);
 	});
 	
 	//helpers
+	$scope.calculateTotalRevenue = function(revenueList)
+	{
+		var total = 0;
+		for(var i=0;i<revenueList.length; i++)
+		{
+			total += parseFloat(revenueList[i].total);
+		}
+		return total;
+	}
+	
 	$scope.calculateTotalForType = function(item)
 	{
 		var total = 0;
@@ -386,7 +398,7 @@ app.controller('reportDetailViewController', function($scope, $filter, $routePar
 		var total = 0;
 		for(i=0;i<products.length; i++)
 		{
-			total += parseInt(products[i].sold);
+			total += parseFloat(products[i].sold);
 		}
 		return total;
 	}

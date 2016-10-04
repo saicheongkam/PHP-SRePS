@@ -7,49 +7,54 @@
 				<li>{{month | monthName}}</li>
 			</ol>
 			<div>
-				<h4>Montly Sales Report
-				<span class="pull-right"><span class="label label-primary">{{month | monthName}} / {{year}}</span></span></h4>
-				<table class="table table-striped table-hover">
+				<h3>Montly Sales Report
+				<span class="pull-right"><span class="label label-primary">{{month | monthName}} / {{year}}</span></span></h3>
+				<table class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
 							<th class="col-xs-6">Day</th>
 							<th class="col-xs-6 text-right">Revenue</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="animated flipInX" data-ng-repeat="sale in sales">
+					<tbody >
+						<tr data-ng-repeat="sale in sales">
 							<td>{{sale.date}}</td>
-							<td>{{sale.total}}</td>
+							<td class="text-right">{{sale.total | currency:"$"}}</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<td >Total Revenue</td>
-							<td class="text-right">{{0 | currency:"$"}}</td>
+							<td class="text-right">{{ total_revenue | currency:"$"}}</td>
 						</tr>
 					</tfoot>
 				</table>
 			</div>
 			<div>
 				<h4>Montly Sales of Items</h4>
-				<div class="col-xs-12 col-lg-6" data-ng-repeat="item in items">
-					<h5 class="table-header">{{item.type | uppercase}}</h5>
-					<p class="text-center no-data" data-ng-hide="calculateTotalForType(item)>0">
+				<div class="col-xs-12 col-lg-6" data-ng-repeat="item in items" data-ng-init="totalForType = calculateTotalForType(item);">
+					<h5 class="table-header">
+						<span>{{item.type | uppercase}}</span>
+						<span class="pull-right primary" data-ng-show="totalForType>0">
+							{{(totalForType / total_revenue )*100 | number:2}}% of Revenue
+						</span>
+					</h5>
+					<p class="text-center no-data" data-ng-hide="totalForType>0">
 						No any {{item.type}}s are sold during this period
 					</p>
-					<div class="col-xs-12 chart chart" data-ng-show="calculateTotalForType(item)>0" data-ng-repeat="drug in item.drugs">
-						<p class="text-center no-data" data-ng-hide="calculateTotalForDrug(drug.products)>0">
+					<div class="col-xs-12 chart chart" data-ng-show="totalForType>0" data-ng-repeat="drug in item.drugs" data-ng-init="total_drug=calculateTotalForDrug(drug.products);">
+						<p class="text-center no-data" data-ng-hide="total_drug>0">
 							No {{drug.drug}} {{item.type}}s are sold
 						</p>
-						<div class="row chart-data" data-ng-show="calculateTotalForDrug(drug.products)>0">
+						<div class="row chart-data" data-ng-show="total_drug>0">
 							<div class="col-xs-10-offset-1 chart-data-row" data-ng-repeat="product in drug.products" >
 								<div class="col-xs-3 chart-bar-label text-right">
 									{{product.name}}
 								</div>
-								<div class="col-xs-7" >
+								<div class="col-xs-7 animated flipInX" >
 									<div class="chart-bar" data-ng-style="{width: calculateWidth(product.sold, drug.products) + '%'}"></div>
 								</div>
-								<span class="chart-bar-label primary">{{product.sold}}</span>
+								<span class="chart-bar-label primary">{{product.sold | currency:"$"}}</span>
 							</div>
 							<div class="row">
 								<h6 class="text-center"><em>{{drug.drug}}</em></h6>
