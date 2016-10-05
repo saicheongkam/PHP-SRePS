@@ -10,6 +10,7 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/addItem', { templateUrl: 'views/addItemView.html', controller: 'addItemViewController'})
 			.when('/reports', { templateUrl: 'views/reportsView.html', controller: 'reportsViewController'})
 			.when('/report/:month/:year', { templateUrl: 'views/reportDetailView.html', controller: 'reportDetailViewController'})
+			.when('/predict/:month/:year', { templateUrl: 'views/predictionView.html', controller: 'predictionViewController'})
 			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
 	}]
 );
@@ -303,30 +304,6 @@ app.controller('addItemViewController', function($scope, Database, $window){
 		};
 });
 
-app.directive('animate', ['$window', function ($window) {
-
-	return {
-		link: link,
-		restrict: 'A',
-	};
-	
-	function link($scope, element, attrs){
-		
-		$scope.width = $window.innerWidth;
-		
-		angular.element($window).on('resize', function(){	
-			$scope.width = $window.innerWidth;
-			
-			if ($scope.width < 768)
-				$scope.animateEnabled = false;
-			else
-				$scope.animateEnabled = true;
-			
-			$scope.$digest();
-		});
-	}
-}]);
-
 app.controller('reportsViewController', function($scope,Database, $window) {
 		
 	var currentDate = new Date();
@@ -472,17 +449,70 @@ app.controller('reportDetailViewController', function($scope, $filter, $routePar
 	 
 });
 
-// Data factory
-app.factory("Data", 
-	function () {
-		return {
-			sales: function () {
-				return [{"date": new Date() ,"id":100302,"amount":"$41.25"}];
-			}
-		};
+app.controller('predictionViewController', function($scope, $filter, $routeParams, Database) {
+	$scope.year = $routeParams.year;
+	$scope.month = $routeParams.month;
+	$scope.fetching = {items: true, sales: "true"};
+	$scope.predict_items = [];
+	$scope.average_revenue = 0;
+	$scope.predict_total = 0;
+	$scope.highest_item =0;
+	//helpers
+	$scope.calculateTotal = function(predict_items)
+	{
+		var total = 0;
+		for(var i=0;i<predict_items.length; i++)
+		{
+			total += parseFloat(predict_items[i].total);
+		}
+		return total;
 	}
-);
-
+	
+	$scope.getHighest = function(predict_items)
+	{
+		var high = 0;
+		for(var i=0;i<predict_items.length; i++)
+		{
+			var value = parseFloat(predict_items[i].total);
+			if (value>high)
+			{
+				high = value;
+			}
+		}
+		return high;
+	}
+	
+	$scope.calculateTotal = function(predict_items)
+	{
+		var total = 0;
+		for(var i=0;i<predict_items.length; i++)
+		{
+			total += parseFloat(predict_items[i].total);
+		}
+		return total;
+	}
+	
+	$scope.calculateWidth = function()
+	{
+		var total_width = document.getElementsByClassName("histogram")[0].clientWidth;
+		return (total_width / ($scope.predict_items.length + 1)) - 20;
+		
+	}
+	$scope.calculateHeight = function(x)
+	{
+		return (x / $scope.highest_item)*200;
+		
+	}
+	
+	Database.getPredictItems($scope.month, $scope.year).success(function(response){
+		$scope.fetching.items = false;
+		$scope.predict_items = response;
+		$scope.highest_item = $scope.getHighest($scope.predict_items);
+		$scope.predict_total = $scope.calculateTotal($scope.predict_items);
+		$scope.average_revenue = $scope.predict_total / $scope.predict_items.length ;
+	});
+	 
+});
 
 // Services
 app.service('Database', function($http) {
@@ -549,6 +579,11 @@ app.service('Database', function($http) {
 			return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
 	};
 	
+	//Prediction APIS
+	this.getPredictItems = function (month,year) {
+			return $http.get("api/prediction_api.php/sales/sale?month="+month+"&year="+year);
+	};
+	
 });
 
 // App run
@@ -557,6 +592,30 @@ app.run(
 });
 
 //Directives
+
+app.directive('animate', ['$window', function ($window) {
+
+	return {
+		link: link,
+		restrict: 'A',
+	};
+	
+	function link($scope, element, attrs){
+		
+		$scope.width = $window.innerWidth;
+		
+		angular.element($window).on('resize', function(){	
+			$scope.width = $window.innerWidth;
+			
+			if ($scope.width < 768)
+				$scope.animateEnabled = false;
+			else
+				$scope.animateEnabled = true;
+			
+			$scope.$digest();
+		});
+	}
+}]);
 
 app.directive('ngEnter', function () {
 		return function (scope, element, attrs) {

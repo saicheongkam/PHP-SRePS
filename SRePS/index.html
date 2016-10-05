@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html data-ng-app="myApp" lang="en">
 	<head>
-		<title>People Health Pharmacy</title>
+		<title>PHP SRePS</title>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
 		<!-- Bootstrap -->
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --> 
 		<!-- WARNING: Respond.js doesnt work if you view the page via file:// -->
@@ -16,6 +18,8 @@
 		<link href="css/animate.css" rel="stylesheet"/>
 		<link href="css/main.css" rel="stylesheet"/>
 		<link rel="icon" type="img/ico" href="img/favicon.ico">
+		<link rel="apple-touch-icon" href="img/icon.png">
+		<link rel="apple-touch-startup-image" href="img/launch.png">
 	</head>
 	<body>
 		<div class="container-fluid" data-ng-controller="menuController">
@@ -45,8 +49,8 @@
 					<li data-ng-class="{active:isActive('sales')}"><a data-toggle="tab" href="#sales"> <span class="glyphicon glyphicon-shopping-cart"></span> Sales</a></li>
 					<li data-ng-class="{active:isActive('inventory')}"><a data-toggle="tab" href="#inventory"> <span class="glyphicon glyphicon-list"></span> Inventory</a></li>
 					<li><a data-toggle="tab" href="#reports"><span class="glyphicon glyphicon-book"></span> Reports</a></li>
-					<li class="disabled" ><a><span class="glyphicon glyphicon-stats"></span> Statistics</a></li>
-					<li class="disabled pull-right"><a > <span class="glyphicon glyphicon-user"></span> User</a></li>
+					<!--<li class="disabled" ><a><span class="glyphicon glyphicon-stats"></span> Statistics</a></li>-->
+					<!--<li class="disabled pull-right"><a > <span class="glyphicon glyphicon-user"></span> User</a></li>-->
 				</ul>
 			</nav>
 			<!--Application-->

@@ -1,0 +1,82 @@
+<div class="row tab-pane">
+	<div class="col-xs-12 panel">
+		<div class="row panel-body">
+			<ol class="breadcrumb animated headShake">
+				<li><a href="#reports">Reports</a></li>
+				<li>{{year}}</li>
+				<li>{{month | monthName}} </li>
+			</ol>
+			<div class="col-lg-6">
+				<h3>Prediction Report
+				<span class="pull-right"><span class="label label-primary">{{month | monthName}} / {{year}}</span></span></h3>
+				<table class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th class="col-xs-6">Month</th>
+							<th class="col-xs-6 text-right">Revenue</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr data-ng-repeat="predict_item in predict_items">
+							<td>{{predict_item.month}}</td>
+							<td class="text-right">{{predict_item.total | currency:"$"}}</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td><strong>Average Revenue</strong></td>
+							<td class="text-right">{{ average_revenue | currency:"$"}}</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div class="col-lg-6">
+				<h4>Predictive Analysis</h4>
+				<div class="histogram">
+					<div class="histogram-axis-y primary">Revenue</div>
+					<div class="histogram-data">
+						<div class="histogram-bar" data-ng-repeat="predict_item in predict_items" data-ng-style="{'height':calculateHeight(predict_item.total), 'width':calculateWidth(), 'left': ((calculateWidth() * $index))}">
+							<div class="histogram-bar-text text-center">{{predict_item.month}}</div>
+							<div class="histogram-bar-text text-center"><strong>{{predict_item.total | currency:"$"}}</strong></div>
+						</div>
+						<div class="histogram-bar predicted" data-ng-style="{'height':calculateHeight(average_revenue), 'width':calculateWidth(), 'left': ((calculateWidth() * predict_items.length))}">
+							<div class="histogram-bar-text text-center">Predicted Revenue</div>
+							<div class="histogram-bar-text text-center"><strong>{{average_revenue | currency:"$"}}</strong></div>
+						</div>
+					</div>
+					<div class="histogram-axis-x primary">Time</div>
+				</div>
+				<div class="col-xs-12 col-lg-6" data-ng-repeat="item in items" data-ng-init="totalForType = calculateTotalForType(item);">
+					<h5 class="table-header">
+						<span>{{item.type | uppercase}}</span>
+						<span class="pull-right primary" data-ng-show="totalForType>0">
+							{{(totalForType / total_revenue )*100 | number:2}}% of Revenue
+						</span>
+					</h5>
+					<p class="text-center no-data" data-ng-hide="totalForType>0">
+						No any {{item.type}}s are sold during this period
+					</p>
+					<div class="col-xs-12 chart chart" data-ng-show="totalForType>0" data-ng-repeat="drug in item.drugs" data-ng-init="total_drug=calculateTotalForDrug(drug.products);">
+						<p class="text-center no-data" data-ng-hide="total_drug>0">
+							No {{drug.drug}} {{item.type}}s are sold
+						</p>
+						<div class="row chart-data" data-ng-show="total_drug>0">
+							<div class="col-xs-10-offset-1 chart-data-row" data-ng-repeat="product in drug.products" >
+								<div class="col-xs-3 chart-bar-label text-right">
+									{{product.name}}
+								</div>
+								<div class="col-xs-7 animated flipInX" >
+									<div class="chart-bar" data-ng-style="{width: calculateWidth(product.sold, drug.products) + '%'}"></div>
+								</div>
+								<span class="chart-bar-label primary">{{product.sold | currency:"$"}}</span>
+							</div>
+							<div class="row">
+								<h6 class="text-center"><em>{{drug.drug}}</em></h6>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
