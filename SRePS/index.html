@@ -39,6 +39,7 @@
 					</div>
 					<div class="collapse navbar-collapse" id="nav">
 						<ul class="nav navbar-nav navbar-right" ng-cloak>
+							<li><a><span class="glyphicon glyphicon-user"></span> Logged in as, {{user_name}}</a></li>
 							<li ng-show="!showLogout"><a href="#login" data-toggle="modal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 							<li ng-show="showLogout"><a href="#logout" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 							<li><a href="" data-toggle="modal"><span class="glyphicon glyphicon-phone"></span> Contact</a></li>
@@ -47,12 +48,11 @@
 					</div>
 				</div>
 				<ul class="nav nav-tabs">
-					<li data-ng-class="{active:isActive('sales')}"><a data-toggle="tab" href="#sales"> <span class="glyphicon glyphicon-shopping-cart"></span> Sales</a></li>
+					<li data-ng-class="{active:isActive('sales')}"><a data-toggle="tab" href="#sales"> <span class="glyphicon glyphicon-shopping-cart"></span> Sale</a></li>
 					<li data-ng-class="{active:isActive('inventory')}"><a data-toggle="tab" href="#inventory"> <span class="glyphicon glyphicon-list"></span> Inventory</a></li>
 					<li><a data-toggle="tab" href="#reports"><span class="glyphicon glyphicon-book"></span> Reports</a></li>
 					<!--<li class="disabled" ><a><span class="glyphicon glyphicon-stats"></span> Statistics</a></li>-->
-					<li data-ng-class="{active:isActive('users')}" data-ng-hide="isDisabled('adduser')"><a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span> Staff</a></li>
-					<li class="disabled pull-right" ng-cloak><a> <span class="glyphicon glyphicon-user"></span> {{user_name}}</a></li>
+					<li class="pull-right" data-ng-class="{active:isActive('users')}" data-ng-hide="isDisabled('adduser')"><a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span><span > Staff</span></a></li>
 				</ul>
 			</nav>
 			<!--Application-->

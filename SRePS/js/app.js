@@ -11,18 +11,197 @@ app.config(['$routeProvider', function($routeProvider) {
 			.when('/reports', { templateUrl: 'views/reportsView.html', controller: 'reportsViewController'})
 			.when('/report/:month/:year', { templateUrl: 'views/reportDetailView.html', controller: 'reportDetailViewController'})
 			.when('/predict/:month/:year', { templateUrl: 'views/predictionView.html', controller: 'predictionViewController'})
-			.otherwise({ templateUrl: 'views/homepage.html', controller: ''} );
+			.when('/login', { templateUrl: 'views/loginView.html', controller: 'loginViewController'})
+			.when('/users', { templateUrl: 'views/usersView.html', controller: 'userViewController', resolve:{
+					"check":function($location){
+						if(sessionStorage.user == null){
+							$location.path('/login');
+						}
+					}
+				}})
+			.when('/users/adduser', { templateUrl: 'views/addUserView.html', controller: 'userViewController'})
+			.otherwise({ templateUrl: 'views/homepage.html', controller: '', resolve:{
+					"check":function($location){
+						if(sessionStorage.user == null){
+							$location.path('/login');
+						}
+					}
+				}
+			});
 	}]
 );
 
 // Controllers
 
-app.controller('menuController', function($scope,$window){
+app.controller('menuController', function($scope,$window, Database){
+	$scope.user_name = "User";
+	$scope.showLogout = false;	
+	$scope.role = "";
+	
+	// Check user session
+	if(sessionStorage.user != null){
+		var user = JSON.parse(sessionStorage.user);
+		if(user){
+			$scope.user_name = user.name;
+			$scope.role = user.role;
+			$scope.showLogout = true;
+		}
+	}	
+	
 	$scope.isActive = function(requestedTab){
 		var strs = $window.location.toString().split('/');
 		var thisTab = strs[strs.indexOf('#')+1];
-		return (requestedTab==thisTab);
+		return (requestedTab==thisTab);		
 	};
+	
+	//Hide menu
+	$scope.isDisabled = function(tab){
+		var result = true;
+		var sales = ["Sales Person","Manager","Owner"];
+		var report = ["Manager","Owner"];
+		var full = ["Owner"];				
+		if(tab == "sales"){
+			result = sales.indexOf($scope.role) > -1;			
+		}
+		if(tab == "inventory" || tab == "report" || tab == "stat"){
+			result = report.indexOf($scope.role) > -1;			
+		}
+		if(tab == "adduser"){
+			result = full.indexOf($scope.role) > -1;
+		}		
+		return !result;
+	}
+
+	//Call logout
+	$scope.logout = function(){
+		Database.doLogout().success(function(result){
+			sessionStorage.clear();
+			$window.location = "#/login";
+			window.location.reload();			
+		});		
+	}
+});
+
+app.controller('loginViewController', function($scope, $filter, $window, Database){	
+	$scope.showError = false;
+	$scope.errorMsg = "";
+
+	$scope.login = function(){	
+		var toSend = {"username":$scope.username,"password":$scope.userpass};
+		if( !$scope.username ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter username";	
+			angular.element('#login-username').focus();
+			return;
+		}else if( !$scope.userpass ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter password";
+			angular.element('#login-password').focus();			
+			return;			
+		}else{
+			$scope.showError = false;
+			$scope.errorMsg = "";			
+			Database.doLogin(toSend).success(function(result){
+				if(result.error){
+					$scope.showError = true;
+					$scope.errorMsg = result.message;						
+				}else{
+					sessionStorage.setItem('user', JSON.stringify(result));
+					$window.location = "#/sales";
+					window.location.reload(); 
+				}
+			});			
+		}	
+	}
+});
+
+app.controller('userViewController', function($scope, $filter, $window, Database){	
+	$scope.roles = ['Sales Person', 'Manager', 'Owner'];
+	$scope.userrole = "Sales Person";
+	$scope.users = null;
+	Database.getUsers().success(function(result){
+		$scope.users = result;		
+	});
+	$scope.showReset = function(Id){
+		$scope.staff_Id = Id;
+		$('#reset-password').modal('show');		
+	}
+	
+	$scope.showDelete = function(Id){
+		$scope.staff_Id = Id;
+		$('#delete-user').modal('show');		
+	}	
+	
+	//Reset password
+	$scope.resetPw = function(){
+		if( !$scope.reset_pw ){	
+			angular.element('#txt-reset-pw').focus();
+			return;
+		}else{
+			var toSend = {"id":$scope.staff_Id,"password":$scope.reset_pw};
+			Database.resetPassword(toSend).success(function(result){
+				if(result.error){
+					$window.alert(result.message);
+				}else{
+					$window.alert(result.message);
+					$('#reset-password').modal('hide');								
+				}
+			});			
+		}		
+	}
+	
+	//Delete user
+	$scope.delUser = function(){
+		var toSend = {"id":$scope.staff_Id};
+		Database.deleteUser(toSend).success(function(result){
+			if(result.error){
+				$window.alert(result.message);
+			}else{
+				$window.alert(result.message);
+				$('#delete-user').modal('hide');
+				$window.location.reload();		
+			}
+		});		
+	}	
+	// Create user 
+	$scope.createUser = function(){
+		if( !$scope.staffname ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter a Full Name";	
+			angular.element('#staff-name').focus();
+			return;
+		}else if( !$scope.username ){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter a Username";
+			angular.element('#user-name').focus();			
+			return;			
+		}else if(!$scope.userpass){
+			$scope.showError = true;
+			$scope.errorMsg = "Please enter  a Password";
+			angular.element('#user-password').focus();			
+			return;					
+		}else if($scope.userpass != $scope.confirmpass){
+			$scope.showError = true;
+			$scope.errorMsg = "Password fields are not the same";
+			angular.element('#confirm-password').focus();			
+			return;					
+		}else{		
+			$scope.showError = false;
+			$scope.errorMsg = "";				
+			var toSend = {"staffname":$scope.staffname,"role":$scope.userrole ,"username":$scope.username,"password":$scope.userpass};
+			Database.createUser(toSend).success(function(result){
+				if(result.error){
+					$scope.showError = true;
+					$scope.errorMsg = result.message;						
+				}else{
+					$('#user-confirmation').modal('show');
+					$('#user-confirmation').on('hidden.bs.modal', function (e) {
+						$window.location = "#/users";
+					})					
+				}
+			});	
+		}
+	}
 });
 
 app.controller('salesViewController', function($scope, $filter, $window, Database){
@@ -577,6 +756,53 @@ app.service('Database', function($http) {
 			start = start.toISOString().slice(0,10);
 			end = end.toISOString().slice(0,10);
 			return $http.get("api/report_api.php/sales/items?start="+start+"&end="+end);
+	};
+	
+	// Authentication API
+
+	this.doLogin = function (toAdd) {
+		return $http({
+			method: 'POST',
+			url:'api/loginapi.php',
+			data: $.param({username: toAdd.username,password:toAdd.password}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		});
+	};
+	this.doLogout = function(){
+		return $http({
+			method: 'POST',
+			url:'api/logout.php'
+		}); 
+	}
+	this.getUsers = function () {
+		return $http.get("api/getusers_api.php");
+	};
+	this.createUser = function (toAdd) {
+		//console.log(toAdd);
+		return $http({
+			method: 'POST',
+			url:'api/adduser_api.php',
+			data: $.param({staffname:toAdd.staffname,role:toAdd.role,username: toAdd.username,password:toAdd.password}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		});
+	};
+	this.resetPassword = function (toAdd) {
+		//console.log(toAdd);
+		return $http({
+			method: 'POST',
+			url:'api/password_api.php',
+			data: $.param({id:toAdd.id,password:toAdd.password}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		});
+	};
+	this.deleteUser = function (toAdd) {
+		//console.log(toAdd);
+		return $http({
+			method: 'POST',
+			url:'api/deluser_api.php',
+			data: $.param({id:toAdd.id}),           
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}							
+		});
 	};
 	
 	//Prediction APIS
