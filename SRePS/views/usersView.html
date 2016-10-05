@@ -1,10 +1,17 @@
-<div class="row" data-ng-controller="userViewController" style="margin-top:100px">       
+<div class="row tab-pane" data-ng-controller="userViewController">       
+	<div class="col-xs-12 panel tile-container">
+		<div class="row panel-heading toolbar" >
+			<!-- Toolbar -->
+			<div class="pull-left">
+				<a href="#/users/adduser" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add Staff</a>
+			</div>
+		</div>
+	
+	<div class="row panel-body offset tile-container">
+	<div>
+	
 	<div class="col-md-6 center">
         <div class="panel panel-primary">
-          <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left">Staff</h3>	
-			<a href="#/users/adduser" class="btn btn-success btn-sm pull-right"><span class="glyphicon glyphicon-plus"></span>  Add Staff</a>
-          </div>
           <div class="panel-body">
         	<div class="list-group">
 				<div class="list-group-item" data-ng-repeat="user in users">
@@ -21,11 +28,13 @@
           </div>
         </div>	
 	</div>
+	
+
 	<!-- Reset Password Modal -->
 	<div class="modal fade" tabindex="-1" role="dialog" id="reset-password"  data-backdrop="static">
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content">
-		  <div class="modal-header">
+		  <div class="modal-header model-primary">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="modal-title">Reset Password</h4>
 		  </div>
@@ -48,7 +57,7 @@
 	<div class="modal fade" tabindex="-1" role="dialog" id="delete-user"  data-backdrop="static">
 	  <div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
-		  <div class="modal-header">
+		  <div class="modal-header model-primary">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="modal-title">Confirmation</h4>
 		  </div>
