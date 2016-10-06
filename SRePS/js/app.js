@@ -63,7 +63,7 @@ app.controller('menuController', function($scope,$window, Database){
 		if(tab == "sales"){
 			result = sales.indexOf($scope.role) > -1;			
 		}
-		if(tab == "inventory" || tab == "report" || tab == "stat"){
+		if(tab == "inventory" || tab == "reports" || tab == "stat"){
 			result = report.indexOf($scope.role) > -1;			
 		}
 		if(tab == "adduser"){
